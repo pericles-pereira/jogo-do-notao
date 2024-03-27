@@ -1,9 +1,6 @@
 <?php
 
-use App\Http\Controllers\Admin\Enterprise\Edit\EnterpriseCommonDataController;
-use App\Http\Controllers\Admin\Enterprise\Edit\EnterpriseNfeDataController;
-use App\Http\Controllers\Admin\Enterprise\Edit\EnterpriseTaxDataController;
-use App\Http\Controllers\Admin\Enterprise\Register\EnterpriseRegisterController;
+use App\Http\Controllers\Admin\Questions\QuestionController;
 use App\Http\Controllers\Admin\Users\EditUserController;
 use App\Http\Controllers\Admin\Users\RegisteredUserController;
 use App\Http\Controllers\Admin\Users\UserManagementController;
@@ -21,17 +18,4 @@ Route::patch('users/{id}/disable', [EditUserController::class, 'disable'])->name
 Route::patch('users/{id}/activate', [EditUserController::class, 'activate'])->name('user.activate.patch');
 Route::delete('users/{id}/delete', [EditUserController::class, 'delete'])->name('user.delete');
 
-
-
-// Enterprise Routes
-Route::get('enterprise/register', [EnterpriseRegisterController::class, 'create'])->can('unregisteredCompany')->name('enterprise.register.create');
-Route::post('enterprise/register', [EnterpriseRegisterController::class, 'store'])->can('unregisteredCompany')->name('enterprise.register.store');
-
-Route::get('enterprise/edit', [EnterpriseCommonDataController::class, 'edit'])->can('registeredCompany')->name('enterprise.common.edit');
-Route::patch('enterprise/edit', [EnterpriseCommonDataController::class, 'update'])->can('registeredCompany')->name('enterprise.common.edit');
-
-Route::get('enterprise/nfe/edit', [EnterpriseNfeDataController::class, 'edit'])->can('registeredCompany')->name('enterprise.nfe.edit');
-Route::patch('enterprise/nfe/edit', [EnterpriseNfeDataController::class, 'update'])->can('registeredCompany')->name('enterprise.nfe.edit');
-
-Route::get('enterprise/tax/edit', [EnterpriseTaxDataController::class, 'edit'])->can('registeredCompany')->name('enterprise.tax.edit');
-Route::patch('enterprise/tax/edit', [EnterpriseTaxDataController::class, 'update'])->can('registeredCompany')->name('enterprise.tax.edit');
+Route::get('questions', [QuestionController::class, 'index'])->name('questions');

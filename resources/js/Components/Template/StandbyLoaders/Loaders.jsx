@@ -2,7 +2,7 @@ import { useLoader } from "@/Context/LoaderContext";
 import styled from "@emotion/styled";
 import { Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { TailSpin, ThreeDots } from "react-loader-spinner";
+import { ThreeDots } from "react-loader-spinner";
 
 export const Loaders = {
     LoaderOverlay: () => {

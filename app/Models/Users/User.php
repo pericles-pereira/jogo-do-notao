@@ -47,12 +47,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-
-    public function enterprise(): BelongsTo
-    {
-        return $this->belongsTo(Enterprise::class);
-    }
-
+    
     public function permission(): HasOne
     {
         return $this->hasOne(Permission::class);

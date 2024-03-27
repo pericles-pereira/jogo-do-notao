@@ -34,7 +34,7 @@ final class Create
         }
 
         $user = DB::transaction(function () use ($credentials, $permissions): User {
-            $user = Auth::user()->enterprise->users()->create([
+            $user = User::create([
                 'name' => $credentials['name'],
                 'email' => $credentials['email'],
                 'password' => Hash::make($credentials['password']),
@@ -49,5 +49,5 @@ final class Create
         return $user;
     }
 
-    
+
 }

@@ -1,6 +1,7 @@
 import {
     AdminPanelSettings,
     DashboardOutlined,
+    List,
     ManageAccountsOutlined,
     PersonAddAlt1Outlined,
 } from "@mui/icons-material";
@@ -12,6 +13,11 @@ const menu = [
         text: "Dashboard",
         url: route("dashboard"),
         icon: IconWrapper(DashboardOutlined),
+    },
+    {
+        text: "Questões",
+        url: route("questions"),
+        icon: IconWrapper(List),
     },
     {
         text: "Usuários",
