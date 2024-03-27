@@ -8,7 +8,7 @@ export default function exportToCSV(table) {
 
     const visibleColumns = table.getVisibleFlatColumns();
 
-    csv.push(visibleColumns.filter(column => column.columnDef?.header !== "Select").map(column => column.columnDef?.header ?? 'no header'));
+    csv.push(visibleColumns.filter(column => column.columnDef?.header !== "Selecionar").map(column => column.columnDef?.header ?? 'no header'));
 
     let rows = table.getFilteredRowModel().rows.map(row => row.original);
 

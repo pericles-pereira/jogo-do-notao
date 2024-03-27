@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import {
     MaterialReactTable,
     useMaterialReactTable,
 } from "material-react-table";
+import { MRT_Localization_PT_BR } from "material-react-table/locales/pt-BR";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Container, Grid, Chip, Button, Typography } from "@mui/material";
 import { useReactToPrint } from "react-to-print";
@@ -11,19 +12,14 @@ import { Print, TableView } from "@mui/icons-material";
 import exportToCSV from "@/utils/helpers/exportToCSV";
 import booleanObjectToArray from "@/utils/helpers/booleanObjectToArray";
 import { toSentenceCase } from "@/utils/common/strings";
-import { toast } from "react-toastify";
 import { router } from "@inertiajs/react";
 
-export default function Management({ status, users }) {
+export default function Management({ users }) {
     const componentRef = useRef();
 
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
     });
-
-    useEffect(() => {
-        if (status && status.type) toast[status.type](status?.message);
-    }, [status]);
 
     const data = useMemo(
         () =>
@@ -43,7 +39,7 @@ export default function Management({ status, users }) {
         () => [
             {
                 accessorKey: "name",
-                header: "Name",
+                header: "Nome",
             },
             {
                 accessorKey: "email",
@@ -51,15 +47,15 @@ export default function Management({ status, users }) {
             },
             {
                 accessorKey: "createdAt",
-                header: "Creation Date",
+                header: "Data de Criação",
             },
             {
                 accessorKey: "emailVerifiedAt",
-                header: "Verification Date",
+                header: "Data de Verificação",
             },
             {
                 accessorKey: "permissions",
-                header: "Permissions",
+                header: "Permissões",
                 Cell: ({ cell }) => (
                     <div>
                         {cell.getValue().map((tag, index) => (
@@ -81,6 +77,7 @@ export default function Management({ status, users }) {
     const table = useMaterialReactTable({
         columns,
         data,
+        localization: MRT_Localization_PT_BR,
         enableRowSelection: true,
         enableColumnOrdering: true,
         enableGlobalFilter: true,
@@ -94,15 +91,6 @@ export default function Management({ status, users }) {
         },
         muiSelectAllCheckboxProps: { sx: { textAlign: "center" } },
         muiTableHeadCellProps: { sx: { textAlign: "center" } },
-        muiFilterTextFieldProps: {
-            sx: {
-                ":focus": {
-                    outline: "none",
-                    borderColor: "transparent",
-                    boxShadow: "none",
-                },
-            },
-        },
         muiTableBodyRowProps: ({ row }) => ({
             onClick: () => router.visit(route("users.show", row.original?.id)),
         }),
@@ -111,15 +99,15 @@ export default function Management({ status, users }) {
                 item
                 sx={{ display: "flex", flexDirection: "row", gap: "8px" }}
             >
-                <Button variant="contained" startIcon={<TableView />}>
-                    <CSVLink
-                        data={exportToCSV(table)}
-                        filename={"users.csv"}
-                        separator=";"
-                    >
+                <CSVLink
+                    data={exportToCSV(table)}
+                    filename={"users.csv"}
+                    separator=";"
+                >
+                    <Button variant="contained" startIcon={<TableView />}>
                         <Typography variant="subtitle2">CSV</Typography>
-                    </CSVLink>
-                </Button>
+                    </Button>
+                </CSVLink>
                 <Button
                     variant="contained"
                     onClick={handlePrint}
@@ -132,7 +120,7 @@ export default function Management({ status, users }) {
     });
 
     return (
-        <AuthenticatedLayout title="Users">
+        <AuthenticatedLayout title="Usuários">
             <Container maxWidth="xl" sx={{ py: 4 }}>
                 <Grid container justifyContent="center">
                     <div ref={componentRef} style={{ display: "grid" }}>
@@ -144,6 +132,11 @@ export default function Management({ status, users }) {
                 .Mui-TableHeadCell-Content {
                     display: flex;
                     justify-content: center;
+                }
+                .MuiInputBase-input:focus {
+                    outline: none;
+                    border-color: transparent;
+                    box-shadow: none;
                 }
             `}</style>
         </AuthenticatedLayout>

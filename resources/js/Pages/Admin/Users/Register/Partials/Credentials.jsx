@@ -25,7 +25,7 @@ export default function Credentials({ data, setData, errors, toggleForm, showCre
                     onChange={(e) => setData("name", e.target.value)}
                     required
                     variant="outlined"
-                    label="Name"
+                    label="Nome"
                     error={!!errors.name}
                 />
                 <InputError
@@ -68,7 +68,7 @@ export default function Credentials({ data, setData, errors, toggleForm, showCre
                     disabled={processing}
                     className="gap-2"
                 >
-                    Next
+                    Próximo
                     <East />
                 </DefaultButton>
             </div>

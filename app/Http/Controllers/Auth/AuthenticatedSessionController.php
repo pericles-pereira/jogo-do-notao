@@ -21,7 +21,6 @@ class AuthenticatedSessionController extends Controller
     {
         return Page::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
-            'status' => session('status'),
         ]);
     }
 

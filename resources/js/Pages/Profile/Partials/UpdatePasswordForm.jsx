@@ -47,7 +47,7 @@ export default function UpdatePasswordForm() {
             <div>
                 <TextField
                     id="current_password"
-                    label="Current Password"
+                    label="Senha Atual"
                     type="password"
                     variant="outlined"
                     fullWidth
@@ -67,7 +67,7 @@ export default function UpdatePasswordForm() {
             <div>
                 <TextField
                     id="password"
-                    label="New Password"
+                    label="Nova Senha"
                     type="password"
                     variant="outlined"
                     fullWidth
@@ -86,7 +86,7 @@ export default function UpdatePasswordForm() {
             <div>
                 <TextField
                     id="password_confirmation"
-                    label="Confirm Password"
+                    label="Confirmar Senha"
                     type="password"
                     variant="outlined"
                     fullWidth
@@ -105,11 +105,11 @@ export default function UpdatePasswordForm() {
             </div>
 
             <div className="flex items-center gap-4 mt-8">
-                <DefaultButton disabled={processing}>Save</DefaultButton>
+                <DefaultButton disabled={processing}>Salvar</DefaultButton>
 
                 <Collapse in={recentlySuccessful}>
                     <Typography variant="body2" className="text-gray-600">
-                        Saved.
+                        Salvo.
                     </Typography>
                 </Collapse>
             </div>

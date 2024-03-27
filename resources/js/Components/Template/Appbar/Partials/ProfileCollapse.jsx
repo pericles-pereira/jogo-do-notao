@@ -1,9 +1,21 @@
-import DefaultButton from "@/Components/Form/DefaultButton";
 import styled from "@emotion/styled";
 import { Link } from "@inertiajs/react";
-import { Avatar, Box, Collapse, IconButton, Paper, Typography } from "@mui/material";
+import {
+    Avatar,
+    Box,
+    Button,
+    Collapse,
+    IconButton,
+    Paper,
+    Typography,
+} from "@mui/material";
 
-export default function ProfileCollapse({ userName, profileImg, openProfile, setOpenProfile }) {
+export default function ProfileCollapse({
+    userName,
+    profileImg,
+    openProfile,
+    setOpenProfile,
+}) {
     return (
         <ProfileCollapseStyled
             in={openProfile}
@@ -30,7 +42,7 @@ export default function ProfileCollapse({ userName, profileImg, openProfile, set
                                 width: 120,
                                 height: 120,
                                 border: "1px solid",
-                                objectFit: "cover"
+                                objectFit: "cover",
                             }}
                         />
                     </IconButton>
@@ -42,22 +54,27 @@ export default function ProfileCollapse({ userName, profileImg, openProfile, set
                     className="py-3"
                     sx={{
                         display: "flex",
-                        gap: 5,
+                        gap: 10,
                         flexDirection: "row",
                         alignItems: "center",
-                        justifyContent: "flex-end",
+                        justifyContent: "end",
                         height: "100%",
                     }}
                 >
                     <Link href={route("profile.edit")}>
-                        <DefaultButton type="button" fullWidth>
+                        <Button type="button" variant="contained" fullWidth>
                             Perfil
-                        </DefaultButton>
+                        </Button>
                     </Link>
                     <Link href={route("logout")} method="post" as="div">
-                        <DefaultButton color="error" fullWidth>
+                        <Button
+                            type="button"
+                            variant="contained"
+                            color="inherit"
+                            fullWidth
+                        >
                             Sair
-                        </DefaultButton>
+                        </Button>
                     </Link>
                 </Box>
             </Paper>

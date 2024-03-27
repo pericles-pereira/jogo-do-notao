@@ -1,13 +1,13 @@
 import DefaultButton from "@/Components/Form/DefaultButton";
 import { useForm } from "@inertiajs/react";
 import { Box, Button, Collapse, Typography } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import defaultProfileImage from "@/assets/images/users/default_profile_image.png";
 import { toast } from "@/utils/common/Toast";
 
-export default function UpdateProfileImageForm({ user, status }) {
+export default function UpdateProfileImageForm({ user }) {
     const fileInputRef = useRef(null);
-    
+
     const [profileImage, setProfileImage] = useState(null);
     const [loadedFile, setLoadedFile] = useState(null);
     const [loadingFile, setLoadingFile] = useState(false);
@@ -48,17 +48,15 @@ export default function UpdateProfileImageForm({ user, status }) {
             return;
         }
 
-        patch(route("profile.image"), { preserveScroll: true });
+        patch(route("profile.image"), {
+            preserveScroll: true,
+            onSuccess: () => {
+                reset();
+                setProfileImage(null);
+                setLoadedFile(null);
+            },
+        });
     };
-
-    useEffect(() => {
-        if (status && status?.type) toast[status.type](status?.message);
-        if (status && status?.type === "success") {
-            reset();
-            setProfileImage(null);
-            setLoadedFile(null);
-        }
-    }, [status]);
 
     return (
         <Box component="form" onSubmit={submit} encType="multipart/form-data">
@@ -67,8 +65,9 @@ export default function UpdateProfileImageForm({ user, status }) {
                     src={
                         profileImage ?? user?.profile_img ?? defaultProfileImage
                     }
-                    alt="Profile"
-                    className="rounded-full w-96 h-96 object-cover"
+                    alt="Profile Picture"
+                    onClick={handleChooseFile}
+                    className="rounded-full w-96 h-96 object-cover cursor-pointer"
                     style={{ border: "2px solid rgba(0, 0, 0, 0.4)" }}
                 />
             </div>

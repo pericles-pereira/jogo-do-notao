@@ -5,11 +5,17 @@ import MenuItens from "@/Components/Template/Sidebar/MenuItens/MenuItens";
 import logo from "@/assets/images/logos/logo138x48.svg";
 import { useDrawer } from "@/Context/DrawerContext";
 import { Link } from "@inertiajs/react";
+import { useMemo, useState } from "react";
 
 export const drawerWidth = 250;
 
 export default function Sidebar({ permissions }) {
+    const [menuMemo, setMenuMemo] = useState();
     const { open, openByClick, defineOpenState } = useDrawer();
+
+    useMemo(() => {
+        setMenuMemo(menu(permissions));
+    }, []);
 
     return (
         <Drawer
@@ -31,7 +37,7 @@ export default function Sidebar({ permissions }) {
                 </Link>
             </div>
 
-            <MenuItens menu={menu(permissions)} />
+            <MenuItens menu={menuMemo} />
         </Drawer>
     );
 }

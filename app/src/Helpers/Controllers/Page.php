@@ -18,6 +18,10 @@ final class Page
 
         $props['permissions'] = $permissions;
 
+        if (!array_key_exists('status', $props)) {
+            $props['status'] = session('status');
+        }
+
         return Inertia::render($component, $props);
     }
 }

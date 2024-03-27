@@ -17,9 +17,7 @@ class PasswordResetLinkController extends Controller
      */
     public function create(): Response
     {
-        return Page::render('Auth/ForgotPassword', [
-            'status' => session('status'),
-        ]);
+        return Page::render('Auth/ForgotPassword');
     }
 
     /**

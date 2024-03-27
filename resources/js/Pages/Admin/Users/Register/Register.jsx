@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import { useForm } from "@inertiajs/react";
 import Credentials from "./Partials/Credentials";
-import Permissions from "../Shared/Permissions";
+import Permissions from "../shared/Permissions";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { toast } from "@/utils/common/Toast";
-import MediumLayoutFormFade from "@/Components/Form/MediumLayout/MediumLayoutFormFade";
+import FormFadeLayout from "@/Components/Form/Layout/FormFadeLayout";
 import allPermissions from "../config/allUserPermissions.json";
 
-export default function Register({ status }) {
-    const [newUserPermissions, setNewUserPermissions] = useState(allPermissions);
+export default function Register() {
+    const [newUserPermissions, setNewUserPermissions] =
+        useState(allPermissions);
 
     const { data, setData, post, processing, errors, reset } = useForm({
         name: "",
         email: "",
-        permissions: newUserPermissions
+        permissions: newUserPermissions,
     });
 
     const [showCredentials, setShowCredentials] = useState(true);
@@ -27,23 +27,7 @@ export default function Register({ status }) {
     }, []);
 
     useEffect(() => {
-        if (status && status?.type === "success") {
-            reset("name", "email");
-            Object.keys(newUserPermissions).map((permission) =>
-                setNewUserPermissions((prevPermissions) => ({
-                    ...prevPermissions,
-                    [permission]: false,
-                }))
-            );
-        }
-
-        if (status && status.type) {
-            toast[status.type](status?.message);
-        }
-    }, [status]);
-
-    useEffect(() => {
-        setData('permissions', newUserPermissions);
+        setData("permissions", newUserPermissions);
     }, [newUserPermissions]);
 
     useEffect(() => {
@@ -52,7 +36,19 @@ export default function Register({ status }) {
 
     const submit = (e) => {
         e.preventDefault();
-        post(route("register"));
+
+        post(route("register"), {
+            preserveScroll: true,
+            onSuccess: () => {
+                reset("name", "email");
+                Object.keys(newUserPermissions).map((permission) =>
+                    setNewUserPermissions((prevPermissions) => ({
+                        ...prevPermissions,
+                        [permission]: false,
+                    }))
+                );
+            },
+        });
     };
 
     const components = [
@@ -67,8 +63,9 @@ export default function Register({ status }) {
             />,
             {
                 id: 1,
-                title: "Register",
-                subtitle: "Register new system users by providing name and email.",
+                title: "Registrar Usuário",
+                subtitle:
+                    "Cadastre novos usuários do sistema fornecendo nome e email.",
                 fade: showCredentials,
             },
         ],
@@ -80,16 +77,16 @@ export default function Register({ status }) {
             />,
             {
                 id: 2,
-                title: "Permissions",
-                subtitle: "Set this user's permissions on the system.",
+                title: "Permissões",
+                subtitle: "Defina as permissões deste usuário no sistema.",
                 fade: !showCredentials,
             },
         ],
     ];
 
     return (
-        <AuthenticatedLayout title="Register">
-            <MediumLayoutFormFade components={components} submit={submit} />
+        <AuthenticatedLayout title="Registrar Usuário">
+            <FormFadeLayout components={components} submit={submit} />
         </AuthenticatedLayout>
     );
-};
+}

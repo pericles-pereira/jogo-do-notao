@@ -7,32 +7,22 @@ use App\Http\Controllers\Controller;
 use Source\Helpers\Controllers\Page;
 use App\Models\Users\User;
 use App\Notifications\VerifyEmail;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\DB;
 use Inertia\Response;
+use Source\Helpers\Controllers\Redirect;
 use Source\Helpers\Models\Create;
 use Source\Helpers\Utils\Common\Str;
 
 class RegisteredUserController extends Controller
 {
-    /**
-     * Display the registration view.
-     */
     public function create(): Response
     {
-        return Page::render('Admin/Users/Register/Register', [
-            'status' => session('status'),
-        ]);
+        return Page::render('Admin/Users/Register/Register');
     }
 
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
@@ -50,15 +40,17 @@ class RegisteredUserController extends Controller
         ];
 
         try {
-            $user = Create::user($credentials, Str::camelToSnake($request->permissions, 'associative'));
+            DB::transaction(function () use ($credentials, $request, $password) {
+                $user = Create::user($credentials, Str::camelToSnake($request->permissions));
+
+                VerifyEmail::$password = $password;
+
+                event(new Registered($user));
+            });
         } catch (\Throwable $th) {
-            return back()->with('status', Toast::error('Erro no servidor! Usuário não cadastrado.'));
+            return Redirect::back($th, 'Erro no servidor! Usuário não cadastrado.');
         }
 
-        VerifyEmail::$password = $password;
-
-        event(new Registered($user));
-
-        return back()->with('status', Toast::success("Usuário cadastrado."));;
+        return Redirect::backSuccess("Usuário cadastrado.");
     }
 }

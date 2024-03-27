@@ -1,6 +1,6 @@
 import { Container, Grid, Paper, Typography } from "@mui/material";
 
-export default function MediumLayout({ components }) {
+export default function FormLayout({ components, size = "medium" }) {
     return (
         <Container
             maxWidth="xl"

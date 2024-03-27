@@ -13,7 +13,7 @@ export default function MenuItem(item, openStates, handleToggle) {
     const open = openStates[item.id] || false;
 
     React.useEffect(() => {
-        const hasChildInPage = utils.checkDescendantsForPage(item, page.url);
+        const hasChildInPage = utils.checkDescendantsForPage(item, page.props?.ziggy?.location);
 
         if (hasChildInPage) {
             handleToggle(item.id, true);
@@ -23,7 +23,7 @@ export default function MenuItem(item, openStates, handleToggle) {
     const stylesListItem = {
         backgroundColor: open ? styles.openItemOpacity : "inherit",
         color: styles.fontColor,
-        ...(item.url && page.url === item.url && { ...styles.selectedItemStyles }),
+        ...(item.url && page.props?.ziggy?.location === item.url && { ...styles.selectedItemStyles }),
         ...styles.hoverOpacity,
     };
 

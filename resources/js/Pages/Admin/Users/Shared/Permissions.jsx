@@ -8,6 +8,7 @@ export default function Permissions({
     toggleForm = null,
     permissions,
     setPermissions,
+    submit = null
 }) {
     const handleCheckboxChange = (permission) => {
         setPermissions((prevPermissions) => ({
@@ -56,7 +57,7 @@ export default function Permissions({
                             className="gap-2"
                         >
                             <West />
-                            Previous
+                            Anterior
                         </DefaultButton>
 
                         <DefaultButton
@@ -64,12 +65,12 @@ export default function Permissions({
                             onClick={toggleForm}
                             className="gap-2"
                         >
-                            Register
+                            Registrar
                             <Done />
                         </DefaultButton>
                     </>
                 ) : (
-                    <DefaultButton size="medium">
+                    <DefaultButton size="medium" onClick={submit}>
                         <Done sx={{ marginBottom: "2px" }} />
                         <span style={{ marginLeft: "4px" }}>Salvar</span>
                     </DefaultButton>

@@ -6,13 +6,20 @@ import { commonStyles as styles } from "./Shared/commonStyles";
 import { utilsFunctions as utils } from "./Shared/utilsFunctions";
 
 // Gera todos os itens de submenus, de forma recursiva
-export default function SubmenuItem(fatherId, subItem, openStates, handleToggle) {
+export default function SubmenuItem(
+    fatherId,
+    subItem,
+    openStates,
+    handleToggle
+) {
     const page = usePage();
     const open = openStates[subItem.id] || false;
 
     React.useEffect(() => {
-        const hasChildInPage = utils.checkDescendantsForPage(subItem, page.url);
-
+        const hasChildInPage = utils.checkDescendantsForPage(
+            subItem,
+            page.props?.ziggy?.location
+        );
         if (hasChildInPage) {
             handleToggle(subItem.id, true);
             handleToggle(fatherId, true);
@@ -32,7 +39,9 @@ export default function SubmenuItem(fatherId, subItem, openStates, handleToggle)
                 : "inherit"
             : styles.subItemOpenOpacity,
         ...(subItem.url &&
-            page.url === subItem.url && { ...styles.selectedItemStyles }),
+            page.props?.ziggy?.location === subItem.url && {
+                ...styles.selectedItemStyles,
+            }),
         ...styles.hoverOpacity,
     };
 
@@ -65,7 +74,12 @@ export default function SubmenuItem(fatherId, subItem, openStates, handleToggle)
             {subItem.submenu && (
                 <Collapse in={open} timeout="auto" unmountOnExit>
                     {subItem.submenu.map((nestedSubItem) =>
-                        SubmenuItem( subItem.id, nestedSubItem, openStates, handleToggle)
+                        SubmenuItem(
+                            subItem.id,
+                            nestedSubItem,
+                            openStates,
+                            handleToggle
+                        )
                     )}
                 </Collapse>
             )}

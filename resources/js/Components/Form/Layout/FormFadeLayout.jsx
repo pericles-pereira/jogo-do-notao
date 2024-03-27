@@ -1,6 +1,6 @@
 import { Container, Fade, Grid, Paper, Typography } from "@mui/material";
 
-export default function MediumLayoutFormFade({ components, submit }) {
+export default function FormFadeLayout({ components, submit, size = "medium" }) {
     return (
         <Container
             maxWidth="xl"
@@ -18,7 +18,7 @@ export default function MediumLayoutFormFade({ components, submit }) {
                 spacing={6}
                 sx={{ alignItems: "center", justifyContent: "center" }}
             >
-                {components.map(([component, options]) => (
+                {components && components.map(([component, options]) => (
                     <Fade in={options.fade} translate="yes" timeout={800} key={options?.id ?? options?.title}>
                         <Grid
                             item

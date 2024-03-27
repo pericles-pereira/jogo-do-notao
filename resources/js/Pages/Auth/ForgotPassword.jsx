@@ -17,10 +17,10 @@ export default function ForgotPassword({ status }) {
     };
 
     return (
-        <GuestLayout title="Forgot Password" >
+        <GuestLayout title="Esqueci Minha Senha" >
             <div className="mb-4 text-sm text-gray-600">
-                <Typography>Forgot your password? No problem. Just let us know your email address and we will email you a password
-                reset link that will allow you to choose a new one.</Typography>
+                <Typography>Esqueceu sua senha? Sem problemas. Basta nos informar seu endereço de e-mail e enviaremos um link de redefinição de senha
+                que permitirá que você escolha uma nova senha.</Typography>
             </div>
 
             {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
@@ -40,7 +40,7 @@ export default function ForgotPassword({ status }) {
 
                 <div className="flex items-center justify-end mt-4">
                     <DefaultButton size="medium" className="ms-4" disabled={processing}>
-                        <Typography>Email Password Reset Link</Typography>
+                        <Typography>Link de redefinição de senha</Typography>
                     </DefaultButton>
                 </div>
             </form>

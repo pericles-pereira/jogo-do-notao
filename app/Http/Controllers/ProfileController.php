@@ -10,29 +10,19 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Date;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Response;
-use Source\Helpers\Utils\Common\Toast;
+use Source\Helpers\Controllers\Redirect;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
     public function edit(Request $request): Response
     {
         return Page::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
-            'status' => session('status'),
         ]);
     }
 
-    /**
-     * Update the user's profile information.
-     */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $request->user()->fill($request->validated());
@@ -43,7 +33,7 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit');
+        return Redirect::route('profile.edit', "Dados do perfil atualizados.");
     }
 
     public function updateProfileImage(FormRequest $request)
@@ -54,12 +44,16 @@ class ProfileController extends Controller
 
         $mimeType = finfo_buffer(finfo_open(FILEINFO_MIME_TYPE), $imageData);
 
-        if (strpos($mimeType, 'image/') !== 0) {
-            return back()->with('status', Toast::error('O arquivo fornecido não é uma imagem.'));
-        }
+        try {
+            if (strpos($mimeType, 'image/') !== 0) {
+                throw new \InvalidArgumentException('O arquivo fornecido não é uma imagem.');
+            }
 
-        if (strlen($imageData) > (2 * 1024 * 1024)) {
-            return back()->with('status', Toast::error('A imagem fornecida é muito grande (maior que 2 MB).'));
+            if (strlen($imageData) > (2 * 1024 * 1024)) {
+                throw new \InvalidArgumentException('A imagem fornecida é muito grande (maior que 2 MB).');
+            }
+        } catch (\InvalidArgumentException $e) {
+            return Redirect::back($e, $e->getMessage());
         }
 
         $fileName = '/public/images/users/' . 'user-id--' . Auth::user()->id . '_profile_image_' . date_format(new DateTimeImmutable(), 'd-m-Y_H.i.s') . '_img-id--' . uniqid() . '.' . explode('/', $mimeType)[1];
@@ -75,27 +69,6 @@ class ProfileController extends Controller
         $user->profile_img = $databaseFileName;
         $user->save();
 
-        return Redirect::route('profile.edit')->with('status', Toast::success('Imagem de perfil atualizada.'));
-    }
-
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'password' => ['required', 'current_password'],
-        ]);
-
-        $user = $request->user();
-
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        return Redirect::route('profile.edit', 'Imagem de perfil atualizada.');
     }
 }

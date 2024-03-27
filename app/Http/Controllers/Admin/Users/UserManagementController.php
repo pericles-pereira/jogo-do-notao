@@ -6,31 +6,29 @@ use App\Http\Controllers\Controller;
 use App\Models\Users\User;
 use DateTimeImmutable;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Redirect;
 use Inertia\Response;
 use Source\Helpers\Controllers\Page;
+use Source\Helpers\Controllers\Redirect;
 use Source\Helpers\Utils\Common\Str;
-use Source\Helpers\Utils\Common\Toast;
 
 class UserManagementController extends Controller
 {
-    public function create(): Response
+    public function index(): Response
     {
         $users = [];
         try {
             foreach (User::all() as $user) {
-                $userArray = Str::snakeToCamel($user->toArray(), 'associative');
-                $userArray['emailVerifiedAt'] = $userArray['emailVerifiedAt'] === null ? null : date_format(new DateTimeImmutable($userArray['emailVerifiedAt']), 'd/m/Y\ \a\t\ H:i');
-                $userArray['createdAt'] = date_format(new DateTimeImmutable($userArray['createdAt']), 'd/m/Y\ \a\t\ H:i');
-                $userArray['permissions'] = Str::snakeToCamel(array_diff_key($user->permission()->get()->toArray()[0], ['id' => null, 'created_at' => null, 'updated_at' => null, 'user_id' => null]), 'associative');
+                $userArray = Str::snakeToCamel($user->toArray());
+                $userArray['emailVerifiedAt'] = $userArray['emailVerifiedAt'] === null ? null : date_format(new DateTimeImmutable($userArray['emailVerifiedAt']), 'd/m/Y\ \à\s\ H:i');
+                $userArray['createdAt'] = date_format(new DateTimeImmutable($userArray['createdAt']), 'd/m/Y\ \à\s\ H:i');
+                $userArray['permissions'] = Str::snakeToCamel(array_diff_key($user->permission()->get()->toArray()[0], ['id' => null, 'created_at' => null, 'updated_at' => null, 'user_id' => null]));
                 $users[] = $userArray;
             }
         } catch (\Throwable $th) {
-            return Redirect::route('users')->with('status', Toast::error('Erro no servidor! Usuário não encontrado.'));
+            return Redirect::back($th, 'Erro no servidor! Usuário não encontrado.');
         }
 
         return Page::render('Admin/Users/Management/Management', [
-            'status' => session('status'),
             'users' => $users,
         ]);
     }
@@ -39,21 +37,24 @@ class UserManagementController extends Controller
     {
         $user = User::whereId($id)->get();
 
-        if (count($user) === 0) {
-            return Redirect::route('users')->with('status', Toast::error('Usuário inexistente! Informe um ID válido como parâmetro.'));
+        try {
+            if (count($user) === 0) {
+                throw new \InvalidArgumentException('Usuário inexistente! Informe um ID válido como parâmetro.');
+            }
+        } catch (\InvalidArgumentException $e) {
+            return Redirect::back($e, $e->getMessage());
         }
 
         try {
-            $userArray = Str::snakeToCamel($user->toArray()[0], 'associative');
-            $userArray['emailVerifiedAt'] = $userArray['emailVerifiedAt'] === null ? null : date_format(new DateTimeImmutable($userArray['emailVerifiedAt']), 'd/m/Y\ \a\t\ H:i');
-            $userArray['createdAt'] = date_format(new DateTimeImmutable($userArray['createdAt']), 'd/m/Y\ \a\t\ H:i');
-            $userArray['permissions'] = Str::snakeToCamel(array_diff_key($user->all()[0]->permission()->get()->toArray()[0], ['id' => null, 'created_at' => null, 'updated_at' => null, 'user_id' => null]), 'associative');
+            $userArray = Str::snakeToCamel($user->toArray()[0]);
+            $userArray['emailVerifiedAt'] = $userArray['emailVerifiedAt'] === null ? null : date_format(new DateTimeImmutable($userArray['emailVerifiedAt']), 'd/m/Y\ \à\s\ H:i');
+            $userArray['createdAt'] = date_format(new DateTimeImmutable($userArray['createdAt']), 'd/m/Y\ \à\s\ H:i');
+            $userArray['permissions'] = Str::snakeToCamel(array_diff_key($user->all()[0]->permission()->get()->toArray()[0], ['id' => null, 'created_at' => null, 'updated_at' => null, 'user_id' => null]));
         } catch (\Throwable $th) {
-            return Redirect::route('users')->with('status', Toast::error('Erro no servidor! Usuário não encontrado.' . $th->getMessage()));
+            return Redirect::back($th, 'Erro no servidor! Usuário não encontrado.');
         }
 
-        return Page::render('Admin/Users/UserConfig/UserConfig', [
-            'status' => session('status'),
+        return Page::render('Admin/Users/Management/User/User', [
             'user' => $userArray,
         ]);
     }

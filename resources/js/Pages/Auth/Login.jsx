@@ -28,8 +28,8 @@ export default function Login({ status, canResetPassword }) {
     };
 
     return (
-        <GuestLayout title='Log in'>
-            {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
+        <GuestLayout title='Login'>
+            {status && !status.message && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
 
             <form onSubmit={submit}>
                 <div>
@@ -50,7 +50,7 @@ export default function Login({ status, canResetPassword }) {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
+                    <InputLabel htmlFor="password" value="Senha" />
 
                     <TextInput
                         id="password"
@@ -73,7 +73,7 @@ export default function Login({ status, canResetPassword }) {
                             onChange={(e) => setData('remember', e.target.checked)}
                             className='mr-1'
                         />
-                        <Typography className="ms-2 text-sm text-gray-600">Remember me</Typography>
+                        <Typography className="ms-2 text-sm text-gray-600">Lembrar-me</Typography>
                     </label>
                 </div>
 
@@ -83,12 +83,12 @@ export default function Login({ status, canResetPassword }) {
                             href={route('password.request')}
                             className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-3"
                         >
-                            <Typography>Forgot your password?</Typography>
+                            <Typography>Esqueceu sua senha?</Typography>
                         </Link>
                     )}
 
                     <DefaultButton size="medium" className="ms-4" disabled={processing}>
-                        <Typography>Log in</Typography>
+                        <Typography>Entrar</Typography>
                     </DefaultButton>
                 </div>
             </form>

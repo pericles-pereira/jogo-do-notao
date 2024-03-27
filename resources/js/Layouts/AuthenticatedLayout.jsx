@@ -5,14 +5,16 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import Copyright from "@/Components/Template/Footer/Copyright";
-import AppBar from "@/Components/Template/AppBar/Appbar";
 import { useLoader } from "@/Context/LoaderContext";
 import { Loaders } from "@/Components/Template/StandbyLoaders/Loaders";
 import { Head, usePage } from "@inertiajs/react";
-import { ToastComponent } from "@/utils/common/Toast";
+import { toast, ToastComponent } from "@/utils/common/Toast";
 import "react-toastify/dist/ReactToastify.css";
 import Sidebar from "@/Components/Template/Sidebar/Sidebar";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
+import Appbar from "@/Components/Template/Appbar/Appbar";
 
 const defaultTheme = createTheme({
     palette: {
@@ -20,51 +22,61 @@ const defaultTheme = createTheme({
     },
 });
 
-export default function AuthenticatedLayout({ children, title = '' }) {
+export default function AuthenticatedLayout({ children, title = "" }) {
     const pageProps = usePage().props;
 
     const user = pageProps?.auth?.user;
     const permissions = pageProps?.permissions;
+    const status = pageProps?.status;
+
+    React.useEffect(() => {
+        if (status && status.type) {
+            if (["success", "error", "info", "warn"].includes(status.type)) {
+                toast[status.type](status?.message ?? "");
+            }
+        }
+    }, [status]);
 
     const { loading } = useLoader();
 
     return (
         <ThemeProvider theme={defaultTheme}>
-            <Box sx={{ display: "flex" }}>
-                <Head title={title} />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <Box sx={{ display: "flex" }}>
+                    <Head title={title} />
 
-                <CssBaseline />
+                    <CssBaseline />
 
-                <AppBar user={user} />
+                    <Appbar user={user} title={title} />
 
-                <Loaders.LoaderOverlay />
+                    <Loaders.LoaderOverlay />
 
-                <ToastComponent />
+                    <ToastComponent />
 
-                <Sidebar permissions={permissions} />
+                    <Sidebar permissions={permissions} />
 
-                <Box
-                    component="main"
-                    sx={{
-                        backgroundColor: (theme) =>
-                            theme.palette.mode === "light"
-                                ? theme.palette.grey[100]
-                                : theme.palette.grey[900],
-                        flexGrow: 1,
-                        minHeight: "100vh",
-                    }}
-                >
-                    <Toolbar />
-                    <React.Suspense fallback={<Loaders.SuspenseLoader />}>
-                        {!loading && (
-                            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-                                <Grid container>{children}</Grid>
-                                <Copyright sx={{ pt: 4 }} />
-                            </Container>
-                        )}
-                    </React.Suspense>
+                    <Box
+                        component="main"
+                        sx={{
+                            backgroundColor: (theme) =>
+                                theme.palette.mode === "light"
+                                    ? theme.palette.grey[100]
+                                    : theme.palette.grey[900],
+                            flexGrow: 1,
+                            minHeight: "100vh",
+                        }}
+                    >
+                        <Toolbar />
+                        <React.Suspense fallback={<Loaders.SuspenseLoader />}>
+                            {!loading && (
+                                <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                                    <Grid container>{children}</Grid>
+                                </Container>
+                            )}
+                        </React.Suspense>
+                    </Box>
                 </Box>
-            </Box>
+            </LocalizationProvider>
         </ThemeProvider>
     );
 }

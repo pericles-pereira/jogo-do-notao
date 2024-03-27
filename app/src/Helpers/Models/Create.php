@@ -4,6 +4,7 @@ namespace Source\Helpers\Models;
 
 use App\Models\Users\Permission;
 use App\Models\Users\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -33,7 +34,7 @@ final class Create
         }
 
         $user = DB::transaction(function () use ($credentials, $permissions): User {
-            $user = User::create([
+            $user = Auth::user()->enterprise->users()->create([
                 'name' => $credentials['name'],
                 'email' => $credentials['email'],
                 'password' => Hash::make($credentials['password']),
@@ -47,4 +48,6 @@ final class Create
 
         return $user;
     }
+
+    
 }

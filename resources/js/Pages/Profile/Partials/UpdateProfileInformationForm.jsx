@@ -1,9 +1,10 @@
 import * as React from "react";
-import { LinearProgress, Paper, TextField, Typography } from "@mui/material";
-import { Link, useForm, usePage } from "@inertiajs/react";
+import { LinearProgress, TextField, Typography } from "@mui/material";
+import { useForm, usePage } from "@inertiajs/react";
 import { Transition } from "@headlessui/react";
 import InputError from "@/Components/Form/InputError";
 import DefaultButton from "@/Components/Form/DefaultButton";
+import { toast } from "@/utils/common/Toast";
 
 export default function UpdateProfileInformationForm({
     mustVerifyEmail,
@@ -16,16 +17,29 @@ export default function UpdateProfileInformationForm({
             email: user.email,
         });
 
-    const [sendingEmailVerification, setSendingEmailVerification] = React.useState(false);
+    const { post } = useForm([]);
+
+    const [sendingEmailVerification, setSendingEmailVerification] =
+        React.useState(false);
 
     React.useEffect(() => {
-        if (status === "verification-link-sent")
+        if (status === "verification-link-sent") {
+            toast.success(
+                "Um novo link de verificação foi enviado para o seu endereço de email."
+            );
             setSendingEmailVerification(false);
+        }
     }, [status]);
 
     const submit = (e) => {
         e.preventDefault();
-        patch(route("profile.update"), {preserveScroll: true});
+        patch(route("profile.update"), { preserveScroll: true });
+    };
+
+    const sendEmailVerificationNotification = (e) => {
+        e.preventDefault();
+        setSendingEmailVerification(true);
+        post(route("verification.send"), { preserveScroll: true });
     };
 
     return (
@@ -40,7 +54,7 @@ export default function UpdateProfileInformationForm({
                     error={!!errors.name}
                     required
                     variant="outlined"
-                    label="Name"
+                    label="Nome"
                 />
                 <InputError
                     message={errors.name}
@@ -72,18 +86,18 @@ export default function UpdateProfileInformationForm({
             {mustVerifyEmail && user.email_verified_at === null && (
                 <div style={{ marginTop: "8px" }}>
                     <Typography variant="body1" className="text-gray-950">
-                        Your email address is unverified.
-                        <Link
-                            href={route("verification.send")}
-                            method="post"
-                            as="button"
-                            onClick={() => setSendingEmailVerification(true)}
+                        Seu endereço de e-mail não foi verificado.
+                        <span
+                            onClick={sendEmailVerificationNotification}
                             disabled={sendingEmailVerification}
                             className="underline ml-1 text-gray-700 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                            style={{ textDecorationColor: "steelblue" }}
+                            style={{
+                                textDecorationColor: "steelblue",
+                                cursor: "pointer",
+                            }}
                         >
-                            Click here to re-send the verification email.
-                        </Link>
+                            Clique aqui para reenviar o e-mail de verificação.
+                        </span>
                     </Typography>
                     {sendingEmailVerification && (
                         <div className="flex items-center justify-center p-2">
@@ -97,15 +111,15 @@ export default function UpdateProfileInformationForm({
                                 variant="body1"
                                 className="mt-2 font-medium text-green-600"
                             >
-                                A new verification link has been sent to your
-                                email address.
+                                Um novo link de verificação foi enviado para o
+                                seu endereço de email.
                             </Typography>
                         )}
                 </div>
             )}
 
             <div className="flex items-center gap-4">
-                <DefaultButton disabled={processing}>Save</DefaultButton>
+                <DefaultButton disabled={processing}>Salvar</DefaultButton>
 
                 <Transition
                     show={recentlySuccessful}
@@ -115,7 +129,7 @@ export default function UpdateProfileInformationForm({
                     leaveTo="opacity-0"
                 >
                     <Typography variant="body2" className="text-gray-600">
-                        Saved.
+                        Salvo.
                     </Typography>
                 </Transition>
             </div>

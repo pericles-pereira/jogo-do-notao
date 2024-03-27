@@ -22,7 +22,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::define('teste', fn (User $user) => true);
-        Gate::define('teste2', fn (User $user) => false);
+        Gate::define('unregisteredCompany', fn (User $user) => $user->enterprise->cnpj === null);
+        Gate::define('registeredCompany', fn (User $user) => $user->enterprise->cnpj !== null);
     }
 }

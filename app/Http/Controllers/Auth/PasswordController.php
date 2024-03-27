@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Source\Helpers\Utils\Common\Toast;
 
 class PasswordController extends Controller
 {
@@ -24,6 +25,6 @@ class PasswordController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        return back();
+        return back()->with('status', Toast::success('Senha atualizada.'));
     }
 }

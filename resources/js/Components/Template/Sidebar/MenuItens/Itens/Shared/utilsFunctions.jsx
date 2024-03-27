@@ -9,7 +9,8 @@ export const utilsFunctions = {
 
     // Gera o ícone com a estilização correta, caso exista icone.
     getIcon: (item) => {
-        if (item.icon) return item.icon({ fontSize: "35px", marginRight: "13px" });
+        if (item.icon)
+            return item.icon({ fontSize: "35px", marginRight: "13px" });
     },
 
     // Função para verificar se algum filho tem a url da página atual
@@ -21,7 +22,11 @@ export const utilsFunctions = {
                 }
 
                 if (subItem.submenu) {
-                    const hasDescendantInPage = checkDescendantsForPage(subItem,targetPageUrl);
+                    const hasDescendantInPage =
+                        utilsFunctions.checkDescendantsForPage(
+                            subItem,
+                            targetPageUrl
+                        );
 
                     if (hasDescendantInPage) {
                         return true;

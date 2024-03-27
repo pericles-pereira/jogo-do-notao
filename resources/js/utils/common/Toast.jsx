@@ -28,12 +28,11 @@ export function ToastComponent() {
     return (
         <ToastContainer
             position="bottom-right"
-            autoClose={5000}
+            autoClose={3000}
             hideProgressBar={false}
             newestOnTop
             rtl={false}
             pauseOnFocusLoss
-            draggable
             pauseOnHover
             theme="light"
             transition={Bounce}
