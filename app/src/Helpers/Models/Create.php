@@ -2,6 +2,7 @@
 
 namespace Source\Helpers\Models;
 
+use App\Models\Groups\Group;
 use App\Models\Users\Permission;
 use App\Models\Users\User;
 use Illuminate\Support\Facades\Auth;
@@ -34,11 +35,17 @@ final class Create
         }
 
         $user = DB::transaction(function () use ($credentials, $permissions): User {
-            $user = User::create([
+            $userData = [
                 'name' => $credentials['name'],
                 'email' => $credentials['email'],
                 'password' => Hash::make($credentials['password']),
-            ]);
+            ];
+
+            if ($credentials['newGroup']) {
+                $user = Group::create(['name' => $credentials['groupName']])->user()->create($userData);
+            } else {
+                $user = Auth::user()->group->user()->create($userData);
+            }
 
             $user->permission()->create($permissions);
 
@@ -48,6 +55,4 @@ final class Create
 
         return $user;
     }
-
-
 }

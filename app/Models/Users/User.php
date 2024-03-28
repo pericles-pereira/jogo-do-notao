@@ -2,7 +2,7 @@
 
 namespace App\Models\Users;
 
-use App\Models\Enterprise\Enterprise;
+use App\Models\Groups\Group;
 use Source\Traits\Contracts\Auth\MustVerifyEmail as AuthMustVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -47,7 +47,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-    
+
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(Group::class);
+    }
+
     public function permission(): HasOne
     {
         return $this->hasOne(Permission::class);

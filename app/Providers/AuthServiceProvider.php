@@ -22,5 +22,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::define('master', fn (User $user) => $user->permission->master);
     }
 }

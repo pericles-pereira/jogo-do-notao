@@ -11,9 +11,9 @@ import { Head, usePage } from "@inertiajs/react";
 import { toast, ToastComponent } from "@/utils/common/Toast";
 import "react-toastify/dist/ReactToastify.css";
 import Sidebar from "@/Components/Template/Sidebar/Sidebar";
-// import { LocalizationProvider } from "@mui/x-date-pickers";
-// import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-// import dayjs from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 import Appbar from "@/Components/Template/Appbar/Appbar";
 
 const defaultTheme = createTheme({
@@ -41,7 +41,7 @@ export default function AuthenticatedLayout({ children, title = "" }) {
 
     return (
         <ThemeProvider theme={defaultTheme}>
-            {/* <LocalizationProvider dateAdapter={AdapterDayjs}> */}
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Box sx={{ display: "flex" }}>
                     <Head title={title} />
 
@@ -76,7 +76,7 @@ export default function AuthenticatedLayout({ children, title = "" }) {
                         </React.Suspense>
                     </Box>
                 </Box>
-            {/* </LocalizationProvider> */}
+            </LocalizationProvider>
         </ThemeProvider>
     );
 }

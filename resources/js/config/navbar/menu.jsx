@@ -2,6 +2,7 @@ import {
     AdminPanelSettings,
     DashboardOutlined,
     List,
+    ListAlt,
     ManageAccountsOutlined,
     PersonAddAlt1Outlined,
 } from "@mui/icons-material";
@@ -16,12 +17,20 @@ const menu = [
     },
     {
         text: "Questões",
-        url: route("questions"),
-        icon: IconWrapper(List),
+        icon: IconWrapper(ListAlt),
+        submenu: [
+            {
+                text: "Gerenciar Questões",
+                url: route("questions"),
+                icon: IconWrapper(List),
+            },
+        ],
     },
+
     {
         text: "Usuários",
         icon: IconWrapper(AdminPanelSettings),
+        can: "master",
         submenu: [
             {
                 text: "Registrar",

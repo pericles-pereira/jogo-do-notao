@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Groups\Group;
 use App\Models\Users\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -17,11 +18,12 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\Users\User::factory(10)->create();
 
-        User::create([
+        Group::create(['name' => 'Grupo 1'])->user()->create([
             'name' => 'pericles',
             'email' => 'pericles@example.com',
             'password' => Hash::make('senha123'),
             'email_verified_at' => date(time()),
-        ])->permission()->create();
+            'group_admin' => true
+        ])->permission()->create(['master' => true]);
     }
 }

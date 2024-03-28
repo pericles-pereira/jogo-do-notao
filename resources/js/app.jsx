@@ -8,6 +8,8 @@ import "@fontsource/roboto/700.css";
 import { createRoot } from "react-dom/client";
 import { createInertiaApp } from "@inertiajs/react";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
+import { LoaderProvider } from "./Context/LoaderContext";
+import { DrawerProvider } from "./Context/DrawerContext";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
@@ -21,7 +23,13 @@ createInertiaApp({
     setup({ el, App, props }) {
         const root = createRoot(el);
 
-        root.render(<App {...props} />);
+        root.render(
+            <LoaderProvider>
+                <DrawerProvider>
+                    <App {...props} />
+                </DrawerProvider>
+            </LoaderProvider>
+        );
     },
     progress: {
         color: "rgb(52, 58, 64)",

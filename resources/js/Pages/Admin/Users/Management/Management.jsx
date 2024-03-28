@@ -46,12 +46,12 @@ export default function Management({ users }) {
                 header: "Email",
             },
             {
-                accessorKey: "createdAt",
-                header: "Data de Criação",
+                accessorKey: "group",
+                header: "Grupo",
             },
             {
-                accessorKey: "emailVerifiedAt",
-                header: "Data de Verificação",
+                accessorKey: "createdAt",
+                header: "Data de Criação",
             },
             {
                 accessorKey: "permissions",

@@ -22,6 +22,7 @@ class UserManagementController extends Controller
                 $userArray['emailVerifiedAt'] = $userArray['emailVerifiedAt'] === null ? null : date_format(new DateTimeImmutable($userArray['emailVerifiedAt']), 'd/m/Y\ \à\s\ H:i');
                 $userArray['createdAt'] = date_format(new DateTimeImmutable($userArray['createdAt']), 'd/m/Y\ \à\s\ H:i');
                 $userArray['permissions'] = Str::snakeToCamel(array_diff_key($user->permission()->get()->toArray()[0], ['id' => null, 'created_at' => null, 'updated_at' => null, 'user_id' => null]));
+                $userArray['group'] = $user->group->name;
                 $users[] = $userArray;
             }
         } catch (\Throwable $th) {

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin\Users;
 
-use Source\Helpers\Utils\Common\Toast;
 use App\Http\Controllers\Controller;
+use App\Models\Groups\Group;
 use Source\Helpers\Controllers\Page;
 use App\Models\Users\User;
 use App\Notifications\VerifyEmail;
@@ -28,15 +28,28 @@ class RegisteredUserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
-            'permissions' => 'required|array',
+            'permissions' => 'array',
+            'newGroup' => 'required|boolean',
         ]);
 
         $password = Str::random(12);
+
+        if ($request->newGroup) {
+            try {
+                if (strlen($request?->groupName) < 5) {
+                    throw new \InvalidArgumentException();
+                }
+            } catch (\InvalidArgumentException $e) {
+                return Redirect::back($e, 'Nome do grupo muito pequeno, informe ao menos 5 caracteres.');
+            }
+        }
 
         $credentials = [
             'name' => $request->name,
             'email' => $request->email,
             'password' => $password,
+            'newGroup' => $request->newGroup,
+            'groupName' => $request?->groupName
         ];
 
         try {
