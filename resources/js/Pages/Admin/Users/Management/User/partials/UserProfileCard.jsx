@@ -84,6 +84,9 @@ export default function UserProfileCard({ user }) {
                     )}
                 </Typography>
                 <Typography>
+                    <strong>Grupo:</strong> {user.group}
+                </Typography>
+                <Typography>
                     <strong>Data de Criação:</strong> {user.createdAt}
                 </Typography>
                 <Typography>

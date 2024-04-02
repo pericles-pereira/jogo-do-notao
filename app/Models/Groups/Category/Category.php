@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Groups\Category;
 
+use App\Models\Groups\Category\Question\Question;
 use App\Models\Groups\Group;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

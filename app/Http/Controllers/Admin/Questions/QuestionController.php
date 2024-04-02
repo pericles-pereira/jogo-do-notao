@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Questions;
 
 use App\Http\Controllers\Controller;
+use App\Models\Groups\Category\Category;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,12 +19,16 @@ class QuestionController extends Controller
     public function index(Request $request): Response | RedirectResponse
     {
         try {
-            // $paymentMethods = Search::allDataInCamel($request->user()->enterprise->paymentMethod);
+            $questions = Search::allDataInCamel($request->user()->group->question);
+            foreach ($questions as $key => $value) {
+                $questions[$key]['category'] = Category::find($value['categoryId'])->name;
+            }
+            $categories = Search::allDataInCamel($request->user()->group->category);
         } catch (\Throwable $th) {
             return Redirect::back($th, 'Erro no servidor! Falha ao carregar os dados da página.');
         }
 
-        return Page::render('Admin/Questions/Questions');
+        return Page::render('Admin/Questions/Manage/Questions', ['questions' => $questions, 'categories' => $categories]);
     }
 
     public function store(FormRequest $request): RedirectResponse
@@ -32,12 +37,13 @@ class QuestionController extends Controller
         $request->validate($validation);
 
         try {
-            $request->user()->enterprise->paymentMethod()->create(Str::camelToSnake($request->only(array_keys($validation))));
+            $request->user()->group->question()->create(Str::camelToSnake($request->only(array_keys($validation))));
         } catch (\Throwable $th) {
-            return Redirect::back($th, 'Erro no servidor! Forma de pagamento não cadastrada.');
+            dd($th->getMessage());
+            return Redirect::back($th, 'Erro no servidor! Questão não cadastrada.');
         }
 
-        return Redirect::route('payments.payment-methods', 'Forma de pagamento cadastrada.');
+        return Redirect::route('questions', 'Questão cadastrada.');
     }
 
     public function update(FormRequest $request): RedirectResponse
@@ -46,19 +52,19 @@ class QuestionController extends Controller
         $request->validate($validation);
 
         try {
-            $paymentMethod = $request->user()->enterprise->paymentMethod->find($request->only('id')['id']);
+            $question = $request->user()->group->question->find($request->only('id')['id']);
 
-            if (!$paymentMethod) {
+            if (!$question) {
                 throw new \Error();
             }
 
-            $paymentMethod->fill(Str::camelToSnake($request->only(array_keys($validation))));
-            $paymentMethod->save();
+            $question->fill(Str::camelToSnake($request->only(array_keys($validation))));
+            $question->save();
         } catch (\Throwable $th) {
-            return Redirect::back($th, 'Erro no servidor! Forma de pagamento não atualizada.');
+            return Redirect::back($th, 'Erro no servidor! Questão não atualizada.');
         }
 
-        return Redirect::route('payments.payment-methods', 'Forma de pagamento atualizada.');
+        return Redirect::route('questions', 'Questão atualizada.');
     }
 
     public function delete(FormRequest $request): RedirectResponse
@@ -66,23 +72,27 @@ class QuestionController extends Controller
         $request->validate(['deleteData' => ['required', 'array']]);
         $data = $request->validationData()['deleteData'];
         $s = count($data) > 1 ? 's' : '';
+        $ao = count($data) > 1 ? 'ões' : 'ão';
 
         try {
-            Delete::multipleRecords($data, $request->user()->enterprise->paymentMethod);
+            Delete::multipleRecords($data, $request->user()->group->question);
         } catch (\Throwable $th) {
-            return Redirect::back($th, 'Erro no servidor! Forma' . $s . ' de pagamento não excluída' . $s . '.');
+            return Redirect::back($th, 'Erro no servidor! Quest' . $ao . ' não excluída' . $s . '.');
         }
 
-        return Redirect::route('payments.payment-methods', 'Forma' . $s . ' de pagamento excluída' . $s . '.');
+        return Redirect::route('questions', 'Quest' . $ao . ' excluída' . $s . '.');
     }
 
     private function fieldsAndValidation(): array
     {
         return [
-            "code" => ['required', 'max:255'],
-            "name" => ['required', 'max:255'],
-            "installments" => ['required', 'integer'],
-            "term" => ['required', 'integer'],
+            'statement' => ['required', 'max:500'],
+            'correctOption' => ['required', 'max:255'],
+            'wrongOption1' => ['required', 'max:255'],
+            'wrongOption2' => ['required', 'max:255'],
+            'wrongOption3' => ['required', 'max:255'],
+            'wrongOption4' => ['max:255'],
+            "categoryId" => ['required', 'integer'],
         ];
     }
 }

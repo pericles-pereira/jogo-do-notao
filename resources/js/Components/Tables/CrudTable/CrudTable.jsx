@@ -175,16 +175,6 @@ export default function CrudTable({
         Object.keys(initialFormProps).forEach((key) => {
             const currentData = form.data[key];
 
-            if (currentData.length > 255) {
-                form.setError(key, "Este campo aceita apenas 255 caracteres.");
-                exit = true;
-            }
-
-            if (currentData.length === 0) {
-                form.setError(key, "Este campo deve ser preenchido.");
-                exit = true;
-            }
-
             if (
                 key === "cnpj" &&
                 form.data.cnpj.replace(/[^\d]/g, "").length < 14

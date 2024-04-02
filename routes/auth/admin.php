@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Questions\CategoryController;
 use App\Http\Controllers\Admin\Questions\QuestionController;
 use App\Http\Controllers\Admin\Users\EditUserController;
 use App\Http\Controllers\Admin\Users\RegisteredUserController;
@@ -18,4 +19,12 @@ Route::patch('users/{id}/disable', [EditUserController::class, 'disable'])->name
 Route::patch('users/{id}/activate', [EditUserController::class, 'activate'])->name('user.activate.patch')->can('master');
 Route::delete('users/{id}/delete', [EditUserController::class, 'delete'])->name('user.delete')->can('master');
 
+Route::get('category', [CategoryController::class, 'index'])->name('category');
+Route::post('category', [CategoryController::class, 'store'])->name('category.store');
+Route::patch('category', [CategoryController::class, 'update'])->name('category.update');
+Route::delete('category', [CategoryController::class, 'delete'])->name('category.delete');
+
 Route::get('questions', [QuestionController::class, 'index'])->name('questions');
+Route::post('questions', [QuestionController::class, 'store'])->name('questions.store');
+Route::patch('questions', [QuestionController::class, 'update'])->name('questions.update');
+Route::delete('questions', [QuestionController::class, 'delete'])->name('questions.delete');

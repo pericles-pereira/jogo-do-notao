@@ -1,5 +1,6 @@
 import {
     AdminPanelSettings,
+    Category,
     DashboardOutlined,
     List,
     ListAlt,
@@ -23,6 +24,11 @@ const menu = [
                 text: "Gerenciar Questões",
                 url: route("questions"),
                 icon: IconWrapper(List),
+            },
+            {
+                text: "Categorias",
+                url: route("category"),
+                icon: IconWrapper(Category),
             },
         ],
     },
