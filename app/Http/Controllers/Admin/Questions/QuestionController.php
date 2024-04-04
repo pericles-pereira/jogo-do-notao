@@ -91,8 +91,9 @@ class QuestionController extends Controller
             'wrongOption1' => ['required', 'max:255'],
             'wrongOption2' => ['required', 'max:255'],
             'wrongOption3' => ['required', 'max:255'],
-            'wrongOption4' => ['max:255'],
-            "categoryId" => ['required', 'integer'],
+            'wrongOption4' => ['required', 'max:255'],
+            'categoryId' => ['required', 'integer'],
+            'difficulty' => ['required', 'integer']
         ];
     }
 }

@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('wrong_option1');
             $table->string('wrong_option2');
             $table->string('wrong_option3');
-            $table->string('wrong_option4')->nullable();
+            $table->string('wrong_option4');
+            $table->enum('difficulty', [1, 2, 3, 4, 5, 6]);
             $table->timestamps();
             $table->foreignId('category_id')->constrained('categories');
         });

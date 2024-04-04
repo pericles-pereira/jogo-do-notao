@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\Game\GamesController;
+use App\Http\Controllers\Admin\Game\StartGameController;
 use App\Http\Controllers\Admin\Questions\CategoryController;
 use App\Http\Controllers\Admin\Questions\QuestionController;
 use App\Http\Controllers\Admin\Users\EditUserController;
@@ -28,3 +30,11 @@ Route::get('questions', [QuestionController::class, 'index'])->name('questions')
 Route::post('questions', [QuestionController::class, 'store'])->name('questions.store');
 Route::patch('questions', [QuestionController::class, 'update'])->name('questions.update');
 Route::delete('questions', [QuestionController::class, 'delete'])->name('questions.delete');
+
+Route::get('game/start', [StartGameController::class, 'index'])->name('game.start');
+Route::post('game/start', [StartGameController::class, 'store'])->name('game.start.store');
+
+Route::get('game/manage', [GamesController::class, 'index'])->name('game.manage');
+Route::post('game/manage', [GamesController::class, 'store'])->name('game.manage.store');
+Route::patch('game/manage', [GamesController::class, 'update'])->name('game.manage.update');
+Route::delete('game/manage', [GamesController::class, 'delete'])->name('game.manage.delete');

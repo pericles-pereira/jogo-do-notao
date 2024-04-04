@@ -18,7 +18,8 @@ class Question extends Model
         'wrong_option2',
         'wrong_option3',
         'wrong_option4',
-        'category_id'
+        'category_id',
+        'difficulty'
     ];
 
     public function category(): BelongsTo
