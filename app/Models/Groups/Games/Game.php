@@ -42,10 +42,11 @@ class Game extends Model
         return $this->hasMany(StartedGame::class);
     }
 
-    public function startGame(string $playerName): StartedGame
+    public function startGame(array $data): StartedGame
     {
         return $this->startedGame()->create([
-            'player_name' => $playerName,
+            'player_name' => $data['name'],
+            'timer' => $data['timer'],
             'room_code' => StartedGame::generateRoomCode()
         ]);
     }

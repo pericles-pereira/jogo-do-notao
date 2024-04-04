@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('player_name');
             $table->string('room_code', 4)->unique();
+            $table->time('timer');
             $table->timestamps();
             $table->foreignId('game_id')->constrained('games');
         });

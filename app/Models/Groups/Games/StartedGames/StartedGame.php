@@ -14,7 +14,8 @@ class StartedGame extends Model
 
     protected $fillable = [
         'player_name',
-        'room_code'
+        'room_code',
+        'timer'
     ];
 
     public function game(): BelongsTo

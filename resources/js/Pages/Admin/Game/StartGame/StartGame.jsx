@@ -16,12 +16,14 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
+import { TimePicker } from "@mui/x-date-pickers";
 import { useEffect, useState } from "react";
 
 export default function StartGame({ games, roomCode }) {
     const { data, setData, errors, post, reset } = useForm({
         name: "",
         gameId: "",
+        timer: null,
     });
     const [hasRoomCode, setHasRoomCode] = useState(false);
 
@@ -45,7 +47,7 @@ export default function StartGame({ games, roomCode }) {
     return (
         <AuthenticatedLayout title="Iniciar Partida">
             <Container
-                maxWidth="md"
+                maxWidth="lg"
                 sx={{
                     py: 8,
                     display: "flex",
@@ -127,22 +129,48 @@ export default function StartGame({ games, roomCode }) {
                                         </Typography>
                                     </header>
                                     <div className="mt-6 space-y-6">
-                                        <div className="w-full">
-                                            <TextField
-                                                id="name"
-                                                name="name"
-                                                value={data.name}
-                                                fullWidth
-                                                onChange={text}
-                                                error={!!errors.name}
-                                                required
-                                                variant="outlined"
-                                                label="Nome do Jogador"
-                                            />
-                                            <InputError
-                                                message={errors.name}
-                                                className="flex justify-start"
-                                            />
+                                        <div className="w-full flex gap-x-2">
+                                            <div className="w-6/12 sm:w-full">
+                                                <TextField
+                                                    id="name"
+                                                    name="name"
+                                                    value={data.name}
+                                                    fullWidth
+                                                    onChange={text}
+                                                    error={!!errors.name}
+                                                    required
+                                                    variant="outlined"
+                                                    label="Nome do Jogador"
+                                                />
+                                                <InputError
+                                                    message={errors.name}
+                                                    className="flex justify-start"
+                                                />
+                                            </div>
+                                            <div className="">
+                                                <TimePicker
+                                                    views={[
+                                                        "minutes",
+                                                        "seconds",
+                                                    ]}
+                                                    id="timer"
+                                                    name="timer"
+                                                    value={data.timer}
+                                                    fullWidth
+                                                    onChange={(time) =>
+                                                        setData("timer", time)
+                                                    }
+                                                    error={!!errors.timer}
+                                                    required
+                                                    variant="outlined"
+                                                    label="Tempo Por Questão"
+                                                    disableOpenPicker
+                                                />
+                                                <InputError
+                                                    message={errors.timer}
+                                                    className="flex justify-start"
+                                                />
+                                            </div>
                                         </div>
                                         <div className="w-full">
                                             <FormControl

@@ -7,6 +7,7 @@ use App\Models\Groups\Games\Game;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Redirect as FacadesRedirect;
 use Inertia\Response;
 use Source\Helpers\Controllers\Page;
@@ -41,7 +42,10 @@ class StartGameController extends Controller
                 throw new \Error();
             }
 
-            $startedGame = $game->startGame($request->only('name')['name']);
+            $data = $request->only('name', 'timer');
+            $data['timer'] = Carbon::parse($data['timer'])->format('00:i:s');
+
+            $startedGame = $game->startGame($data);
         } catch (\Throwable $th) {
             return Redirect::back($th, 'Erro no servidor! Jogo não iniciado.');
         }
@@ -55,7 +59,8 @@ class StartGameController extends Controller
     {
         return [
             "name" => ['required', 'max:255'],
-            "gameId" => ['required', 'integer']
+            "gameId" => ['required', 'integer'],
+            "timer" => ['required']
         ];
     }
 }
