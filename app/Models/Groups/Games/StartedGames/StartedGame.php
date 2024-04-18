@@ -6,7 +6,6 @@ use App\Models\Groups\Games\Game;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use phpDocumentor\Reflection\Types\Boolean;
 
 class StartedGame extends Model
 {
@@ -15,7 +14,7 @@ class StartedGame extends Model
     protected $fillable = [
         'player_name',
         'room_code',
-        'timer'
+        'timer',
     ];
 
     public function game(): BelongsTo

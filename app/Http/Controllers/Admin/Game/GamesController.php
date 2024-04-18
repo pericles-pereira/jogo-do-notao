@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Game;
 
 use App\Http\Controllers\Controller;
+use App\Models\Groups\Games\Game;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,11 +22,12 @@ class GamesController extends Controller
             $group = $request->user()->group;
             $games = Search::allDataInCamel($group->game);
             $questions = Search::allDataInCamel($group->question);
+            $startedGames = Search::allDataInCamel($group->startedGame);
         } catch (\Throwable $th) {
             return Redirect::back($th, 'Erro no servidor! Falha ao carregar os dados da página.');
         }
 
-        return Page::render('Admin/Game/Games/Games', ['questions' => $questions, 'games' => $games]);
+        return Page::render('Admin/Game/Games/Games', ['questions' => $questions, 'games' => $games, 'startedGames' => $startedGames]);
     }
 
     public function store(FormRequest $request): RedirectResponse
@@ -81,8 +83,9 @@ class GamesController extends Controller
     private function fieldsAndValidation(): array
     {
         return [
-            "name" => ['required', 'max:255'],
-            "questions" => ['required', 'array'],
+            'name' => ['required', 'max:255'],
+            'questions' => ['required', 'array'],
+            'acronym' => ['required', 'max:255']
         ];
     }
 }

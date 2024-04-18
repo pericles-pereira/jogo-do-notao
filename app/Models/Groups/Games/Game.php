@@ -15,7 +15,7 @@ class Game extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'questions'];
+    protected $fillable = ['name', 'questions', 'acronym'];
 
     public function setQuestionsAttribute($value)
     {

@@ -207,7 +207,9 @@ export default function StartGame({ games, roomCode }) {
                                                             value={game?.id}
                                                             key={game?.id}
                                                         >
-                                                            {game?.name}
+                                                            {game?.acronym +
+                                                                " - " +
+                                                                game?.name}
                                                         </MenuItem>
                                                     ))}
                                                 </Select>

@@ -32,10 +32,27 @@ function getStyles(theme) {
 export default function ModalFields({ data, setData, errors, questions }) {
     const theme = useTheme();
     const { text } = textFieldFilters(setData);
-    "".padStart;
+
     return (
         <>
-            <div className="w-full p-2 pl-0 pb-1">
+            <div className="w-3/12 p-2 pl-0 pb-1">
+                <TextField
+                    id="acronym"
+                    name="acronym"
+                    value={data.acronym}
+                    fullWidth
+                    onChange={text}
+                    error={!!errors.acronym}
+                    required
+                    variant="outlined"
+                    label="Sigla"
+                />
+                <InputError
+                    message={errors.acronym}
+                    className="flex justify-start"
+                />
+            </div>
+            <div className="w-9/12 p-2 pl-0 pb-1">
                 <TextField
                     id="name"
                     name="name"

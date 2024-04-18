@@ -35,10 +35,13 @@ const paperStyle = {
 export default function CrudTable({
     tableData,
     tableColumns,
-    initialFormProps,
-    relativeZiggyRoute,
-    headers,
-    ModalFields,
+    initialFormProps = null,
+    relativeZiggyRoute = "",
+    headers = null,
+    ModalFields = null,
+    renderActions = true,
+    actions = null,
+    rowSelection = true,
     ...modalProperties
 }) {
     const [refreshData, setRefreshData] = useState(false);
@@ -83,7 +86,7 @@ export default function CrudTable({
         columns,
         data,
         localization: MRT_Localization_PT_BR,
-        enableRowSelection: true,
+        enableRowSelection: rowSelection,
         enableColumnOrdering: true,
         enableGlobalFilter: true,
         enableFullScreenToggle: false,
@@ -100,32 +103,37 @@ export default function CrudTable({
                 item
                 sx={{ display: "flex", flexDirection: "row", gap: "8px" }}
             >
-                <Button
-                    variant="contained"
-                    startIcon={<Add />}
-                    type="button"
-                    onClick={openModal}
-                >
-                    <Typography variant="subtitle2">Criar</Typography>
-                </Button>
-                <Button
-                    variant="contained"
-                    startIcon={<Create />}
-                    type="button"
-                    color="info"
-                    onClick={edit}
-                >
-                    <Typography variant="subtitle2">Editar</Typography>
-                </Button>
-                <Button
-                    variant="contained"
-                    startIcon={<Delete />}
-                    color="error"
-                    type="button"
-                    onClick={openConfirmDeletionModal}
-                >
-                    <Typography variant="subtitle2">Excluir</Typography>
-                </Button>
+                {renderActions && (
+                    <>
+                        <Button
+                            variant="contained"
+                            startIcon={<Add />}
+                            type="button"
+                            onClick={openModal}
+                        >
+                            <Typography variant="subtitle2">Criar</Typography>
+                        </Button>
+                        <Button
+                            variant="contained"
+                            startIcon={<Create />}
+                            type="button"
+                            color="info"
+                            onClick={edit}
+                        >
+                            <Typography variant="subtitle2">Editar</Typography>
+                        </Button>
+                        <Button
+                            variant="contained"
+                            startIcon={<Delete />}
+                            color="error"
+                            type="button"
+                            onClick={openConfirmDeletionModal}
+                        >
+                            <Typography variant="subtitle2">Excluir</Typography>
+                        </Button>
+                    </>
+                )}
+                {actions && actions}
             </Grid>
         ),
     });
@@ -316,19 +324,21 @@ export default function CrudTable({
                                     {inEdit ? subtitle?.edit : subtitle?.create}
                                 </Typography>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 mt-5">
-                                    <div className="md:col-span-2">
-                                        <div className="flex flex-wrap">
-                                            <ModalFields
-                                                data={form.data}
-                                                setData={form.setData}
-                                                errors={form.errors}
-                                                reset={form.reset}
-                                                {...modalProperties}
-                                            />
+                                {ModalFields && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 mt-5">
+                                        <div className="md:col-span-2">
+                                            <div className="flex flex-wrap">
+                                                <ModalFields
+                                                    data={form.data}
+                                                    setData={form.setData}
+                                                    errors={form.errors}
+                                                    reset={form.reset}
+                                                    {...modalProperties}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                )}
 
                                 <div className="flex justify-between mt-5">
                                     <Button
