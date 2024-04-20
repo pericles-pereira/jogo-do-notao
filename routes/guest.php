@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Guest\PlayingController;
 use App\Http\Controllers\Guest\RoomCodeController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,4 +29,7 @@ Route::middleware('guest')->group(function () {
 
     Route::get('room-code', [RoomCodeController::class, 'index'])->name('room-code');
     Route::post('room-code', [RoomCodeController::class, 'store'])->name('room-code.store');
+
+    Route::get('playing', [PlayingController::class, 'index'])->name('playing');
+    Route::post('playing', [PlayingController::class, 'store'])->name('playing.store');
 });

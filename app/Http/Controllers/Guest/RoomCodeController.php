@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Groups\Games\StartedGames\StartedGame;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redirect as FacadesRedirect;
 use Inertia\Response;
 use Source\Helpers\Controllers\Page;
 use Source\Helpers\Controllers\Redirect;
+use Source\Helpers\Utils\Common\Toast;
 
 class RoomCodeController extends Controller
 {
@@ -20,7 +22,7 @@ class RoomCodeController extends Controller
     public function store(FormRequest $request): RedirectResponse
     {
         $request->validate([
-            'roomCode' => 'required|integer',
+            'roomCode' => 'required|string|digits:4',
         ]);
         $roomCode = $request->roomCode;
 
@@ -35,7 +37,7 @@ class RoomCodeController extends Controller
                 throw new \DomainException('Essa partida já foi iniciada por outro jogador.');
             }
 
-            $game->in_game = true;
+            // $game->in_game = true;
             $game->save();
         } catch (\Throwable $th) {
             if ($th instanceof \InvalidArgumentException || $th instanceof \DomainException) {
@@ -45,7 +47,9 @@ class RoomCodeController extends Controller
             return Redirect::back($th, 'Erro no servidor! Jogo não iniciado.');
         }
 
-
-        return Redirect::route('room-code', 'Jogo iniciado. Boa sorte!!');
+        return FacadesRedirect::route('playing')
+            ->with('status', Toast::success('Entrando na sala de jogos...'))
+            ->with('canEntry', true)
+            ->with('roomCode', $roomCode);
     }
 }

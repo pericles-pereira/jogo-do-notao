@@ -28,6 +28,7 @@
         "@mui/x-date-pickers": "^6.19.3",
         "dayjs": "^1.11.10",
         "material-react-table": "^2.11.1",
+        "react-confetti": "^6.1.0",
         "react-csv": "^2.2.2",
         "react-loader-spinner": "^6.1.6",
         "react-to-print": "^2.14.15",

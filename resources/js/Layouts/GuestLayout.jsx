@@ -4,7 +4,7 @@ import { Head, Link, usePage } from "@inertiajs/react";
 import React from "react";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function Guest({ children, title = "" }) {
+export default function GuestLayout({ children, title = "" }) {
     const status = usePage().props?.status;
 
     React.useEffect(() => {

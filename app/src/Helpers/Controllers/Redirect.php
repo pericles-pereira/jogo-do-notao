@@ -19,6 +19,15 @@ final class Redirect
     }
 
     /**
+     * Redirects the user to a specific route with a success error.
+     * @param string $errorMessage The error to be presented to the user.
+     */
+    public static function routeError(string $route, string $errorMessage): RedirectResponse
+    {
+        return FacadesRedirect::route($route)->with('status', Toast::error($errorMessage));
+    }
+
+    /**
      * Redirects to the previous route with an error message.
      * @param \Throwable $th The Throwable.
      * @param ?string $defaultMessage The default message to be presented to the user.
