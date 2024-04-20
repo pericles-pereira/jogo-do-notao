@@ -27,6 +27,7 @@ import coloredDragonBalls from "@/assets/images/game/coloredDragonBalls.png";
 import dragonBalls from "@/assets/images/game/dragonBalls.png";
 import { East } from "@mui/icons-material";
 import ReactConfetti from "react-confetti";
+import axios from "axios";
 
 // Função para converter a string de tempo em segundos
 const parseTime = (timeString) => {
@@ -51,10 +52,8 @@ export default function Playing({
     playerName,
     roomCode,
     timer,
-    gameName,
-    gameAcronym,
     questions,
-    maximumPoints = 2,
+    maximumPoints,
 }) {
     const { data, setData, post, processing, errors } = useForm({
         correctResponses: [],
@@ -259,7 +258,24 @@ export default function Playing({
 
     const handleUniversityHelp = () => {
         if (canUseUniversityHelp) {
-            toast.info("Ajuda dos universitários utilizada.");
+            axios
+                .post(route("request-university-help"), {
+                    roomCode: roomCode,
+                    question: currentQuestion.statement,
+                    options: options,
+                })
+                .then((res) => {
+                    if (res.data.error) throw new Error(res.data.message);
+
+                    if (res.data.success) {
+                        // handle success
+                        toast.info("Ajuda dos universitários utilizada.");
+                        console.log("success");
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
             setCanUseUniversityHelp(false);
         }
     };

@@ -3,9 +3,11 @@
 namespace App\Models\Groups\Games\StartedGames;
 
 use App\Models\Groups\Games\Game;
+use App\Models\Groups\Games\StartedGames\UniversityHelps\UniversityHelp;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class StartedGame extends Model
 {
@@ -20,6 +22,11 @@ class StartedGame extends Model
     public function game(): BelongsTo
     {
         return $this->belongsTo(Game::class);
+    }
+
+    public function universityHelp(): HasOne
+    {
+        return $this->hasOne(UniversityHelp::class);
     }
 
     public static function generateRoomCode(): string

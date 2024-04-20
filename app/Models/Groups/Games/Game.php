@@ -17,12 +17,12 @@ class Game extends Model
 
     protected $fillable = ['name', 'questions', 'acronym'];
 
-    public function setQuestionsAttribute($value)
+    public function setQuestionsAttribute($value): void
     {
         $this->attributes['questions'] = serialize($value);
     }
 
-    public function getQuestionsAttribute($value)
+    public function getQuestionsAttribute($value): array
     {
         return unserialize($value);
     }

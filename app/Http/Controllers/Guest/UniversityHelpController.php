@@ -13,7 +13,7 @@ use Source\Helpers\Controllers\Page;
 use Source\Helpers\Controllers\Redirect;
 use Source\Helpers\Utils\Common\Str;
 
-class PlayingController extends Controller
+class UniversityHelpController extends Controller
 {
     public function index(): Response | RedirectResponse
     {
@@ -34,8 +34,7 @@ class PlayingController extends Controller
                 $questions[] = Str::snakeToCamel(Question::find($value)->toArray());
             }
 
-            usort($questions, fn($item, $next) => $item['difficulty'] <=> $next['difficulty']);
-
+            usort($questions, fn ($item, $next) => $item['difficulty'] <=> $next['difficulty']);
         } catch (\Throwable $th) {
             if ($th instanceof UnauthorizedException) {
                 return Redirect::routeError('room-code', $th->getMessage());
@@ -48,8 +47,7 @@ class PlayingController extends Controller
             'playerName' => $startedGame->player_name,
             'roomCode' => $roomCode,
             'timer' => $startedGame->timer,
-            'questions' => $questions,
-            'maximumPoints' => 2
+            'questions' => $questions
         ]);
     }
 

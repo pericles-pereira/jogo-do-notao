@@ -5,6 +5,8 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Guest\PlayingController;
 use App\Http\Controllers\Guest\RoomCodeController;
+use App\Http\Controllers\Guest\UniversityHelpCodeController;
+use App\Http\Controllers\Guest\UniversityHelpController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -32,4 +34,11 @@ Route::middleware('guest')->group(function () {
 
     Route::get('playing', [PlayingController::class, 'index'])->name('playing');
     Route::post('playing', [PlayingController::class, 'store'])->name('playing.store');
+
+
+    Route::get('university-help-code', [UniversityHelpCodeController::class, 'index'])->name('university-help-code');
+    Route::post('university-help-code', [UniversityHelpCodeController::class, 'store'])->name('university-help-code.store');
+
+    Route::get('university-help', [UniversityHelpController::class, 'index'])->name('university-help');
+    Route::post('university-help', [UniversityHelpController::class, 'store'])->name('university-help.store');
 });
