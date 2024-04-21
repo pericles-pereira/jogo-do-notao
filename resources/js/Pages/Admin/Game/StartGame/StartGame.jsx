@@ -1,5 +1,7 @@
 import InputError from "@/Components/Form/InputError";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { toast } from "@/utils/common/Toast";
+import { formatNumbersForMoney } from "@/utils/common/numbers";
 import { textFieldFilters } from "@/utils/helpers/textFieldFilters";
 import { useForm } from "@inertiajs/react";
 import { West } from "@mui/icons-material";
@@ -24,6 +26,7 @@ export default function StartGame({ games, roomCode }) {
         name: "",
         gameId: "",
         timer: null,
+        maximumPoints: null,
     });
     const [hasRoomCode, setHasRoomCode] = useState(false);
 
@@ -37,12 +40,26 @@ export default function StartGame({ games, roomCode }) {
         post(route("game.start.store"), {
             preserveScroll: true,
             onSuccess: () => {
-                reset();
+                reset("name");
             },
         });
     };
 
     const { text } = textFieldFilters(setData);
+
+    const processNumberInput = (key, value) => {
+        const formattedValue = formatNumbersForMoney(value);
+        if (!formattedValue) {
+            setData(key, "");
+            if (value.length !== 0) {
+                toast.warn(
+                    "Informe apenas números. Zeros à esquerda e números negativos não são válidos."
+                );
+            }
+            return;
+        }
+        setData(key, formattedValue);
+    };
 
     return (
         <AuthenticatedLayout title="Iniciar Partida">
@@ -147,7 +164,7 @@ export default function StartGame({ games, roomCode }) {
                                                     className="flex justify-start"
                                                 />
                                             </div>
-                                            <div className="">
+                                            <div className="w-4/12">
                                                 <TimePicker
                                                     views={[
                                                         "minutes",
@@ -172,52 +189,84 @@ export default function StartGame({ games, roomCode }) {
                                                 />
                                             </div>
                                         </div>
-                                        <div className="w-full">
-                                            <FormControl
-                                                fullWidth
-                                                variant="outlined"
-                                                required
-                                                error={!!errors.gameId}
-                                                style={{ minWidth: "200px" }}
-                                            >
-                                                <InputLabel id="gameIdLabel">
-                                                    Jogo
-                                                </InputLabel>
-                                                <Select
-                                                    labelId="gameIdLabel"
-                                                    id="gameId"
-                                                    name="gameId"
-                                                    value={data.gameId}
+                                        <div className="w-full flex gap-x-2">
+                                            <div className="w-8/12">
+                                                <FormControl
+                                                    fullWidth
+                                                    variant="outlined"
+                                                    required
+                                                    error={!!errors.gameId}
+                                                    style={{
+                                                        minWidth: "200px",
+                                                    }}
+                                                >
+                                                    <InputLabel id="gameIdLabel">
+                                                        Jogo
+                                                    </InputLabel>
+                                                    <Select
+                                                        labelId="gameIdLabel"
+                                                        id="gameId"
+                                                        name="gameId"
+                                                        value={data.gameId}
+                                                        onChange={(e) =>
+                                                            setData(
+                                                                "gameId",
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        label="Jogo"
+                                                        error={!!errors.gameId}
+                                                        style={{
+                                                            width: "100%",
+                                                        }}
+                                                    >
+                                                        <MenuItem value="">
+                                                            <em>Selecione</em>
+                                                        </MenuItem>
+
+                                                        {games.map((game) => (
+                                                            <MenuItem
+                                                                value={game?.id}
+                                                                key={game?.id}
+                                                            >
+                                                                {game?.acronym +
+                                                                    " - " +
+                                                                    game?.name}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </Select>
+                                                    <InputError
+                                                        message={errors.gameId}
+                                                        className="flex justify-start"
+                                                    />
+                                                </FormControl>
+                                            </div>
+                                            <div className="w-4/12">
+                                                <TextField
+                                                    id="maximumPoints"
+                                                    name="maximumPoints"
+                                                    value={data.maximumPoints}
+                                                    fullWidth
                                                     onChange={(e) =>
-                                                        setData(
-                                                            "gameId",
+                                                        processNumberInput(
+                                                            "maximumPoints",
                                                             e.target.value
                                                         )
                                                     }
-                                                    label="Jogo"
-                                                    error={!!errors.gameId}
-                                                    style={{ width: "100%" }}
-                                                >
-                                                    <MenuItem value="">
-                                                        <em>Selecione</em>
-                                                    </MenuItem>
-
-                                                    {games.map((game) => (
-                                                        <MenuItem
-                                                            value={game?.id}
-                                                            key={game?.id}
-                                                        >
-                                                            {game?.acronym +
-                                                                " - " +
-                                                                game?.name}
-                                                        </MenuItem>
-                                                    ))}
-                                                </Select>
+                                                    error={
+                                                        !!errors.maximumPoints
+                                                    }
+                                                    required
+                                                    variant="outlined"
+                                                    label="Pontuação Máxima"
+                                                />
                                                 <InputError
-                                                    message={errors.gameId}
+                                                    message={
+                                                        errors.maximumPoints
+                                                    }
                                                     className="flex justify-start"
                                                 />
-                                            </FormControl>
+                                            </div>
                                         </div>
                                         <Box className="flex justify-start">
                                             <Button

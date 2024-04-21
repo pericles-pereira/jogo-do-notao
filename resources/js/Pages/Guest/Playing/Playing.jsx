@@ -28,25 +28,8 @@ import dragonBalls from "@/assets/images/game/dragonBalls.png";
 import { East } from "@mui/icons-material";
 import ReactConfetti from "react-confetti";
 import axios from "axios";
-
-// Função para converter a string de tempo em segundos
-const parseTime = (timeString) => {
-    const [minutes, seconds] = timeString.split(":").map(Number);
-    return minutes * 60 + seconds;
-};
-
-// Função para formatar o tempo restante para "mm:ss"
-const formatTime = (timeLeft) => {
-    const minutes = Math.floor(timeLeft / 60);
-    const seconds = timeLeft % 60;
-    return `${minutes < 10 ? "0" : ""}${minutes}:${
-        seconds < 10 ? "0" : ""
-    }${seconds}`;
-};
-
-const capitalizeFirstLetter = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-};
+import { formatTime, parseTime } from "@/utils/common/time";
+import { capitalizeFirstLetter } from "@/utils/common/strings";
 
 export default function Playing({
     playerName,
@@ -57,8 +40,8 @@ export default function Playing({
 }) {
     const { data, setData, post, processing, errors } = useForm({
         correctResponses: [],
-        inSeconds: [],
-        points: 0,
+        inMinutes: [],
+        points: "0.00",
     });
 
     const [gameStarted, setGameStarted] = useState(false);
@@ -77,8 +60,11 @@ export default function Playing({
     const [canJump, setCanJump] = useState(true);
     const [canUseAudience, setCanUseAudience] = useState(true);
     const [canUseUniversityHelp, setCanUseUniversityHelp] = useState(true);
+    const [waitingUniversityHelp, setWaitingUniversityHelp] = useState(false);
     const [showConfetti, setShowConfetti] = useState(false);
     const [openQuitConfirmation, setOpenQuitConfirmation] = useState(false);
+    const [threeDots, setThreeDots] = useState("");
+    const [universityHelpTime, setUniversityHelpTime] = useState(0);
 
     const initializeGame = () => {
         setGameStarted(true);
@@ -95,16 +81,33 @@ export default function Playing({
                 return () => clearInterval(interval);
             } else if (gameStarted && timeLeft === 0) {
                 toast.error("Tempo esgotado!");
-                toNextQuestion();
+                setTimeout(async () => {
+                    setEndGame(true);
+                }, 3500);
             }
         }
     }, [gameStarted, timeLeft]);
+
+    useEffect(() => {
+        if (waitingUniversityHelp) {
+            if (universityHelpTime > 0) {
+                const interval = setInterval(() => {
+                    setUniversityHelpTime((prevTime) => prevTime - 1);
+                }, 1000);
+                return () => clearInterval(interval);
+            } else if (universityHelpTime === 0) {
+                toast.error("Tempo de espera esgotado!");
+                finishUniversityHelp();
+            }
+        }
+    }, [universityHelpTime]);
 
     useEffect(() => {
         if (endGame) {
             if (correctAnswers === questions.length) {
                 setShowConfetti(true);
             }
+            console.log(data);
             clearInterval(timerInterval); // Pausa o cronômetro
         }
     }, [endGame]);
@@ -137,6 +140,11 @@ export default function Playing({
             const base = limit >= 5 ? limit * 1.2 : limit * 7;
 
             for (let i = 0; i < numberOfQuestions; i++) {
+                if (i === 0) {
+                    points.push(limit.toFixed(2));
+                    continue;
+                }
+
                 // Calcula o peso exponencial
                 const point = limit * Math.pow(base, -(i / numberOfQuestions));
                 points.push((Math.ceil(point / 0.05) * 0.05).toFixed(2));
@@ -146,7 +154,10 @@ export default function Playing({
         };
 
         setQuestionPoints(
-            distributePointsExponential(questions.length, maximumPoints)
+            distributePointsExponential(
+                questions.length,
+                parseFloat(maximumPoints)
+            )
         );
     }, []);
 
@@ -166,19 +177,21 @@ export default function Playing({
             setShowCorrect(true);
 
             if (selectedOption === currentQuestion.correctOption) {
-                setCorrectAnswers(
-                    (prevCorrectAnswers) => prevCorrectAnswers + 1
-                );
+                setCorrectAnswers((prevAnswers) => prevAnswers + 1);
+                setData({
+                    correctResponses: [
+                        ...data.correctResponses,
+                        currentQuestion.id,
+                    ],
+                    inMinutes: [
+                        ...data.inMinutes,
+                        formatTime(parseTime(timer.slice(3)) - timeLeft),
+                    ],
+                    points: questionPoints[
+                        questions.length - 1 - correctAnswers
+                    ],
+                });
 
-                setData("correctResponses", [
-                    ...data.correctResponses,
-                    currentQuestion,
-                ]);
-                setData("inSeconds", [...data.inSeconds, formatTime(timeLeft)]);
-                setData(
-                    "points",
-                    questionPoints[questions.length - correctAnswers]
-                );
                 toast.success("Resposta correta! Avançando...");
             } else {
                 setShowIncorrect(index);
@@ -230,7 +243,6 @@ export default function Playing({
                 indices.push(getRandomIndex());
             }
 
-            console.log(indices);
             toast.info(
                 `Cartas utilizadas! opções removidas: ${removeQuestions}`
             );
@@ -258,17 +270,28 @@ export default function Playing({
 
     const handleUniversityHelp = () => {
         if (canUseUniversityHelp) {
+            clearInterval(timerInterval);
+            const [min, sec] = formatTime(timeLeft).split(":");
+
+            const data = new Date();
+
+            data.setUTCMinutes(parseInt(min));
+            data.setUTCSeconds(parseInt(sec));
+
+            setWaitingUniversityHelp(true);
+            setUniversityHelpTime(timeLeft + 60);
+
             axios
                 .post(route("request-university-help"), {
                     roomCode: roomCode,
                     question: currentQuestion.statement,
                     options: options,
+                    timer: data.toISOString(),
                 })
                 .then((res) => {
                     if (res.data.error) throw new Error(res.data.message);
 
                     if (res.data.success) {
-                        // handle success
                         toast.info("Ajuda dos universitários utilizada.");
                         console.log("success");
                     }
@@ -276,9 +299,78 @@ export default function Playing({
                 .catch((error) => {
                     console.log(error);
                 });
+
             setCanUseUniversityHelp(false);
         }
     };
+
+    const finishUniversityHelp = () => {
+        setWaitingUniversityHelp(false);
+        toNextQuestion();
+    };
+
+    const handleCancelUniversityHelp = () => {
+        setTimeLeft(universityHelpTime);
+        setWaitingUniversityHelp(false);
+        toast.info(
+            "A ajuda universitária foi cancelada. O tempo de espera será ajustado para o tempo restante da questão."
+        );
+    };
+
+    useEffect(() => {
+        let interval;
+
+        const consultAnswer = () => {
+            axios
+                .get(
+                    route("request-university-help.waiting-response", {
+                        roomCode: roomCode,
+                    })
+                )
+                .then((res) => {
+                    if (res.data.error) throw new Error(res.data.message);
+                    if (res.data.waiting) {
+                        return;
+                    }
+
+                    if (res.data.response !== null) {
+                        setWaitingUniversityHelp(false);
+                        const indice = res.data.response;
+                        if (parseInt(indice) === 99) {
+                            toast.error("Sua ajuda não respondeu a tempo! ");
+                            setTimeout(async () => {
+                                setEndGame(true);
+                            }, 3500);
+                            return;
+                        }
+                        const chosenOption = options[indice];
+                        handleAnswer(chosenOption, indice);
+                    }
+                })
+                .catch((error) => console.error(error));
+        };
+
+        if (waitingUniversityHelp) {
+            consultAnswer();
+
+            interval = setInterval(consultAnswer, 3000);
+
+            return () => clearInterval(interval);
+        }
+    }, [waitingUniversityHelp]);
+
+    useEffect(() => {
+        if (waitingUniversityHelp) {
+            setTimeout(() => {
+                if (threeDots.length < 3) {
+                    setThreeDots(`${threeDots}.`);
+                    return;
+                }
+
+                setThreeDots("");
+            }, 400);
+        }
+    }, [waitingUniversityHelp, threeDots]);
 
     return (
         <GameLayout title={`Sala ${roomCode}`}>
@@ -724,7 +816,9 @@ export default function Playing({
                                             questions.length - correctAnswers
                                         ] ?? "0.0"}
                                     </span>
-                                    <span>/{maximumPoints.toFixed(2)}</span>
+                                    <span>
+                                        /{parseFloat(maximumPoints).toFixed(2)}
+                                    </span>
                                 </div>
                             </Typography>
                         </div>
@@ -795,6 +889,43 @@ export default function Playing({
                             onClick={() => setOpenQuitConfirmation(false)}
                         >
                             Voltar
+                        </Button>
+                    </div>
+                </Paper>
+            </Modal>
+
+            <Modal
+                open={waitingUniversityHelp}
+                className="flex justify-center items-center w-full h-full overflow-auto text-center text-wrap"
+            >
+                <Paper
+                    className="xl:m-12 overflow-auto"
+                    sx={{
+                        padding: "20px",
+                        minWidth: "480px",
+                        maxHeight: "70vh",
+                    }}
+                >
+                    <Typography variant="h6">
+                        Aguardando resposta da ajuda universitária{threeDots}
+                    </Typography>
+
+                    <div className="flex justify-center mt-4">
+                        <Typography
+                            variant="body1"
+                            className="p-1 flex justify-center text-black"
+                            sx={{ fontSize: "60px" }}
+                        >
+                            {formatTime(universityHelpTime)}
+                        </Typography>
+                    </div>
+                    <div className="flex justify-end mt-6">
+                        <Button
+                            variant="contained"
+                            color="error"
+                            onClick={handleCancelUniversityHelp}
+                        >
+                            Cancelar Ajuda
                         </Button>
                     </div>
                 </Paper>

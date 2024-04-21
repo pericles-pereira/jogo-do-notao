@@ -33,22 +33,32 @@ class UniversityHelpCodeController extends Controller
                 throw new \InvalidArgumentException('Esta sala não existe.');
             }
 
-            if ($game->in_game) {
-                throw new \DomainException('Essa partida já foi iniciada por outro jogador.');
+            if (!$game->universityHelp) {
+                throw new \DomainException('Este jogador ainda não usou a ajuda dos universitários.');
             }
 
-            // $game->in_game = true;
-            $game->save();
+            $universityHelp = $game->universityHelp;
+
+            if ($universityHelp->response) {
+                throw new \DomainException('Este jogador já utilizou a ajuda universitária uma vez.');
+            }
+
+            if ($universityHelp->used) {
+                throw new \DomainException('Outro universitário já está ajudando este jogador.');
+            }
+
+            $universityHelp->used = true;
+            $universityHelp->save();
         } catch (\Throwable $th) {
             if ($th instanceof \InvalidArgumentException || $th instanceof \DomainException) {
                 return Redirect::back($th, $th->getMessage());
             }
 
-            return Redirect::back($th, 'Erro no servidor! Jogo não iniciado.');
+            return Redirect::back($th, 'Erro no servidor! Ajuda não iniciada.');
         }
 
-        return FacadesRedirect::route('playing')
-            ->with('status', Toast::success('Entrando na sala de jogos...'))
+        return FacadesRedirect::route('university-help')
+            ->with('status', Toast::success('Entrando na sala...'))
             ->with('canEntry', true)
             ->with('roomCode', $roomCode);
     }

@@ -44,12 +44,13 @@ class PlayingController extends Controller
                 return Redirect::back($th, $th->getMessage());
             }
         }
+
         return Page::render('Guest/Playing/Playing', [
             'playerName' => $startedGame->player_name,
             'roomCode' => $roomCode,
             'timer' => $startedGame->timer,
             'questions' => $questions,
-            'maximumPoints' => 2
+            'maximumPoints' => $startedGame->maximum_points
         ]);
     }
 

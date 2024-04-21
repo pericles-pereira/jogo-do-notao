@@ -37,7 +37,7 @@ class RoomCodeController extends Controller
                 throw new \DomainException('Essa partida já foi iniciada por outro jogador.');
             }
 
-            // $game->in_game = true;
+            $game->in_game = true;
             $game->save();
         } catch (\Throwable $th) {
             if ($th instanceof \InvalidArgumentException || $th instanceof \DomainException) {

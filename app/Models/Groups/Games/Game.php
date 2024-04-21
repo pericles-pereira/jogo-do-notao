@@ -47,7 +47,8 @@ class Game extends Model
         return $this->startedGame()->create([
             'player_name' => $data['name'],
             'timer' => $data['timer'],
-            'room_code' => StartedGame::generateRoomCode()
+            'room_code' => StartedGame::generateRoomCode(),
+            'maximum_points' => $data['maximumPoints']
         ]);
     }
 

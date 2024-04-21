@@ -18,3 +18,6 @@ export function toSentenceCase(camelCase) {
     return spacedString.charAt(0).toUpperCase() + spacedString.slice(1);
 }
 
+export function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+};

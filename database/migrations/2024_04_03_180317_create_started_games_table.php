@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('player_name');
             $table->string('room_code', 4)->unique();
             $table->time('timer');
+            $table->decimal('maximum_points');
             $table->boolean('in_game')->default(false);
             $table->timestamps();
             $table->foreignId('game_id')->constrained('games');

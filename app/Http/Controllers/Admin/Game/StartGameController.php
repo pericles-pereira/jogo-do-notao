@@ -13,6 +13,7 @@ use Inertia\Response;
 use Source\Helpers\Controllers\Page;
 use Source\Helpers\Controllers\Redirect;
 use Source\Helpers\Models\Search;
+use Source\Helpers\Utils\Common\Decimals;
 use Source\Helpers\Utils\Common\Toast;
 
 class StartGameController extends Controller
@@ -42,8 +43,9 @@ class StartGameController extends Controller
                 throw new \Error();
             }
 
-            $data = $request->only('name', 'timer');
+            $data = $request->only('name', 'timer', 'maximumPoints');
             $data['timer'] = Carbon::parse($data['timer'])->format('00:i:s');
+            $data['maximumPoints'] = Decimals::numericStringToDecimal($data['maximumPoints']);
 
             $startedGame = $game->startGame($data);
         } catch (\Throwable $th) {
@@ -60,7 +62,8 @@ class StartGameController extends Controller
         return [
             "name" => ['required', 'max:255'],
             "gameId" => ['required', 'integer'],
-            "timer" => ['required']
+            "timer" => ['required'],
+            "maximumPoints" => ['required']
         ];
     }
 }

@@ -11,7 +11,7 @@ class UniversityHelp extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['question', 'options'];
+    protected $fillable = ['question', 'options', 'timer'];
 
     public function setOptionsAttribute($value): void
     {

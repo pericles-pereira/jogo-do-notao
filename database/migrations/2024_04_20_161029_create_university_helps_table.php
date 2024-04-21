@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('question');
             $table->string('options');
+            $table->integer('response')->nullable()->default(null);
+            $table->boolean('used')->default(false);
+            $table->time('timer');
             $table->timestamps();
             $table->foreignId('started_game_id')->constrained('started_games')->cascadeOnDelete();
             $table->unique('started_game_id');

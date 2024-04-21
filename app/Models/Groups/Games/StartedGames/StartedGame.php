@@ -17,6 +17,7 @@ class StartedGame extends Model
         'player_name',
         'room_code',
         'timer',
+        'maximum_points'
     ];
 
     public function game(): BelongsTo

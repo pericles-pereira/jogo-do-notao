@@ -1,6 +1,6 @@
 import GameLayout from "@/Layouts/GameLayout";
 import { toast } from "@/utils/common/Toast";
-import { useForm } from "@inertiajs/react";
+import { Link, useForm } from "@inertiajs/react";
 import {
     Button,
     Typography,
@@ -9,38 +9,26 @@ import {
     List,
     ListItem,
     ListItemText,
+    Modal,
 } from "@mui/material";
 import { useState, useEffect } from "react";
-import announcer from "@/assets/images/game/announcer2.png";
+import universityHelpImage from "@/assets/images/game/universityHelpImage.png";
+import excellence from "@/assets/images/game/excellence.png";
+import { East } from "@mui/icons-material";
+import axios from "axios";
+import { formatTime, parseTime } from "@/utils/common/time";
+import { capitalizeFirstLetter } from "@/utils/common/strings";
 
-// Função para converter a string de tempo em segundos
-const parseTime = (timeString) => {
-    const [minutes, seconds] = timeString.split(":").map(Number);
-    return minutes * 60 + seconds;
-};
-
-// Função para formatar o tempo restante para "mm:ss"
-const formatTime = (timeLeft) => {
-    const minutes = Math.floor(timeLeft / 60);
-    const seconds = timeLeft % 60;
-    return `${minutes < 10 ? "0" : ""}${minutes}:${
-        seconds < 10 ? "0" : ""
-    }${seconds}`;
-};
-
-const capitalizeFirstLetter = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-};
-
-export default function Playing({ roomCode, timer, question, options }) {
-    const { data, setData, post, processing, errors } = useForm({
-        correctResponses: [],
-        inSeconds: [],
-        points: 0,
+export default function Playing({ question, roomCode, timer, options }) {
+    const { data, setData } = useForm({
+        roomCode: roomCode,
+        response: 99,
     });
 
     const [timeLeft, setTimeLeft] = useState(parseTime(timer.slice(3)));
     const [timerInterval, setTimerInterval] = useState(null);
+    const [sendResponse, setSendResponse] = useState(false);
+    const [replySent, setReplySent] = useState(false);
 
     useEffect(() => {
         if (timeLeft > 0) {
@@ -51,17 +39,46 @@ export default function Playing({ roomCode, timer, question, options }) {
             return () => clearInterval(interval);
         } else if (timeLeft === 0) {
             toast.error("Tempo esgotado!");
-            // handle isso
+            axios.patch(route("request-university-help.patch"), {
+                roomCode: data.roomCode,
+                response: data.response,
+            });
+            setReplySent(true);
         }
     }, [timeLeft]);
 
-    const handleAnswer = (selectedOption) => {
+    useEffect(() => {
+        if (sendResponse) {
+            axios
+                .patch(route("request-university-help.patch"), {
+                    roomCode: data.roomCode,
+                    response: data.response,
+                })
+                .then((res) => {
+                    if (res.data.error) throw new Error();
+                    toast.info("Resposta registrada.");
+                    setReplySent(true);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    toast.error("Erro ao enviar resposta.");
+                });
+        }
+    }, [sendResponse]);
+
+    const handleAnswer = (index) => {
         clearInterval(timerInterval); // Pausa o cronômetro
+        setData("response", index);
+        setSendResponse(true);
     };
 
     return (
         <GameLayout title={`Ajuda Universitária da Sala ${roomCode}`}>
-            <Grid container spacing={3} className="min-h-full justify-evenly">
+            <Grid
+                container
+                spacing={3}
+                className="min-h-full justify-end gap-x-32"
+            >
                 <Grid item xs={7} className="content-center">
                     <Typography
                         variant="body1"
@@ -94,7 +111,7 @@ export default function Playing({ roomCode, timer, question, options }) {
                                         color="inherit"
                                         className="w-full block text-wrap"
                                         onClick={() =>
-                                            handleAnswer(option, index)
+                                            !sendResponse && handleAnswer(index)
                                         }
                                         style={{ textTransform: "none" }}
                                     >
@@ -152,12 +169,54 @@ export default function Playing({ roomCode, timer, question, options }) {
                     sx={{ marginTop: "-16px" }}
                 >
                     <img
-                        src={announcer}
-                        alt="announcer"
+                        src={universityHelpImage}
+                        alt="universityHelpImage"
                         className="fill-current object-cover px-4"
                     />
                 </Grid>
             </Grid>
+
+            <Modal
+                open={replySent}
+                className="flex justify-center items-center w-full h-full overflow-auto text-center text-wrap"
+            >
+                <Paper
+                    className="xl:m-12 overflow-auto"
+                    sx={{
+                        padding: "16px",
+                        maxWidth: "500px",
+                        maxHeight: "70vh",
+                    }}
+                >
+                    <Typography variant="h6">
+                        Sua resposta foi registrada!
+                    </Typography>
+
+                    <div className="flex justify-center mt-5">
+                        <img
+                            src={excellence}
+                            alt="excellence"
+                            style={{
+                                width: "100px",
+                                height: "100px",
+                                objectFit: "cover",
+                            }}
+                        />
+                    </div>
+                    <div className="flex justify-end mt-6">
+                        <Link href={route("university-help-code")}>
+                            <Button
+                                size="small"
+                                variant="contained"
+                                color="info"
+                                endIcon={<East />}
+                            >
+                                Voltar
+                            </Button>
+                        </Link>
+                    </div>
+                </Paper>
+            </Modal>
         </GameLayout>
     );
 }
