@@ -1,7 +1,5 @@
 import InputError from "@/Components/Form/InputError";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { toast } from "@/utils/common/Toast";
-import { formatNumbersForMoney } from "@/utils/common/numbers";
 import { textFieldFilters } from "@/utils/helpers/textFieldFilters";
 import { useForm } from "@inertiajs/react";
 import { West } from "@mui/icons-material";
@@ -18,15 +16,12 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import { TimePicker } from "@mui/x-date-pickers";
 import { useEffect, useState } from "react";
 
 export default function StartGame({ games, roomCode }) {
     const { data, setData, errors, post, reset } = useForm({
         name: "",
         gameId: "",
-        timer: null,
-        maximumPoints: null,
     });
     const [hasRoomCode, setHasRoomCode] = useState(false);
 
@@ -46,20 +41,6 @@ export default function StartGame({ games, roomCode }) {
     };
 
     const { text } = textFieldFilters(setData);
-
-    const processNumberInput = (key, value) => {
-        const formattedValue = formatNumbersForMoney(value);
-        if (!formattedValue) {
-            setData(key, "");
-            if (value.length !== 0) {
-                toast.warn(
-                    "Informe apenas números. Zeros à esquerda e números negativos não são válidos."
-                );
-            }
-            return;
-        }
-        setData(key, formattedValue);
-    };
 
     return (
         <AuthenticatedLayout title="Iniciar Partida">
@@ -117,6 +98,7 @@ export default function StartGame({ games, roomCode }) {
                                             <Button
                                                 variant="contained"
                                                 type="button"
+                                                size="large"
                                                 startIcon={<West />}
                                                 onClick={() =>
                                                     setHasRoomCode(false)
@@ -153,6 +135,7 @@ export default function StartGame({ games, roomCode }) {
                                                     name="name"
                                                     value={data.name}
                                                     fullWidth
+                                                    autoFocus={!hasRoomCode}
                                                     onChange={text}
                                                     error={!!errors.name}
                                                     required
@@ -164,33 +147,8 @@ export default function StartGame({ games, roomCode }) {
                                                     className="flex justify-start"
                                                 />
                                             </div>
-                                            <div className="w-4/12">
-                                                <TimePicker
-                                                    views={[
-                                                        "minutes",
-                                                        "seconds",
-                                                    ]}
-                                                    id="timer"
-                                                    name="timer"
-                                                    value={data.timer}
-                                                    fullWidth
-                                                    onChange={(time) =>
-                                                        setData("timer", time)
-                                                    }
-                                                    error={!!errors.timer}
-                                                    required
-                                                    variant="outlined"
-                                                    label="Tempo Por Questão"
-                                                    disableOpenPicker
-                                                />
-                                                <InputError
-                                                    message={errors.timer}
-                                                    className="flex justify-start"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="w-full flex gap-x-2">
-                                            <div className="w-8/12">
+
+                                            <div className="w-6/12">
                                                 <FormControl
                                                     fullWidth
                                                     variant="outlined"
@@ -241,35 +199,10 @@ export default function StartGame({ games, roomCode }) {
                                                     />
                                                 </FormControl>
                                             </div>
-                                            <div className="w-4/12">
-                                                <TextField
-                                                    id="maximumPoints"
-                                                    name="maximumPoints"
-                                                    value={data.maximumPoints}
-                                                    fullWidth
-                                                    onChange={(e) =>
-                                                        processNumberInput(
-                                                            "maximumPoints",
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                    error={
-                                                        !!errors.maximumPoints
-                                                    }
-                                                    required
-                                                    variant="outlined"
-                                                    label="Pontuação Máxima"
-                                                />
-                                                <InputError
-                                                    message={
-                                                        errors.maximumPoints
-                                                    }
-                                                    className="flex justify-start"
-                                                />
-                                            </div>
                                         </div>
-                                        <Box className="flex justify-start">
+                                        <Box className="flex justify-end">
                                             <Button
+                                                size="large"
                                                 variant="contained"
                                                 type="submit"
                                                 color="success"

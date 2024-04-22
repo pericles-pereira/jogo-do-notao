@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\Admin\Game;
 
 use App\Http\Controllers\Controller;
-use App\Models\Groups\Games\Game;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Inertia\Response;
 use Source\Helpers\Controllers\Page;
 use Source\Helpers\Controllers\Redirect;
 use Source\Helpers\Models\Delete;
 use Source\Helpers\Models\Search;
+use Source\Helpers\Utils\Common\Decimals;
 use Source\Helpers\Utils\Common\Str;
 
 class GamesController extends Controller
@@ -36,7 +37,11 @@ class GamesController extends Controller
         $request->validate($validation);
 
         try {
-            $request->user()->group->game()->create(Str::camelToSnake($request->only(array_keys($validation))));
+            $data = $request->only(array_keys($validation));
+            $data['timer'] = Carbon::parse($data['timer'])->format('00:i:s');
+            $data['maximumPoints'] = Decimals::numericStringToDecimal($data['maximumPoints']);
+
+            $request->user()->group->game()->create(Str::camelToSnake($data));
         } catch (\Throwable $th) {
             return Redirect::back($th, 'Erro no servidor! Jogo não cadastrado.');
         }
@@ -56,7 +61,11 @@ class GamesController extends Controller
                 throw new \Error();
             }
 
-            $game->fill(Str::camelToSnake($request->only(array_keys($validation))));
+            $data = $request->only(array_keys($validation));
+            $data['timer'] = Carbon::parse($data['timer'])->format('00:i:s');
+            $data['maximumPoints'] = Decimals::numericStringToDecimal($data['maximumPoints']);
+
+            $game->fill(Str::camelToSnake($data));
             $game->save();
         } catch (\Throwable $th) {
             return Redirect::back($th, 'Erro no servidor! Jogo não atualizado.');
@@ -85,7 +94,9 @@ class GamesController extends Controller
         return [
             'name' => ['required', 'max:255'],
             'questions' => ['required', 'array'],
-            'acronym' => ['required', 'max:255']
+            'acronym' => ['required', 'max:255'],
+            "timer" => ['required'],
+            "maximumPoints" => ['required'],
         ];
     }
 }

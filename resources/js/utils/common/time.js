@@ -1,5 +1,9 @@
 // Função para converter a string de tempo em segundos
 export function parseTime(timeString) {
+    if (typeof timeString === "number") {
+        return timeString;
+    }
+
     const [minutes, seconds] = timeString.split(":").map(Number);
     return minutes * 60 + seconds;
 }

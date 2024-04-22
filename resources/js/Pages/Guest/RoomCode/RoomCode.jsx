@@ -15,6 +15,8 @@ export default function RoomCode() {
     const submit = (e) => {
         e.preventDefault();
 
+        if(data.roomCode.length !== 4) return;
+
         post(route("room-code.store"));
     };
 

@@ -46,7 +46,13 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
 
-            $user->group->game()->create(['name' => 'Jogo 1', 'acronym' => 'JOG001', 'questions' => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]]);
+            $user->group->game()->create([
+                'name' => 'Jogo 1',
+                'acronym' => 'JOG001',
+                'questions' => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                'maximum_points' => 2,
+                'timer' => '00:04:12'
+            ]);
         });
     }
 }

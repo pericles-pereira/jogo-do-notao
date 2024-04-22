@@ -19,7 +19,7 @@ import axios from "axios";
 import { formatTime, parseTime } from "@/utils/common/time";
 import { capitalizeFirstLetter } from "@/utils/common/strings";
 
-export default function Playing({ question, roomCode, timer, options }) {
+export default function UniversityHelp({ question, roomCode, timer, options }) {
     const { data, setData } = useForm({
         roomCode: roomCode,
         response: 99,

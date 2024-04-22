@@ -43,9 +43,7 @@ class StartGameController extends Controller
                 throw new \Error();
             }
 
-            $data = $request->only('name', 'timer', 'maximumPoints');
-            $data['timer'] = Carbon::parse($data['timer'])->format('00:i:s');
-            $data['maximumPoints'] = Decimals::numericStringToDecimal($data['maximumPoints']);
+            $data = $request->only('name');
 
             $startedGame = $game->startGame($data);
         } catch (\Throwable $th) {
@@ -62,8 +60,6 @@ class StartGameController extends Controller
         return [
             "name" => ['required', 'max:255'],
             "gameId" => ['required', 'integer'],
-            "timer" => ['required'],
-            "maximumPoints" => ['required']
         ];
     }
 }

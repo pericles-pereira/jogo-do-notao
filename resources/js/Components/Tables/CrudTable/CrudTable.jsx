@@ -269,6 +269,11 @@ export default function CrudTable({
                 if (lowerKey.includes("date")) {
                     editData[key] = dayjs(data[key]);
                 }
+                if (lowerKey.includes("timer")) {
+                    editData[key] = dayjs()
+                        .set("minutes", editData[key].slice(3, 5))
+                        .set("seconds", editData[key].slice(6));
+                }
             }
         }
 

@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Guest\PlayingController;
+use App\Http\Controllers\Guest\RankingController;
 use App\Http\Controllers\Guest\RoomCodeController;
 use App\Http\Controllers\Guest\UniversityHelpCodeController;
 use App\Http\Controllers\Guest\UniversityHelpController;
@@ -41,4 +42,6 @@ Route::middleware('guest')->group(function () {
 
     Route::get('university-help', [UniversityHelpController::class, 'index'])->name('university-help');
     Route::post('university-help', [UniversityHelpController::class, 'store'])->name('university-help.store');
+
+    Route::get('ranking/{gameAcronym}', [RankingController::class, 'index'])->name('ranking');
 });

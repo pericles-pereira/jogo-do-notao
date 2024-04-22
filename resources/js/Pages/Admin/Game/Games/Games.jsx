@@ -10,6 +10,8 @@ export default function Games({ games, questions, startedGames }) {
         name: "",
         acronym: "",
         questions: [],
+        timer: null,
+        maximumPoints: null,
     };
 
     const columns = [
@@ -21,6 +23,15 @@ export default function Games({ games, questions, startedGames }) {
             accessorKey: "name",
             header: "Nome do Jogo",
         },
+        {
+            accessorKey: "timer",
+            header: "Tempo",
+            Cell: ({ cell }) => <div>{cell.getValue().slice(3)}</div>,
+        },
+        {
+            accessorKey: "maximumPoints",
+            header: "Pontuação Máxima",
+        },
     ];
 
     const startedGamesColumns = [
@@ -31,10 +42,6 @@ export default function Games({ games, questions, startedGames }) {
         {
             accessorKey: "roomCode",
             header: "Sala",
-        },
-        {
-            accessorKey: "timer",
-            header: "Tempo",
         },
         {
             accessorKey: "game",

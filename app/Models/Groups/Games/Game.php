@@ -3,6 +3,7 @@
 namespace App\Models\Groups\Games;
 
 use App\Models\Groups\Category\Question\Question;
+use App\Models\Groups\Games\FinishedGames\FinishedGame;
 use App\Models\Groups\Games\StartedGames\StartedGame;
 use App\Models\Groups\Group;
 use Illuminate\Database\Eloquent\Collection;
@@ -10,12 +11,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 
 class Game extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'questions', 'acronym'];
+    protected $fillable = ['name', 'questions', 'acronym', 'maximum_points', 'timer'];
 
     public function setQuestionsAttribute($value): void
     {
@@ -42,14 +44,34 @@ class Game extends Model
         return $this->hasMany(StartedGame::class);
     }
 
+    public function finishedGame(): HasMany
+    {
+        return $this->hasMany(FinishedGame::class);
+    }
+
     public function startGame(array $data): StartedGame
     {
         return $this->startedGame()->create([
             'player_name' => $data['name'],
-            'timer' => $data['timer'],
             'room_code' => StartedGame::generateRoomCode(),
-            'maximum_points' => $data['maximumPoints']
         ]);
+    }
+
+    public static function finishGame(array $data, StartedGame $startedGame): FinishedGame
+    {
+        return DB::transaction(function () use ($data, $startedGame): FinishedGame {
+            $finishedGame = FinishedGame::create([
+                'player_name' => $startedGame->player_name,
+                'correct_responses' => $data['correctResponses'],
+                'in_minutes' => $data['inMinutes'],
+                'points' => $data['points'],
+                'game_id' => $startedGame->game_id
+            ]);
+
+            $startedGame->delete();
+
+            return $finishedGame;
+        }, 2);
     }
 
     #[\Override]

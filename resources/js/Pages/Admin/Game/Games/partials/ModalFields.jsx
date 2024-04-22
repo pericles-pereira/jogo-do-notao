@@ -1,4 +1,6 @@
 import InputError from "@/Components/Form/InputError";
+import { toast } from "@/utils/common/Toast";
+import { formatNumbersForMoney } from "@/utils/common/numbers";
 import { textFieldFilters } from "@/utils/helpers/textFieldFilters";
 import {
     Box,
@@ -11,6 +13,7 @@ import {
     TextField,
     useTheme,
 } from "@mui/material";
+import { TimePicker } from "@mui/x-date-pickers";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -33,9 +36,23 @@ export default function ModalFields({ data, setData, errors, questions }) {
     const theme = useTheme();
     const { text } = textFieldFilters(setData);
 
+    const processNumberInput = (key, value) => {
+        const formattedValue = formatNumbersForMoney(value);
+        if (!formattedValue) {
+            setData(key, "");
+            if (value.length !== 0) {
+                toast.warn(
+                    "Informe apenas números. Números negativos não são válidos."
+                );
+            }
+            return;
+        }
+        setData(key, formattedValue);
+    };
+
     return (
         <>
-            <div className="w-3/12 p-2 pl-0 pb-1">
+            <div className="w-2/12 p-2 pl-0 pb-1">
                 <TextField
                     id="acronym"
                     name="acronym"
@@ -52,7 +69,7 @@ export default function ModalFields({ data, setData, errors, questions }) {
                     className="flex justify-start"
                 />
             </div>
-            <div className="w-9/12 p-2 pl-0 pb-1">
+            <div className="w-6/12 p-2 pl-0 pb-1">
                 <TextField
                     id="name"
                     name="name"
@@ -69,7 +86,45 @@ export default function ModalFields({ data, setData, errors, questions }) {
                     className="flex justify-start"
                 />
             </div>
+            <div className="w-2/12 p-2 pl-0 pb-1">
+                <TextField
+                    id="maximumPoints"
+                    name="maximumPoints"
+                    value={data.maximumPoints}
+                    fullWidth
+                    onChange={(e) =>
+                        processNumberInput("maximumPoints", e.target.value)
+                    }
+                    error={!!errors.maximumPoints}
+                    required
+                    variant="outlined"
+                    label="Pontuação Máxima"
+                />
+                <InputError
+                    message={errors.maximumPoints}
+                    className="flex justify-start"
+                />
+            </div>
 
+            <div className="w-2/12 p-2 pl-0 pb-1">
+                <TimePicker
+                    views={["minutes", "seconds"]}
+                    id="timer"
+                    name="timer"
+                    value={data.timer}
+                    fullWidth
+                    onChange={(time) => setData("timer", time)}
+                    error={!!errors.timer}
+                    required
+                    variant="outlined"
+                    label="Tempo Por Questão"
+                    disableOpenPicker
+                />
+                <InputError
+                    message={errors.timer}
+                    className="flex justify-start"
+                />
+            </div>
             <div className="w-full p-2 pl-0 pb-1">
                 <FormControl
                     fullWidth

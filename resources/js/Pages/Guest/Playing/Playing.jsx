@@ -38,7 +38,8 @@ export default function Playing({
     questions,
     maximumPoints,
 }) {
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post } = useForm({
+        roomCode: roomCode,
         correctResponses: [],
         inMinutes: [],
         points: "0.00",
@@ -107,7 +108,6 @@ export default function Playing({
             if (correctAnswers === questions.length) {
                 setShowConfetti(true);
             }
-            console.log(data);
             clearInterval(timerInterval); // Pausa o cronômetro
         }
     }, [endGame]);
@@ -179,6 +179,7 @@ export default function Playing({
             if (selectedOption === currentQuestion.correctOption) {
                 setCorrectAnswers((prevAnswers) => prevAnswers + 1);
                 setData({
+                    roomCode: roomCode,
                     correctResponses: [
                         ...data.correctResponses,
                         currentQuestion.id,
@@ -823,13 +824,14 @@ export default function Playing({
                             </Typography>
                         </div>
                     </div>
-                    <div className="flex justify-end mt-5 pr-2">
+                    <div className="flex justify-end mt-3 pr-5">
                         <Button
                             variant="contained"
                             color="success"
                             endIcon={<East />}
+                            onClick={() => post(route("playing.store"))}
                         >
-                            Ranking
+                            Registrar Pontuação
                         </Button>
                     </div>
                     {showConfetti && (
