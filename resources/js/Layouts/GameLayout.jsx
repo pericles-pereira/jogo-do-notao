@@ -17,7 +17,7 @@ export default function GameLayout({ children, title = "" }) {
 
     return (
         <div
-            className="min-h-screen flex flex-col sm:justify-center items-center pt-6 bg-gray-100"
+            className="min-h-screen flex flex-col justify-center items-center align-middle pt-6 bg-gray-100"
             style={{
                 backgroundImage: `url(${background})`,
                 backgroundSize: "cover",

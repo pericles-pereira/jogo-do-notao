@@ -15,7 +15,7 @@ export default function RoomCode() {
     const submit = (e) => {
         e.preventDefault();
 
-        if(data.roomCode.length !== 4) return;
+        if (data.roomCode.length !== 4) return;
 
         post(route("room-code.store"));
     };
@@ -28,56 +28,65 @@ export default function RoomCode() {
                 </Link>
             </div>
 
-            <div
-                className="w-full sm:max-w-md mt-4 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg"
-                style={{ boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)" }}
-            >
-                <header className="text-center">
-                    <Typography
-                        variant="h5"
-                        className="text-gray-900 font-bold"
-                    >
-                        Entrar na Sala
-                    </Typography>
-
-                    <Typography variant="body2" className="mt-1 text-gray-600">
-                        Informe o código da sala para poder participar do jogo.
-                    </Typography>
-                </header>
-                <form onSubmit={submit} className="mt-5">
-                    <div>
-                        <InputLabel htmlFor="roomCode" value="Código da Sala" />
-
-                        <TextInput
-                            id="roomCode"
-                            name="roomCode"
-                            value={data.roomCode}
-                            className="mt-1 block w-full text-center text-lg border-gray-400"
-                            style={{ fontSize: "40px" }}
-                            isFocused={true}
-                            onChange={(e) =>
-                                e.target.value.length < 5 && numbers(e)
-                            }
-                        />
-
-                        <InputError
-                            message={errors.roomCode}
-                            className="mt-2"
-                        />
-                    </div>
-
-                    <div className="flex items-center justify-end mt-4">
-                        <Button
-                            className="ms-4"
-                            color="secondary"
-                            type="submit"
-                            variant="contained"
-                            disabled={processing}
+            <div className="px-2 lg:px-0">
+                <div
+                    className="w-full sm:max-w-md lg:px-6 lg:py-4 px-3 py-2 bg-white shadow-md overflow-hidden rounded-lg"
+                    style={{ boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.5)" }}
+                >
+                    <header className="text-center">
+                        <Typography
+                            variant="h5"
+                            className="text-gray-900 font-bold"
                         >
-                            <Typography>Entrar</Typography>
-                        </Button>
-                    </div>
-                </form>
+                            Entrar na Sala
+                        </Typography>
+
+                        <Typography
+                            variant="body2"
+                            className="mt-1 text-gray-600"
+                        >
+                            Informe o código da sala para poder participar do
+                            jogo.
+                        </Typography>
+                    </header>
+                    <form onSubmit={submit} className="mt-5">
+                        <div>
+                            <InputLabel
+                                htmlFor="roomCode"
+                                value="Código da Sala"
+                            />
+
+                            <TextInput
+                                id="roomCode"
+                                name="roomCode"
+                                value={data.roomCode}
+                                className="mt-1 block w-full text-center text-lg border-gray-400"
+                                style={{ fontSize: "40px" }}
+                                isFocused={true}
+                                onChange={(e) =>
+                                    e.target.value.length < 5 && numbers(e)
+                                }
+                            />
+
+                            <InputError
+                                message={errors.roomCode}
+                                className="mt-2"
+                            />
+                        </div>
+
+                        <div className="flex items-center justify-end mt-4">
+                            <Button
+                                className="ms-4"
+                                color="secondary"
+                                type="submit"
+                                variant="contained"
+                                disabled={processing}
+                            >
+                                <Typography>Entrar</Typography>
+                            </Button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </GameLayout>
     );
