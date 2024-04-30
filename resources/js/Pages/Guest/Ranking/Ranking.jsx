@@ -8,16 +8,17 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { TableVirtuoso } from "react-virtuoso";
 import GameLayout from "@/Layouts/GameLayout";
-import { Button, Grid, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { useMemo } from "react";
 import { formatTime, parseTime } from "@/utils/common/time";
 import announcer from "@/assets/images/game/announcer3-2.png";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { West } from "@mui/icons-material";
-import { useState } from "react";
+import HomeButton from "@/Components/HomeButton/HomeButton";
+import goldMedal from "@/assets/images/game/goldMedal.png";
+import silverMedal from "@/assets/images/game/silverMedal.png";
+import bronzeMedal from "@/assets/images/game/bronzeMedal.png";
 import { useEffect } from "react";
-import axios from "axios";
-import { Link } from "@inertiajs/react";
+import { useState } from "react";
 
 export default function Ranking({
     gameName,
@@ -25,25 +26,25 @@ export default function Ranking({
     maximumPoints,
     finishedGames,
 }) {
-    const [finishedGamesState, setFinishedGamesState] = useState(finishedGames);
+    // const [finishedGamesState, setFinishedGamesState] = useState(finishedGames);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            axios
-                .get(route("get-finished-games", { gameAcronym: gameAcronym }))
-                .then((res) => {
-                    if (res.data.error) throw new Error(res.data.message);
-                    setFinishedGamesState(res.data.finishedGames);
-                })
-                .catch((e) => console.log(e));
-        }, 3000);
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         axios
+    //             .get(route("get-finished-games", { gameAcronym: gameAcronym }))
+    //             .then((res) => {
+    //                 if (res.data.error) throw new Error(res.data.message);
+    //                 setFinishedGamesState(res.data.finishedGames);
+    //             })
+    //             .catch((e) => console.log(e));
+    //     }, 3000);
 
-        return () => clearInterval(interval);
-    }, []);
+    //     return () => clearInterval(interval);
+    // }, []);
 
     const sortedFinishedData = useMemo(
         () =>
-            finishedGamesState
+            finishedGames
                 .sort((a, b) => {
                     if (
                         b.correctResponses.length !== a.correctResponses.length
@@ -77,12 +78,12 @@ export default function Ranking({
                         )
                     ),
                 })),
-        [finishedGamesState]
+        [finishedGames]
     );
 
-    const columns = [
+    const [columns, setColumns] = useState([
         {
-            label: "Posição",
+            label: "",
             dataKey: "position",
         },
         {
@@ -101,34 +102,58 @@ export default function Ranking({
             label: "Tempo",
             dataKey: "time",
         },
-    ];
-
+    ]);
     const hideImages = useMediaQuery("(max-width:800px)");
+    const isMobile = useMediaQuery("(max-width:428px)");
+
+    useEffect(() => {
+        if (isMobile) {
+            setColumns([
+                {
+                    label: "",
+                    dataKey: "position",
+                },
+                {
+                    label: "Jogador",
+                    dataKey: "playerName",
+                },
+            ]);
+            return;
+        }
+
+        setColumns([
+            {
+                label: "",
+                dataKey: "position",
+            },
+            {
+                label: "Jogador",
+                dataKey: "playerName",
+            },
+            {
+                label: "Acertos",
+                dataKey: "correctResponses",
+            },
+            {
+                label: "Pontos",
+                dataKey: "points",
+            },
+            {
+                label: "Tempo",
+                dataKey: "time",
+            },
+        ]);
+    }, [isMobile]);
 
     return (
         <GameLayout title={`Ranking do Jogo`}>
-            <Link href={route("home")}>
-                <Button
-                    variant="contained"
-                    sx={{
-                        position: "absolute",
-                        top: "20px",
-                        left: "20px",
-                        backgroundColor: "black",
-                        ":hover": {
-                            backgroundColor: "rgba(0, 0, 0, 0.88)",
-                        },
-                    }}
-                    className=""
-                    startIcon={<West />}
-                >
-                    Voltar
-                </Button>
-            </Link>
+            <HomeButton />
             <Grid
                 container
                 spacing={3}
-                className="min-h-full px-20 justify-evenly"
+                className={`min-h-full justify-evenly ${
+                    hideImages ? (isMobile ? "px-3" : "px-10") : "px-20"
+                }`}
             >
                 {!hideImages && (
                     <Grid item xs={2} className="content-center">
@@ -194,6 +219,13 @@ export default function Ranking({
                                             key={column.dataKey}
                                             variant="head"
                                             align="center"
+                                            sx={{
+                                                width:
+                                                    column.dataKey ===
+                                                    "position"
+                                                        ? "60px"
+                                                        : "auto",
+                                            }}
                                         >
                                             <Typography
                                                 variant="h6"
@@ -210,14 +242,47 @@ export default function Ranking({
                                     {columns.map((column) => (
                                         <TableCell
                                             key={column.dataKey}
-                                            align="center"
+                                            align={
+                                                column.dataKey === "playerName"
+                                                    ? "left"
+                                                    : "center"
+                                            }
                                         >
-                                            <Typography
-                                                variant="subtitle1"
-                                                className="text-wrap"
-                                            >
-                                                {row[column.dataKey]}
-                                            </Typography>
+                                            {column.dataKey === "position" &&
+                                            row.position <= 3 ? (
+                                                <div
+                                                    style={{
+                                                        display: "flex",
+                                                        justifyContent:
+                                                            "center",
+                                                    }}
+                                                >
+                                                    <img
+                                                        src={
+                                                            row.position === 1
+                                                                ? goldMedal
+                                                                : row.position ===
+                                                                  2
+                                                                ? silverMedal
+                                                                : bronzeMedal
+                                                        }
+                                                        alt="medal"
+                                                        style={{
+                                                            objectFit: "cover",
+                                                            alignSelf: "center",
+                                                            minWidth: "25px",
+                                                            minHeight: "25px",
+                                                        }}
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <Typography
+                                                    variant="subtitle1"
+                                                    className="text-wrap"
+                                                >
+                                                    {row[column.dataKey]}
+                                                </Typography>
+                                            )}
                                         </TableCell>
                                     ))}
                                 </React.Fragment>

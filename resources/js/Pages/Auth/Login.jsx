@@ -7,6 +7,7 @@ import TextInput from '@/Components/Form/TextInput';
 import { Link, useForm } from '@inertiajs/react';
 import { Typography } from '@mui/material';
 import DefaultButton from '@/Components/Form/DefaultButton';
+import HomeButton from '@/Components/HomeButton/HomeButton';
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -29,6 +30,8 @@ export default function Login({ status, canResetPassword }) {
 
     return (
         <GuestLayout title='Login'>
+            <HomeButton color="#1976d2" hoverColor="#0f70d2"/>
+
             {status && !status.message && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
 
             <form onSubmit={submit}>

@@ -22,12 +22,7 @@ import { capitalizeFirstLetter } from "@/utils/common/strings";
 import coloredDragonBalls from "@/assets/images/game/coloredDragonBalls.png";
 import dragonBalls from "@/assets/images/game/dragonBalls.png";
 
-export default function Watch({
-    roomCode,
-    timer,
-    questions,
-    maximumPoints,
-}) {
+export default function Watch({ roomCode, timer, questions, maximumPoints }) {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [timeLeft, setTimeLeft] = useState(parseTime(timer.slice(3)));
     const [timerInterval, setTimerInterval] = useState(null);
@@ -92,7 +87,12 @@ export default function Watch({
 
                     return res.data;
                 })
-                .then(({ inGameRecords }) => {
+                .then(({ inGameRecords, ...rest }) => {
+                    if (rest.finish) {
+                        setEndGame(true);
+                        return;
+                    }
+
                     const inGameLength = inGameRecords.length;
 
                     if (inGameLength === 0) return;
@@ -385,7 +385,7 @@ export default function Watch({
                 <Paper
                     className="p-6 xl:m-12 overflow-auto"
                     sx={{
-                        padding: "24px",
+                        padding: "18px",
                         minWidth: "500px",
                         maxHeight: "90vh",
                     }}

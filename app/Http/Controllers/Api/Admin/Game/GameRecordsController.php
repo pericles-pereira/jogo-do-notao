@@ -22,7 +22,10 @@ class GameRecordsController extends Controller
             $game = StartedGame::where(['room_code' => $roomCode])->get()[0] ?? null;
 
             if (!$game) {
-                throw new \InvalidArgumentException('Esta sala não existe.');
+                return response()->json([
+                    'success' => true,
+                    'finish' => true
+                ]);
             }
 
             $inGameRecords = Search::allDataInCamel($game->inGameRecord);

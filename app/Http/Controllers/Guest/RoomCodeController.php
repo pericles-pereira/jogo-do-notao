@@ -3,20 +3,31 @@
 namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
+use App\Models\Groups\Games\Game;
 use App\Models\Groups\Games\StartedGames\StartedGame;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect as FacadesRedirect;
 use Inertia\Response;
 use Source\Helpers\Controllers\Page;
 use Source\Helpers\Controllers\Redirect;
+use Source\Helpers\Models\Search;
 use Source\Helpers\Utils\Common\Toast;
 
 class RoomCodeController extends Controller
 {
-    public function index(): Response
+    public function index(): Response | RedirectResponse
     {
-        return Page::render('Guest/RoomCode/RoomCode');
+        try {
+            $games = Search::allDataInCamel(Game::all());
+        } catch (\Throwable $th) {
+            return Redirect::back($th, 'Erro no servidor!');
+        }
+
+        return Page::render('Guest/RoomCode/RoomCode', [
+            'games' => $games
+        ]);
     }
 
     public function store(FormRequest $request): RedirectResponse

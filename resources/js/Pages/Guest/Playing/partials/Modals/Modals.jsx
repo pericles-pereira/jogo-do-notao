@@ -36,7 +36,7 @@ export default function Modals({
                             : "p-6 xl:m-12 overflow-auto"
                     }
                     sx={{
-                        padding: isMobile ? "" : "24px",
+                        padding: isMobile ? "" : "18px",
                         minWidth: isMobile ? "auto" : "500px",
                         maxWidth: !isMobile ? "auto" : "428px",
                         maxHeight: "90vh",
