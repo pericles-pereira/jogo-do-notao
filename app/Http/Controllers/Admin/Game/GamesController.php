@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Game;
 
 use App\Http\Controllers\Controller;
+use App\Models\Groups\Games\Game;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,16 +20,34 @@ class GamesController extends Controller
 {
     public function index(Request $request): Response | RedirectResponse
     {
+        $roomCode = session('roomCode');
+
         try {
             $group = $request->user()->group;
             $games = Search::allDataInCamel($group->game);
             $questions = Search::allDataInCamel($group->question);
             $startedGames = Search::allDataInCamel($group->startedGame);
+
+            foreach ($startedGames as $key => $value) {
+                $startedGames[$key]['game'] = Game::find($value['gameId'])->acronym;
+            }
+
+            $finishedGames = Search::allDataInCamel($group->finishedGame);
+
+            foreach ($finishedGames as $key => $value) {
+                $finishedGames[$key]['game'] = Game::find($value['gameId'])->acronym;
+            }
         } catch (\Throwable $th) {
             return Redirect::back($th, 'Erro no servidor! Falha ao carregar os dados da página.');
         }
 
-        return Page::render('Admin/Game/Games/Games', ['questions' => $questions, 'games' => $games, 'startedGames' => $startedGames]);
+        return Page::render('Admin/Game/Games/Games', [
+            'questions' => $questions,
+            'games' => $games,
+            'startedGames' => $startedGames,
+            'roomCode' => $roomCode,
+            'finishedGames' => $finishedGames
+        ]);
     }
 
     public function store(FormRequest $request): RedirectResponse

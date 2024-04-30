@@ -38,6 +38,7 @@ export default function SmallScreen({
     correctAnswers,
     questionPoints,
     questions,
+    disableAllQuestions,
 }) {
     return (
         <Grid container className="min-h-full">
@@ -57,10 +58,7 @@ export default function SmallScreen({
                                 height: "28px",
                             }}
                         />
-                        <Typography
-                            variant="body2"
-                            sx={{ fontSize: "30px" }}
-                        >
+                        <Typography variant="body2" sx={{ fontSize: "30px" }}>
                             {questionPoints[
                                 questions.length - correctAnswers
                             ] ?? "0.0"}
@@ -106,10 +104,11 @@ export default function SmallScreen({
                                     color="inherit"
                                     className="w-full block text-wrap"
                                     disabled={
-                                        disableCardQuestions.length > 0 &&
-                                        disableCardQuestions.some(
-                                            (value) => value === index
-                                        )
+                                        disableAllQuestions ||
+                                        (disableCardQuestions.length > 0 &&
+                                            disableCardQuestions.some(
+                                                (value) => value === index
+                                            ))
                                     }
                                     onClick={() =>
                                         !showCorrect &&

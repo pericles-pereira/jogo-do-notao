@@ -8,11 +8,16 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { TableVirtuoso } from "react-virtuoso";
 import GameLayout from "@/Layouts/GameLayout";
-import { Grid, Typography } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import { useMemo } from "react";
 import { formatTime, parseTime } from "@/utils/common/time";
 import announcer from "@/assets/images/game/announcer3-2.png";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { West } from "@mui/icons-material";
+import { useState } from "react";
+import { useEffect } from "react";
+import axios from "axios";
+import { Link } from "@inertiajs/react";
 
 export default function Ranking({
     gameName,
@@ -20,9 +25,25 @@ export default function Ranking({
     maximumPoints,
     finishedGames,
 }) {
+    const [finishedGamesState, setFinishedGamesState] = useState(finishedGames);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            axios
+                .get(route("get-finished-games", { gameAcronym: gameAcronym }))
+                .then((res) => {
+                    if (res.data.error) throw new Error(res.data.message);
+                    setFinishedGamesState(res.data.finishedGames);
+                })
+                .catch((e) => console.log(e));
+        }, 3000);
+
+        return () => clearInterval(interval);
+    }, []);
+
     const sortedFinishedData = useMemo(
         () =>
-            finishedGames
+            finishedGamesState
                 .sort((a, b) => {
                     if (
                         b.correctResponses.length !== a.correctResponses.length
@@ -56,7 +77,7 @@ export default function Ranking({
                         )
                     ),
                 })),
-        [finishedGames]
+        [finishedGamesState]
     );
 
     const columns = [
@@ -86,6 +107,24 @@ export default function Ranking({
 
     return (
         <GameLayout title={`Ranking do Jogo`}>
+            <Link href={route("home")}>
+                <Button
+                    variant="contained"
+                    sx={{
+                        position: "absolute",
+                        top: "20px",
+                        left: "20px",
+                        backgroundColor: "black",
+                        ":hover": {
+                            backgroundColor: "rgba(0, 0, 0, 0.88)",
+                        },
+                    }}
+                    className=""
+                    startIcon={<West />}
+                >
+                    Voltar
+                </Button>
+            </Link>
             <Grid
                 container
                 spacing={3}

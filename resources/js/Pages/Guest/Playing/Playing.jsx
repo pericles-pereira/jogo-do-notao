@@ -16,14 +16,14 @@ export default function Playing({
     timer,
     questions,
     maximumPoints,
+    gameAcronym,
 }) {
-    const { data, setData, post } = useForm({
+    const { data, setData } = useForm({
         roomCode: roomCode,
         correctResponses: [],
         inMinutes: [],
         points: "0.00",
     });
-
     const [gameStarted, setGameStarted] = useState(false);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [timeLeft, setTimeLeft] = useState(parseTime(timer.slice(3)));
@@ -45,12 +45,24 @@ export default function Playing({
     const [openQuitConfirmation, setOpenQuitConfirmation] = useState(false);
     const [threeDots, setThreeDots] = useState("");
     const [universityHelpTime, setUniversityHelpTime] = useState(0);
+    const [disableAllQuestions, setDisableAllQuestions] = useState(false);
 
     const isMobile = useMediaQuery("(max-width:428px)");
 
     const initializeGame = () => {
-        setGameStarted(true);
-        toast.success("Jogo iniciado. Boa sorte!!");
+        axios
+            .patch(route("set-playing-attribute"), {
+                roomCode: roomCode,
+            })
+            .then((res) => {
+                if (res.data.error) throw new Error(res.data.message);
+                setGameStarted(true);
+                toast.success("Jogo iniciado. Boa sorte!!");
+            })
+            .catch((e) => {
+                console.log(e);
+                toast.error("Erro ao inicializar o jogo.");
+            });
     };
 
     useEffect(() => {
@@ -134,12 +146,12 @@ export default function Playing({
             return points;
         };
 
-        setQuestionPoints(
-            distributePointsExponential(
-                questions.length,
-                parseFloat(maximumPoints)
-            )
+        const questionPoints = distributePointsExponential(
+            questions.length,
+            parseFloat(maximumPoints)
         );
+
+        setQuestionPoints(questionPoints);
     }, []);
 
     const toNextQuestion = () => {
@@ -155,16 +167,12 @@ export default function Playing({
     const handleAnswer = (selectedOption, index) => {
         if (!endGame) {
             clearInterval(timerInterval); // Pausa o cronômetro
-            setShowCorrect(true);
-
-            if (selectedOption === currentQuestion.correctOption) {
-                setCorrectAnswers((prevAnswers) => prevAnswers + 1);
-                setData({
+            setDisableAllQuestions(true);
+            axios
+                .post(route("set-question-response"), {
                     roomCode: roomCode,
-                    correctResponses: [
-                        ...data.correctResponses,
-                        currentQuestion.id,
-                    ],
+                    response: selectedOption,
+                    questionId: questions[currentQuestionIndex].id,
                     inMinutes: [
                         ...data.inMinutes,
                         formatTime(parseTime(timer.slice(3)) - timeLeft),
@@ -172,24 +180,55 @@ export default function Playing({
                     points: questionPoints[
                         questions.length - 1 - correctAnswers
                     ],
+                })
+                .then((res) => {
+                    if (res.data.error) throw new Error(res.data.message);
+                    setDisableAllQuestions(false);
+                    setShowCorrect(true);
+
+                    if (selectedOption === currentQuestion.correctOption) {
+                        setCorrectAnswers((prevAnswers) => prevAnswers + 1);
+                        setData({
+                            roomCode: roomCode,
+                            correctResponses: [
+                                ...data.correctResponses,
+                                currentQuestion.id,
+                            ],
+                            inMinutes: [
+                                ...data.inMinutes,
+                                formatTime(
+                                    parseTime(timer.slice(3)) - timeLeft
+                                ),
+                            ],
+                            points: questionPoints[
+                                questions.length - 1 - correctAnswers
+                            ],
+                        });
+
+                        toast.success("Resposta correta! Avançando...");
+                    } else {
+                        setShowIncorrect(index);
+                        toast.error("Resposta incorreta! Finalizando jogo...");
+                        setTimeout(async () => {
+                            setEndGame(true);
+                        }, 3500);
+                        return;
+                    }
+
+                    setTimeout(async () => {
+                        setShowCorrect(null);
+                        setShowIncorrect(null);
+                        // Avança para a próxima pergunta
+                        toNextQuestion();
+                    }, 3500);
+                })
+                .catch((e) => {
+                    console.log(e);
+                    toast.error("Falha ao registrar resposta.");
+                    setTimeout(async () => {
+                        setEndGame(true);
+                    }, 3500);
                 });
-
-                toast.success("Resposta correta! Avançando...");
-            } else {
-                setShowIncorrect(index);
-                toast.error("Resposta incorreta! Finalizando jogo...");
-                setTimeout(async () => {
-                    setEndGame(true);
-                }, 3500);
-                return;
-            }
-
-            setTimeout(async () => {
-                setShowCorrect(null);
-                setShowIncorrect(null);
-                // Avança para a próxima pergunta
-                toNextQuestion();
-            }, 3500);
         }
     };
 
@@ -383,6 +422,7 @@ export default function Playing({
                     showIncorrect={showIncorrect}
                     timeLeft={timeLeft}
                     questions={questions}
+                    disableAllQuestions={disableAllQuestions}
                 />
             ) : (
                 <LargeScreen
@@ -404,6 +444,7 @@ export default function Playing({
                     showCorrect={showCorrect}
                     showIncorrect={showIncorrect}
                     timeLeft={timeLeft}
+                    disableAllQuestions={disableAllQuestions}
                 />
             )}
             <Modals
@@ -412,7 +453,6 @@ export default function Playing({
                 handleCancelUniversityHelp={handleCancelUniversityHelp}
                 maximumPoints={maximumPoints}
                 openQuitConfirmation={openQuitConfirmation}
-                post={post}
                 questionPoints={questionPoints}
                 questions={questions}
                 setEndGame={setEndGame}
@@ -422,6 +462,7 @@ export default function Playing({
                 waitingUniversityHelp={waitingUniversityHelp}
                 threeDots={threeDots}
                 isMobile={isMobile}
+                gameAcronym={gameAcronym}
             />
         </GameLayout>
     );

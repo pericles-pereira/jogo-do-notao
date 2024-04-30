@@ -3,10 +3,12 @@
 namespace App\Models\Groups\Games\StartedGames;
 
 use App\Models\Groups\Games\Game;
+use App\Models\Groups\Games\StartedGames\InGameRecords\InGameRecord;
 use App\Models\Groups\Games\StartedGames\UniversityHelps\UniversityHelp;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class StartedGame extends Model
@@ -26,6 +28,11 @@ class StartedGame extends Model
     public function universityHelp(): HasOne
     {
         return $this->hasOne(UniversityHelp::class);
+    }
+
+    public function inGameRecord(): HasMany
+    {
+        return $this->hasMany(InGameRecord::class);
     }
 
     public static function generateRoomCode(): string

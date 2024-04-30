@@ -42,6 +42,7 @@ export default function CrudTable({
     renderActions = true,
     actions = null,
     rowSelection = true,
+    tableOptions = {},
     ...modalProperties
 }) {
     const [refreshData, setRefreshData] = useState(false);
@@ -50,7 +51,7 @@ export default function CrudTable({
     const [openConfirmDeletion, setOpenConfirmDeletion] = useState(false);
     const [inEdit, setInEdit] = useState(false);
 
-    const data = useMemo(() => tableData, [refreshData]);
+    const data = useMemo(() => tableData, [refreshData, tableData]);
     const columns = useMemo(() => tableColumns, []);
 
     const form = useForm(initialFormProps);
@@ -136,6 +137,7 @@ export default function CrudTable({
                 {actions && actions}
             </Grid>
         ),
+        ...tableOptions,
     });
 
     const getRows = ({ forExclusion } = { forExclusion: false }) => {

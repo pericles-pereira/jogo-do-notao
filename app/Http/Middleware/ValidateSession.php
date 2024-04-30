@@ -26,7 +26,7 @@ class ValidateSession
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            return Redirect::route('login')->with('status', Toast::error('Acesso negado! Usuário desativado.'));
+            return Redirect::route('home')->with('status', Toast::error('Acesso negado! Usuário desativado.'));
         }
 
         return $next($request);

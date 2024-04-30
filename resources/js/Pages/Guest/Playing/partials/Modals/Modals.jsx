@@ -4,6 +4,7 @@ import { East } from "@mui/icons-material";
 import sad from "@/assets/images/game/sad.png";
 import finish from "@/assets/images/game/finish.png";
 import { formatTime } from "@/utils/common/time";
+import { Link } from "@inertiajs/react";
 
 export default function Modals({
     endGame,
@@ -11,7 +12,6 @@ export default function Modals({
     questions,
     questionPoints,
     maximumPoints,
-    post,
     openQuitConfirmation,
     setOpenQuitConfirmation,
     handleCancelUniversityHelp,
@@ -21,6 +21,7 @@ export default function Modals({
     showConfetti,
     threeDots,
     isMobile,
+    gameAcronym,
 }) {
     return (
         <>
@@ -109,7 +110,7 @@ export default function Modals({
                                     <span className="text-green-700">
                                         {questionPoints[
                                             questions.length - correctAnswers
-                                        ] ?? "0.0"}
+                                        ] ?? "0.00"}
                                     </span>
                                     <span>
                                         /{parseFloat(maximumPoints).toFixed(2)}
@@ -123,15 +124,20 @@ export default function Modals({
                             isMobile ? "justify-center" : "justify-end pr-5"
                         } mt-3`}
                     >
-                        <Button
-                            variant="contained"
-                            color="success"
-                            size={isMobile ? "small" : "medium"}
-                            endIcon={<East />}
-                            onClick={() => post(route("playing.store"))}
+                        <Link
+                            href={route("ranking", {
+                                gameAcronym: gameAcronym,
+                            })}
                         >
-                            Registrar Pontuação
-                        </Button>
+                            <Button
+                                variant="contained"
+                                color="success"
+                                size={isMobile ? "small" : "medium"}
+                                endIcon={<East />}
+                            >
+                                Ranking
+                            </Button>
+                        </Link>
                     </div>
                     {showConfetti && (
                         <ReactConfetti

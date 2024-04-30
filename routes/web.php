@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Guest\RankingController;
 use Illuminate\Support\Facades\Route;
+use Source\Helpers\Controllers\Page;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,10 +15,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return to_route('login');
-});
-
 require __DIR__ . '/guest.php';
 
 require __DIR__ . '/auth.php';
+
+Route::get('ranking/{gameAcronym}', [RankingController::class, 'index'])->name('ranking');
+

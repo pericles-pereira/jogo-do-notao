@@ -11,16 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('at_game_records', function (Blueprint $table) {
+        Schema::create('in_game_records', function (Blueprint $table) {
             $table->id();
-            $table->string('question');
-            $table->string('options');
-            $table->integer('response');
-            $table->time('timer');
+            $table->string('response');
             $table->timestamps();
             $table->foreignId('question_id')->constrained('questions');
             $table->foreignId('started_game_id')->constrained('started_games')->cascadeOnDelete();
-            $table->unique('started_game_id');
         });
     }
 
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('at_game_records');
+        Schema::dropIfExists('in_game_records');
     }
 };

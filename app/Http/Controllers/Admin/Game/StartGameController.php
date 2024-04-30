@@ -3,34 +3,14 @@
 namespace App\Http\Controllers\Admin\Game;
 
 use App\Http\Controllers\Controller;
-use App\Models\Groups\Games\Game;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Redirect as FacadesRedirect;
-use Inertia\Response;
-use Source\Helpers\Controllers\Page;
 use Source\Helpers\Controllers\Redirect;
-use Source\Helpers\Models\Search;
-use Source\Helpers\Utils\Common\Decimals;
 use Source\Helpers\Utils\Common\Toast;
 
 class StartGameController extends Controller
 {
-    public function index(Request $request): Response | RedirectResponse
-    {
-        $roomCode = session('roomCode');
-
-        try {
-            $games = Search::allDataInCamel($request->user()->group->game);
-        } catch (\Throwable $th) {
-            return Redirect::back($th, 'Erro no servidor! Falha ao carregar os dados da página.');
-        }
-
-        return Page::render('Admin/Game/StartGame/StartGame', ['games' => $games, 'roomCode' => $roomCode]);
-    }
-
     public function store(FormRequest $request): RedirectResponse
     {
         $validation = $this->fieldsAndValidation();
@@ -50,7 +30,7 @@ class StartGameController extends Controller
             return Redirect::back($th, 'Erro no servidor! Jogo não iniciado.');
         }
 
-        return FacadesRedirect::route('game.start')
+        return FacadesRedirect::route('game.manage')
             ->with('status', Toast::success('Jogo iniciado.'))
             ->with('roomCode', $startedGame->room_code);
     }

@@ -9,8 +9,17 @@ use App\Http\Controllers\Guest\RoomCodeController;
 use App\Http\Controllers\Guest\UniversityHelpCodeController;
 use App\Http\Controllers\Guest\UniversityHelpController;
 use Illuminate\Support\Facades\Route;
+use Source\Helpers\Controllers\Page;
 
 Route::middleware('guest')->group(function () {
+    Route::get('/', function () {
+        return to_route('home');
+    });
+
+    Route::get('home', function () {
+        return Page::render('Guest/Home/Home');
+    })->name('home');
+
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
 
@@ -42,6 +51,4 @@ Route::middleware('guest')->group(function () {
 
     Route::get('university-help', [UniversityHelpController::class, 'index'])->name('university-help');
     Route::post('university-help', [UniversityHelpController::class, 'store'])->name('university-help.store');
-
-    Route::get('ranking/{gameAcronym}', [RankingController::class, 'index'])->name('ranking');
 });

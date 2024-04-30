@@ -4,13 +4,16 @@ namespace App\Models\Groups\Games;
 
 use App\Models\Groups\Category\Question\Question;
 use App\Models\Groups\Games\FinishedGames\FinishedGame;
+use App\Models\Groups\Games\StartedGames\InGameRecords\InGameRecord;
 use App\Models\Groups\Games\StartedGames\StartedGame;
+use App\Models\Groups\Games\StartedGames\UniversityHelps\UniversityHelp;
 use App\Models\Groups\Group;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Facades\DB;
 
 class Game extends Model
@@ -42,6 +45,16 @@ class Game extends Model
     public function startedGame(): HasMany
     {
         return $this->hasMany(StartedGame::class);
+    }
+
+    public function inGameRecord(): HasManyThrough
+    {
+        return $this->hasManyThrough(InGameRecord::class, StartedGame::class);
+    }
+
+    public function universityHelp(): HasManyThrough
+    {
+        return $this->hasManyThrough(UniversityHelp::class, StartedGame::class);
     }
 
     public function finishedGame(): HasMany

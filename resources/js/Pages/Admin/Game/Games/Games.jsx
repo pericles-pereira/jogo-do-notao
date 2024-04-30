@@ -1,11 +1,19 @@
 import CrudTable from "@/Components/Tables/CrudTable/CrudTable";
 import ModalFields from "./partials/ModalFields";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Box, Button, IconButton, Typography } from "@mui/material";
-import { Add, Check, Close, Replay } from "@mui/icons-material";
+import { Box, Button, IconButton, Tooltip, Typography } from "@mui/material";
+import { Add, Check, Close, EmojiEvents, Replay, Visibility } from "@mui/icons-material";
 import { Link } from "@inertiajs/react";
+import StartGame from "./partials/StartGame";
+import { formatTime, parseTime } from "@/utils/common/time";
 
-export default function Games({ games, questions, startedGames }) {
+export default function Games({
+    games,
+    questions,
+    startedGames,
+    roomCode,
+    finishedGames,
+}) {
     const initialFormProps = {
         name: "",
         acronym: "",
@@ -18,6 +26,7 @@ export default function Games({ games, questions, startedGames }) {
         {
             accessorKey: "acronym",
             header: "Sigla",
+            filterVariant: "select",
         },
         {
             accessorKey: "name",
@@ -36,35 +45,122 @@ export default function Games({ games, questions, startedGames }) {
 
     const startedGamesColumns = [
         {
+            accessorKey: "watch",
+            header: "",
+            enableColumnActions: false,
+            enableColumnDragging: false,
+            enableColumnFilter: false,
+            enableColumnOrdering: false,
+            enableSorting: false,
+            size: 10,
+            Cell: ({ cell }) => (
+                <div>
+                    <Link
+                        href={route("game.watch", {
+                            roomCode: cell.row.original.roomCode,
+                        })}
+                    >
+                        <Tooltip title="Assistir">
+                            <IconButton>
+                                <Visibility
+                                    color="info"
+                                    sx={{ fontSize: "28px" }}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                    </Link>
+                </div>
+            ),
+        },
+        {
             accessorKey: "playerName",
             header: "Jogador",
         },
         {
             accessorKey: "roomCode",
             header: "Sala",
+            filterVariant: "select",
         },
         {
             accessorKey: "game",
             header: "Jogo",
+            filterVariant: "select",
+        },
+        {
+            accessorKey: "playing",
+            header: "Em Partida",
             Cell: ({ cell }) => (
                 <div>
-                    {
-                        games.find(
-                            (game) => game.id === cell.row.original.gameId
-                        ).acronym
-                    }
+                    {cell.row.original.playing ? (
+                        <Check sx={{ fontSize: "32px" }} color="success" />
+                    ) : (
+                        <Close sx={{ fontSize: "32px" }} color="error" />
+                    )}
+                </div>
+            ),
+        },
+    ];
+
+    const finishedGamesColumns = [
+        {
+            accessorKey: "ranking",
+            header: "",
+            enableColumnActions: false,
+            enableColumnDragging: false,
+            enableColumnFilter: false,
+            enableColumnOrdering: false,
+            enableSorting: false,
+            size: 10,
+            Cell: ({ cell }) => (
+                <div>
+                    <Link
+                        href={route("ranking", {
+                            gameAcronym: cell.row.original.game,
+                        })}
+                    >
+                        <Tooltip title="Ranking">
+                            <IconButton>
+                                <EmojiEvents
+                                    color="secondary"
+                                    sx={{ fontSize: "28px" }}
+                                />
+                            </IconButton>
+                        </Tooltip>
+                    </Link>
                 </div>
             ),
         },
         {
-            accessorKey: "inGame",
-            header: "Em Partida",
+            accessorKey: "playerName",
+            header: "Jogador",
+        },
+        {
+            accessorKey: "game",
+            header: "Jogo",
+            filterVariant: "select",
+        },
+        {
+            accessorKey: "correctResponses",
+            header: "Acertos",
+            Cell: ({ cell }) => <div>{cell.getValue().length}</div>,
+        },
+        {
+            accessorKey: "points",
+            header: "Pontos",
+        },
+        {
+            accessorKey: "inMinutes",
+            header: "Tempo",
             Cell: ({ cell }) => (
                 <div>
-                    {cell.row.original.inGame ? (
-                        <Check sx={{ fontSize: "32px" }} color="success" />
-                    ) : (
-                        <Close sx={{ fontSize: "32px" }} color="error" />
+                    {formatTime(
+                        cell
+                            .getValue()
+                            .reduce(
+                                (prev, curr) =>
+                                    parseTime(prev) + parseTime(curr),
+                                0
+                            )
                     )}
                 </div>
             ),
@@ -83,6 +179,8 @@ export default function Games({ games, questions, startedGames }) {
     };
     return (
         <AuthenticatedLayout title="Gerenciar Jogos">
+            <StartGame games={games} roomCode={roomCode} />
+
             <Box className="flex justify-center align-middle w-full mt-4">
                 <Typography
                     className="text-center w-auto text-black opacity-90 text-wrap"
@@ -107,25 +205,16 @@ export default function Games({ games, questions, startedGames }) {
                 renderActions={false}
                 rowSelection={false}
                 actions={
-                    <>
-                        <Link href={route("game.start")} preserveScroll>
-                            <Button
-                                variant="contained"
-                                startIcon={<Add />}
-                                type="button"
-                            >
-                                <Typography variant="subtitle2">
-                                    Criar
-                                </Typography>
-                            </Button>
-                        </Link>
-                        <Link href={route("game.manage")} preserveScroll>
-                            <IconButton>
-                                <Replay />
-                            </IconButton>
-                        </Link>
-                    </>
+                    <Link href={route("game.manage")} preserveScroll>
+                        <IconButton>
+                            <Replay />
+                        </IconButton>
+                    </Link>
                 }
+                tableOptions={{
+                    enableFacetedValues: true,
+                    initialState: { showColumnFilters: true },
+                }}
             />
 
             <Box className="flex justify-center align-middle w-full mt-4">
@@ -147,8 +236,8 @@ export default function Games({ games, questions, startedGames }) {
                 ></div>
             </Box>
             <CrudTable
-                tableColumns={startedGamesColumns}
-                tableData={startedGames}
+                tableColumns={finishedGamesColumns}
+                tableData={finishedGames}
                 renderActions={false}
                 rowSelection={false}
                 actions={
@@ -158,6 +247,10 @@ export default function Games({ games, questions, startedGames }) {
                         </IconButton>
                     </Link>
                 }
+                tableOptions={{
+                    enableFacetedValues: true,
+                    initialState: { showColumnFilters: true },
+                }}
             />
 
             <Box className="flex justify-center align-middle w-full mt-4">
@@ -187,6 +280,10 @@ export default function Games({ games, questions, startedGames }) {
                 ModalFields={ModalFields}
                 headers={headers}
                 questions={questions}
+                tableOptions={{
+                    enableFacetedValues: true,
+                    initialState: { showColumnFilters: true },
+                }}
             />
         </AuthenticatedLayout>
     );

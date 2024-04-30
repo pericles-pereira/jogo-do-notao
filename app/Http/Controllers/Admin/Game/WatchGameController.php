@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Guest;
+namespace App\Http\Controllers\Admin\Game;
 
 use App\Http\Controllers\Controller;
 use App\Models\Groups\Category\Question\Question;
-use App\Models\Groups\Games\Game;
 use App\Models\Groups\Games\StartedGames\StartedGame;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\RedirectResponse;
@@ -16,20 +15,19 @@ use Source\Helpers\Controllers\Redirect;
 use Source\Helpers\Utils\Common\Str;
 use Source\Helpers\Utils\Common\Toast;
 
-class PlayingController extends Controller
+class WatchGameController extends Controller
 {
-    public function index(): Response | RedirectResponse
+    public function show(string $roomCode): Response | RedirectResponse
     {
         try {
-            if (!session('canEntry')) {
-                throw new UnauthorizedException('Você não informou uma sala.');
-            }
-            $roomCode = session('roomCode');
-
             $startedGame = StartedGame::where(['room_code' => $roomCode])->get()[0] ?? null;
 
             if (!$startedGame) {
                 throw new \InvalidArgumentException('Esta sala não existe.');
+            }
+
+            if (!$startedGame->playing) {
+                throw new \DomainException('Esta partida ainda não foi iniciada.');
             }
 
             $questions = [];
@@ -37,59 +35,53 @@ class PlayingController extends Controller
                 $questions[] = Str::snakeToCamel(Question::find($value)->toArray());
             }
 
-            $acronym = $startedGame->game->acronym;
-
             usort($questions, fn ($item, $next) => $item['difficulty'] <=> $next['difficulty']);
         } catch (\Throwable $th) {
             if ($th instanceof UnauthorizedException) {
                 return Redirect::routeError('room-code', $th->getMessage());
             }
-            if ($th instanceof \InvalidArgumentException) {
+            if ($th instanceof \InvalidArgumentException || $th instanceof \DomainException) {
                 return Redirect::back($th, $th->getMessage());
             }
         }
 
-        return Page::render('Guest/Playing/Playing', [
-            'playerName' => $startedGame->player_name,
+        return Page::render('Admin/Game/Watch/Watch', [
             'roomCode' => $roomCode,
             'timer' => $startedGame->game->timer,
             'questions' => $questions,
             'maximumPoints' => $startedGame->game->maximum_points,
-            'gameAcronym' => $acronym
         ]);
     }
 
     public function store(FormRequest $request): RedirectResponse
     {
-        $request->validate([
-            'roomCode' => ['required', 'digits:4'],
-            'correctResponses' => ['array'],
-            'inMinutes' => ['array'],
-            'points' => ['required'],
-        ]);
+        $validation = $this->fieldsAndValidation();
+        $request->validate($validation);
 
         try {
-            $roomCode = $request->roomCode;
+            $game = $request->user()->group->game->find($request->only('gameId')['gameId']);
 
-            $startedGame = StartedGame::where(['room_code' => $roomCode])->get()[0] ?? null;
-
-            if (!$startedGame) {
-                throw new \InvalidArgumentException('Esta sala não existe.');
+            if (!$game) {
+                throw new \Error();
             }
 
-            $acronym = $startedGame->game->acronym;
+            $data = $request->only('name');
 
-            Game::finishGame($request->only([
-                'roomCode',
-                'correctResponses',
-                'inMinutes',
-                'points',
-            ]), $startedGame);
+            $startedGame = $game->startGame($data);
         } catch (\Throwable $th) {
-            return Redirect::back($th, 'Erro no servidor! Não foi possível salvar seu progresso.');
+            return Redirect::back($th, 'Erro no servidor! Jogo não iniciado.');
         }
 
-        return FacadesRedirect::route('ranking', ['gameAcronym' => $acronym])
-            ->with('status', Toast::success('Pontuação registrada!'));
+        return FacadesRedirect::route('game.start')
+            ->with('status', Toast::success('Jogo iniciado.'))
+            ->with('roomCode', $startedGame->room_code);
+    }
+
+    private function fieldsAndValidation(): array
+    {
+        return [
+            "name" => ['required', 'max:255'],
+            "gameId" => ['required', 'integer'],
+        ];
     }
 }

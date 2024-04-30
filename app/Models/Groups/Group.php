@@ -4,6 +4,7 @@ namespace App\Models\Groups;
 
 use App\Models\Groups\Category\Category;
 use App\Models\Groups\Category\Question\Question;
+use App\Models\Groups\Games\FinishedGames\FinishedGame;
 use App\Models\Groups\Games\Game;
 use App\Models\Groups\Games\StartedGames\StartedGame;
 use App\Models\Users\User;
@@ -43,5 +44,10 @@ class Group extends Model
     public function startedGame(): HasManyThrough
     {
         return $this->hasManyThrough(StartedGame::class, Game::class);
+    }
+
+    public function finishedGame(): HasManyThrough
+    {
+        return $this->hasManyThrough(FinishedGame::class, Game::class);
     }
 }

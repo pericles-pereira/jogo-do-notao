@@ -39,6 +39,7 @@ export default function LargeScreen({
     handleJump,
     handleUniversityHelp,
     setOpenQuitConfirmation,
+    disableAllQuestions,
 }) {
     return (
         <Grid container spacing={3} className="min-h-full justify-evenly">
@@ -115,7 +116,7 @@ export default function LargeScreen({
                     <Paper elevation={3} className="p-4">
                         <Typography
                             variant="h6"
-                            className="w-full text-wrap flex justify-center align-middle text-center p-3"
+                            className="w-full text-wrap flex justify-center align-middle text-justify p-3"
                         >
                             {capitalizeFirstLetter(currentQuestion.statement)}
                         </Typography>
@@ -149,10 +150,11 @@ export default function LargeScreen({
                                     color="inherit"
                                     className="w-full block text-wrap"
                                     disabled={
-                                        disableCardQuestions.length > 0 &&
-                                        disableCardQuestions.some(
-                                            (value) => value === index
-                                        )
+                                        disableAllQuestions ||
+                                        (disableCardQuestions.length > 0 &&
+                                            disableCardQuestions.some(
+                                                (value) => value === index
+                                            ))
                                     }
                                     onClick={() =>
                                         !showCorrect &&
