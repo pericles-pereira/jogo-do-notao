@@ -163,120 +163,128 @@ export default function SmallScreen({
 
                 <Box className="p-1 flex justify-center align-middle gap-0.5 flex-wrap">
                     <Tooltip title="Sortear Carta">
-                        <Button
-                            variant="contained"
-                            color="inherit"
-                            disabled={!canUseCards}
-                            className="pr-2"
-                            onClick={handleCards}
-                            sx={{
-                                height: "40px",
-                                width: "35px",
-                                padding: 0,
-                                backgroundColor: "#7435e0eb",
-                                ":hover": {
-                                    backgroundColor: "#622bc1eb",
-                                },
-                                ":disabled": {
-                                    backgroundColor: "#5424a764",
-                                },
-                            }}
-                        >
-                            <img
-                                src={cards}
-                                alt="cards"
-                                style={{
-                                    objectFit: "cover",
+                        <span>
+                            <Button
+                                variant="contained"
+                                color="inherit"
+                                disabled={!canUseCards}
+                                className="pr-2"
+                                onClick={handleCards}
+                                sx={{
+                                    height: "40px",
+                                    width: "35px",
+                                    padding: 0,
+                                    backgroundColor: "#7435e0eb",
+                                    ":hover": {
+                                        backgroundColor: "#622bc1eb",
+                                    },
+                                    ":disabled": {
+                                        backgroundColor: "#5424a764",
+                                    },
                                 }}
-                            />
-                        </Button>
+                            >
+                                <img
+                                    src={cards}
+                                    alt="cards"
+                                    style={{
+                                        objectFit: "cover",
+                                    }}
+                                />
+                            </Button>
+                        </span>
                     </Tooltip>
 
                     <Tooltip title="Pular Questão">
-                        <Button
-                            variant="contained"
-                            color="inherit"
-                            disabled={!canJump}
-                            onClick={handleJump}
-                            sx={{
-                                height: "40px",
-                                width: "35px",
-                                padding: 0,
-                                backgroundColor: "#2c62e0eb",
-                                ":hover": {
-                                    backgroundColor: "#2a54b6eb",
-                                },
-                                ":disabled": {
-                                    backgroundColor: "#2e61d95a",
-                                },
-                            }}
-                        >
-                            <img
-                                src={jump}
-                                alt="jump"
-                                style={{
-                                    objectFit: "cover",
+                        <span>
+                            <Button
+                                variant="contained"
+                                color="inherit"
+                                disabled={!canJump}
+                                onClick={handleJump}
+                                sx={{
+                                    height: "40px",
+                                    width: "35px",
+                                    padding: 0,
+                                    backgroundColor: "#2c62e0eb",
+                                    ":hover": {
+                                        backgroundColor: "#2a54b6eb",
+                                    },
+                                    ":disabled": {
+                                        backgroundColor: "#2e61d95a",
+                                    },
                                 }}
-                            />
-                        </Button>
+                            >
+                                <img
+                                    src={jump}
+                                    alt="jump"
+                                    style={{
+                                        objectFit: "cover",
+                                    }}
+                                />
+                            </Button>
+                        </span>
                     </Tooltip>
 
                     <Tooltip title="Ajuda dos Universitários">
-                        <Button
-                            variant="contained"
-                            color="inherit"
-                            disabled={!canUseUniversityHelp}
-                            onClick={handleUniversityHelp}
-                            sx={{
-                                height: "40px",
-                                width: "35px",
-                                padding: 0,
-                                backgroundColor: "#e1613aeb",
-                                ":hover": {
-                                    backgroundColor: "#b44d2eeb",
-                                },
-                                ":disabled": {
-                                    backgroundColor: "#df4a1d79",
-                                },
-                            }}
-                        >
-                            <img
-                                src={universityHelp}
-                                alt="universityHelp"
-                                style={{
-                                    objectFit: "cover",
+                        <span>
+                            <Button
+                                variant="contained"
+                                color="inherit"
+                                disabled={!canUseUniversityHelp}
+                                onClick={handleUniversityHelp}
+                                sx={{
+                                    height: "40px",
+                                    width: "35px",
+                                    padding: 0,
+                                    backgroundColor: "#e1613aeb",
+                                    ":hover": {
+                                        backgroundColor: "#b44d2eeb",
+                                    },
+                                    ":disabled": {
+                                        backgroundColor: "#df4a1d79",
+                                    },
                                 }}
-                            />
-                        </Button>
+                            >
+                                <img
+                                    src={universityHelp}
+                                    alt="universityHelp"
+                                    style={{
+                                        objectFit: "cover",
+                                    }}
+                                />
+                            </Button>
+                        </span>
                     </Tooltip>
 
                     <Tooltip title="Ajuda da Plateia">
-                        <Button
-                            variant="contained"
-                            color="inherit"
-                            disabled={!canUseAudience}
-                            onClick={handleAudience}
-                            sx={{
-                                height: "40px",
-                                width: "35px",
-                                padding: 0,
-                                backgroundColor: "#ce2ce0eb",
-                                ":hover": {
-                                    backgroundColor: "#a12aaeeb",
-                                },
-                                ":disabled": {
-                                    backgroundColor: "#cb1adf50",
-                                },
-                            }}
-                        >
-                            <img
-                                src={audience}
-                                alt="audience"
-                                style={{
-                                    objectFit: "cover",
+                        <span>
+                            <Button
+                                variant="contained"
+                                color="inherit"
+                                disabled={!canUseAudience}
+                                onClick={handleAudience}
+                                sx={{
+                                    height: "40px",
+                                    width: "35px",
+                                    padding: 0,
+                                    backgroundColor: "#ce2ce0eb",
+                                    ":hover": {
+                                        backgroundColor: "#a12aaeeb",
+                                    },
+                                    ":disabled": {
+                                        backgroundColor: "#cb1adf50",
+                                    },
                                 }}
-                            />
-                        </Button>
+                            >
+                                <img
+                                    src={audience}
+                                    alt="audience"
+                                    style={{
+                                        objectFit: "cover",
+                                    }}
+                                />
+                            </Button>
+                        </span>
                     </Tooltip>
                 </Box>
                 <Box className="flex px-6 mt-1 justify-center">

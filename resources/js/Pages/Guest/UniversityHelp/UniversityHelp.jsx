@@ -10,6 +10,7 @@ import {
     ListItem,
     ListItemText,
     Modal,
+    useMediaQuery,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import universityHelpImage from "@/assets/images/game/universityHelpImage.png";
@@ -24,6 +25,9 @@ export default function UniversityHelp({ question, roomCode, timer, options }) {
         roomCode: roomCode,
         response: 99,
     });
+
+    const isMobile = useMediaQuery("(max-width:428px)");
+    const hideImages = useMediaQuery("(max-width:800px)");
 
     const [timeLeft, setTimeLeft] = useState(parseTime(timer.slice(3)));
     const [timerInterval, setTimerInterval] = useState(null);
@@ -77,9 +81,11 @@ export default function UniversityHelp({ question, roomCode, timer, options }) {
             <Grid
                 container
                 spacing={3}
-                className="min-h-full justify-end gap-x-32"
+                className={`min-h-full gap-x-32 ${
+                    hideImages ? "justify-center" : "justify-end"
+                }`}
             >
-                <Grid item xs={7} className="content-center">
+                <Grid item xs={hideImages ? 11 : 7} className="content-center">
                     <Typography
                         variant="body1"
                         className="p-1 flex justify-end text-white"
@@ -139,6 +145,7 @@ export default function UniversityHelp({ question, roomCode, timer, options }) {
                                                                     "8px",
                                                             }}
                                                             component="span"
+                                                            className="text-nowrap align-middle"
                                                         >
                                                             {index + 1} -
                                                         </Typography>
@@ -162,18 +169,20 @@ export default function UniversityHelp({ question, roomCode, timer, options }) {
                         </List>
                     </div>
                 </Grid>
-                <Grid
-                    item
-                    xs={3}
-                    className="content-center"
-                    sx={{ marginTop: "-16px" }}
-                >
-                    <img
-                        src={universityHelpImage}
-                        alt="universityHelpImage"
-                        className="fill-current object-cover px-4"
-                    />
-                </Grid>
+                {!hideImages && (
+                    <Grid
+                        item
+                        xs={3}
+                        className="content-center"
+                        sx={{ marginTop: "-16px" }}
+                    >
+                        <img
+                            src={universityHelpImage}
+                            alt="universityHelpImage"
+                            className="fill-current object-cover px-4"
+                        />
+                    </Grid>
+                )}
             </Grid>
 
             <Modal

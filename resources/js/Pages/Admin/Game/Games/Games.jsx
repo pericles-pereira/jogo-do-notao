@@ -1,11 +1,27 @@
 import CrudTable from "@/Components/Tables/CrudTable/CrudTable";
 import ModalFields from "./partials/ModalFields";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Box, Button, IconButton, Tooltip, Typography } from "@mui/material";
-import { Add, Check, Close, EmojiEvents, Replay, Visibility } from "@mui/icons-material";
-import { Link } from "@inertiajs/react";
+import {
+    Box,
+    Button,
+    IconButton,
+    Modal,
+    Paper,
+    Tooltip,
+    Typography,
+} from "@mui/material";
+import {
+    Check,
+    Close,
+    EmojiEvents,
+    PhonelinkErase,
+    Replay,
+    Visibility,
+} from "@mui/icons-material";
+import { Link, useForm } from "@inertiajs/react";
 import StartGame from "./partials/StartGame";
 import { formatTime, parseTime } from "@/utils/common/time";
+import { useState } from "react";
 
 export default function Games({
     games,
@@ -14,6 +30,10 @@ export default function Games({
     roomCode,
     finishedGames,
 }) {
+    const { delete: destroy, processing } = useForm();
+    const [openModal, setOpenModal] = useState(false);
+    const [modalRoomCode, setModalRoomCode] = useState(null);
+
     const initialFormProps = {
         name: "",
         acronym: "",
@@ -43,6 +63,16 @@ export default function Games({
         },
     ];
 
+    const handleOpenModal = (roomCode) => {
+        setModalRoomCode(roomCode);
+        setOpenModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setModalRoomCode(null);
+        setOpenModal(false);
+    };
+
     const startedGamesColumns = [
         {
             accessorKey: "watch",
@@ -52,9 +82,9 @@ export default function Games({
             enableColumnFilter: false,
             enableColumnOrdering: false,
             enableSorting: false,
-            size: 10,
+            size: 30,
             Cell: ({ cell }) => (
-                <div>
+                <div className="flex">
                     <Link
                         href={route("game.watch", {
                             roomCode: cell.row.original.roomCode,
@@ -64,11 +94,23 @@ export default function Games({
                             <IconButton>
                                 <Visibility
                                     color="info"
-                                    sx={{ fontSize: "28px" }}
+                                    sx={{ fontSize: "26px" }}
                                 />
                             </IconButton>
                         </Tooltip>
                     </Link>
+                    <Tooltip title="Finalizar Jogo">
+                        <IconButton
+                            onClick={() =>
+                                handleOpenModal(cell.row.original.roomCode)
+                            }
+                        >
+                            <PhonelinkErase
+                                color="error"
+                                sx={{ fontSize: "26px" }}
+                            />
+                        </IconButton>
+                    </Tooltip>
                 </div>
             ),
         },
@@ -285,6 +327,56 @@ export default function Games({
                     initialState: { showColumnFilters: true },
                 }}
             />
+
+            <Modal
+                open={openModal}
+                onClose={handleCloseModal}
+                className="flex justify-center items-center w-full h-full overflow-auto"
+            >
+                <Paper
+                    className="p-6 xl:m-12 overflow-auto"
+                    sx={{ padding: "24px" }}
+                >
+                    <Typography variant="h6">
+                        Confirmar Finalização de Jogo
+                    </Typography>
+                    <Typography variant="body1" component="p">
+                        Você tem certeza que deseja finalizar este jogo
+                        forçadamente?
+                        <p>O jogador manterá seu progresso até agora.</p>
+                    </Typography>
+
+                    <div className="flex justify-between mt-8">
+                        <Button
+                            color="error"
+                            type="button"
+                            onClick={() => {
+                                destroy(
+                                    route("game.finish", {
+                                        roomCode: modalRoomCode,
+                                    }),
+                                    {
+                                        preserveScroll: true,
+                                        onSuccess: handleCloseModal,
+                                    }
+                                );
+                            }}
+                            variant="contained"
+                            disabled={processing}
+                        >
+                            Sim, finalizar jogo
+                        </Button>
+
+                        <Button
+                            variant="contained"
+                            color="inherit"
+                            onClick={handleCloseModal}
+                        >
+                            Sair
+                        </Button>
+                    </div>
+                </Paper>
+            </Modal>
         </AuthenticatedLayout>
     );
 }

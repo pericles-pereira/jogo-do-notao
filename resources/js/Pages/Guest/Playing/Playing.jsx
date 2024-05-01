@@ -43,9 +43,9 @@ export default function Playing({
     const [waitingUniversityHelp, setWaitingUniversityHelp] = useState(false);
     const [showConfetti, setShowConfetti] = useState(false);
     const [openQuitConfirmation, setOpenQuitConfirmation] = useState(false);
-    const [threeDots, setThreeDots] = useState("");
     const [universityHelpTime, setUniversityHelpTime] = useState(0);
     const [disableAllQuestions, setDisableAllQuestions] = useState(false);
+    const [universityResponses, setUniversityResponses] = useState([]);
 
     const isMobile = useMediaQuery("(max-width:428px)");
 
@@ -73,7 +73,11 @@ export default function Playing({
                 }, 1000);
                 setTimerInterval(interval);
                 return () => clearInterval(interval);
-            } else if (gameStarted && timeLeft === 0) {
+            } else if (
+                gameStarted &&
+                timeLeft === 0 &&
+                universityResponses.length === 0
+            ) {
                 toast.error("Tempo esgotado!");
                 setTimeout(async () => {
                     setEndGame(true);
@@ -102,6 +106,18 @@ export default function Playing({
                 setShowConfetti(true);
             }
             clearInterval(timerInterval); // Pausa o cronômetro
+
+            axios
+                .post(route("finish-game"), data)
+                .then((res) => {
+                    if (res.data.error) throw new Error(res.data.message);
+                })
+                .catch((e) => {
+                    toast.error(
+                        "Erro no servidor! Não foi possível salvar seu progresso."
+                    );
+                    console.log(e);
+                });
         }
     }, [endGame]);
 
@@ -156,6 +172,9 @@ export default function Playing({
 
     const toNextQuestion = () => {
         if (currentQuestionIndex < questions.length - 1) {
+            setShowCorrect(null);
+            setShowIncorrect(null);
+            setUniversityResponses([]);
             setDisableCardQuestions([]);
             setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
             setTimeLeft(parseTime(timer.slice(3))); // Reinicia o cronômetro para a próxima pergunta
@@ -216,8 +235,6 @@ export default function Playing({
                     }
 
                     setTimeout(async () => {
-                        setShowCorrect(null);
-                        setShowIncorrect(null);
                         // Avança para a próxima pergunta
                         toNextQuestion();
                     }, 3500);
@@ -327,7 +344,7 @@ export default function Playing({
 
     const finishUniversityHelp = () => {
         setWaitingUniversityHelp(false);
-        toNextQuestion();
+        setTimeLeft(60);
     };
 
     const handleCancelUniversityHelp = () => {
@@ -348,24 +365,17 @@ export default function Playing({
                         roomCode: roomCode,
                     })
                 )
-                .then((res) => {
-                    if (res.data.error) throw new Error(res.data.message);
-                    if (res.data.waiting) {
-                        return;
-                    }
+                .then(({ data }) => {
+                    if (data.error) throw new Error(data.message);
 
-                    if (res.data.response !== null) {
-                        setWaitingUniversityHelp(false);
-                        const indice = res.data.response;
-                        if (parseInt(indice) === 99) {
-                            toast.error("Sua ajuda não respondeu a tempo! ");
-                            setTimeout(async () => {
-                                setEndGame(true);
-                            }, 3500);
-                            return;
-                        }
-                        const chosenOption = options[indice];
-                        handleAnswer(chosenOption, indice);
+                    const response = data.response;
+
+                    if (response !== universityResponses)
+                        setUniversityResponses(response);
+
+                    if (response?.length === 3) {
+                        toast.success("Todas as respostas recebidas.");
+                        finishUniversityHelp();
                     }
                 })
                 .catch((error) => console.error(error));
@@ -379,19 +389,6 @@ export default function Playing({
             return () => clearInterval(interval);
         }
     }, [waitingUniversityHelp]);
-
-    useEffect(() => {
-        if (waitingUniversityHelp) {
-            setTimeout(() => {
-                if (threeDots.length < 3) {
-                    setThreeDots(`${threeDots}.`);
-                    return;
-                }
-
-                setThreeDots("");
-            }, 400);
-        }
-    }, [waitingUniversityHelp, threeDots]);
 
     return (
         <GameLayout title={`Sala ${roomCode}`}>
@@ -423,6 +420,7 @@ export default function Playing({
                     timeLeft={timeLeft}
                     questions={questions}
                     disableAllQuestions={disableAllQuestions}
+                    universityResponses={universityResponses}
                 />
             ) : (
                 <LargeScreen
@@ -445,6 +443,7 @@ export default function Playing({
                     showIncorrect={showIncorrect}
                     timeLeft={timeLeft}
                     disableAllQuestions={disableAllQuestions}
+                    universityResponses={universityResponses}
                 />
             )}
             <Modals
@@ -460,9 +459,10 @@ export default function Playing({
                 showConfetti={showConfetti}
                 universityHelpTime={universityHelpTime}
                 waitingUniversityHelp={waitingUniversityHelp}
-                threeDots={threeDots}
                 isMobile={isMobile}
                 gameAcronym={gameAcronym}
+                currentUniversityResponses={universityResponses.length}
+                roomCode={roomCode}
             />
         </GameLayout>
     );

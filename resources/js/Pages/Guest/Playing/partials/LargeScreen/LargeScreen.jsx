@@ -8,6 +8,7 @@ import {
     ListItemText,
     Box,
     Tooltip,
+    Badge,
 } from "@mui/material";
 import announcer from "@/assets/images/game/announcer2.png";
 import cards from "@/assets/images/game/cards.png";
@@ -40,6 +41,7 @@ export default function LargeScreen({
     handleUniversityHelp,
     setOpenQuitConfirmation,
     disableAllQuestions,
+    universityResponses
 }) {
     return (
         <Grid container spacing={3} className="min-h-full justify-evenly">
@@ -145,61 +147,76 @@ export default function LargeScreen({
                                         : ""
                                 }`}
                             >
-                                <Button
-                                    variant="text"
-                                    color="inherit"
+                                <Badge
+                                    anchorOrigin={{
+                                        vertical: "top",
+                                        horizontal: "left",
+                                    }}
+                                    badgeContent={universityResponses.filter(item => item === index).length}
+                                    color="success"
                                     className="w-full block text-wrap"
-                                    disabled={
-                                        disableAllQuestions ||
-                                        (disableCardQuestions.length > 0 &&
-                                            disableCardQuestions.some(
-                                                (value) => value === index
-                                            ))
-                                    }
-                                    onClick={() =>
-                                        !showCorrect &&
-                                        !showIncorrect &&
-                                        handleAnswer(option, index)
-                                    }
-                                    style={{ textTransform: "none" }}
                                 >
-                                    <ListItem>
-                                        <ListItemText
-                                            primary={
-                                                <div
-                                                    style={{
-                                                        display: "flex",
-                                                        marginTop: "-6px",
-                                                        marginBottom: "-6px",
-                                                        alignItems: "center",
-                                                    }}
-                                                    className="align-middle"
-                                                >
-                                                    <Typography
-                                                        variant="body1"
-                                                        sx={{
-                                                            fontSize: "24px",
-                                                            fontWeight: 500,
-                                                            marginRight: "8px",
-                                                        }}
-                                                        component="span"
-                                                    >
-                                                        {index + 1} -
-                                                    </Typography>
+                                    <Button
+                                        variant="text"
+                                        color="inherit"
+                                        className="w-full block text-wrap"
+                                        disabled={
+                                            disableAllQuestions ||
+                                            (disableCardQuestions.length > 0 &&
+                                                disableCardQuestions.some(
+                                                    (value) => value === index
+                                                ))
+                                        }
+                                        onClick={() =>
+                                            !showCorrect &&
+                                            !showIncorrect &&
+                                            handleAnswer(option, index)
+                                        }
+                                        style={{ textTransform: "none" }}
+                                    >
+                                        <ListItem>
+                                            <ListItemText
+                                                primary={
                                                     <div
                                                         style={{
-                                                            paddingTop: "2px",
+                                                            display: "flex",
+                                                            marginTop: "-6px",
+                                                            marginBottom:
+                                                                "-6px",
+                                                            alignItems:
+                                                                "center",
                                                         }}
+                                                        className="align-middle"
                                                     >
-                                                        {capitalizeFirstLetter(
-                                                            option
-                                                        )}
+                                                        <Typography
+                                                            variant="body1"
+                                                            sx={{
+                                                                fontSize:
+                                                                    "24px",
+                                                                fontWeight: 500,
+                                                                marginRight:
+                                                                    "8px",
+                                                            }}
+                                                            component="span"
+                                                        >
+                                                            {index + 1} -
+                                                        </Typography>
+                                                        <div
+                                                            style={{
+                                                                paddingTop:
+                                                                    "2px",
+                                                            }}
+                                                        >
+                                                            {capitalizeFirstLetter(
+                                                                option
+                                                            )}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            }
-                                        />
-                                    </ListItem>
-                                </Button>
+                                                }
+                                            />
+                                        </ListItem>
+                                    </Button>
+                                </Badge>
                             </Paper>
                         ))}
                     </List>
@@ -219,120 +236,128 @@ export default function LargeScreen({
                 <Box className="p-4 px-6 grid">
                     <Box className="w-full gap-2 xl:flex min-w-40">
                         <Tooltip title="Sortear Carta">
-                            <Button
-                                variant="contained"
-                                color="inherit"
-                                disabled={!canUseCards}
-                                className="pr-2"
-                                onClick={handleCards}
-                                sx={{
-                                    height: "50px",
-                                    width: "50px",
-                                    padding: 0,
-                                    backgroundColor: "#7435e0eb",
-                                    ":hover": {
-                                        backgroundColor: "#622bc1eb",
-                                    },
-                                    ":disabled": {
-                                        backgroundColor: "#5424a764",
-                                    },
-                                }}
-                            >
-                                <img
-                                    src={cards}
-                                    alt="cards"
-                                    style={{
-                                        objectFit: "cover",
+                            <span>
+                                <Button
+                                    variant="contained"
+                                    color="inherit"
+                                    disabled={!canUseCards}
+                                    className="pr-2"
+                                    onClick={handleCards}
+                                    sx={{
+                                        height: "50px",
+                                        width: "50px",
+                                        padding: 0,
+                                        backgroundColor: "#7435e0eb",
+                                        ":hover": {
+                                            backgroundColor: "#622bc1eb",
+                                        },
+                                        ":disabled": {
+                                            backgroundColor: "#5424a764",
+                                        },
                                     }}
-                                />
-                            </Button>
+                                >
+                                    <img
+                                        src={cards}
+                                        alt="cards"
+                                        style={{
+                                            objectFit: "cover",
+                                        }}
+                                    />
+                                </Button>
+                            </span>
                         </Tooltip>
 
                         <Tooltip title="Pular Questão">
-                            <Button
-                                variant="contained"
-                                color="inherit"
-                                disabled={!canJump}
-                                onClick={handleJump}
-                                sx={{
-                                    height: "50px",
-                                    width: "50px",
-                                    padding: 0,
-                                    backgroundColor: "#2c62e0eb",
-                                    ":hover": {
-                                        backgroundColor: "#2a54b6eb",
-                                    },
-                                    ":disabled": {
-                                        backgroundColor: "#2e61d95a",
-                                    },
-                                }}
-                            >
-                                <img
-                                    src={jump}
-                                    alt="jump"
-                                    style={{
-                                        objectFit: "cover",
+                            <span>
+                                <Button
+                                    variant="contained"
+                                    color="inherit"
+                                    disabled={!canJump}
+                                    onClick={handleJump}
+                                    sx={{
+                                        height: "50px",
+                                        width: "50px",
+                                        padding: 0,
+                                        backgroundColor: "#2c62e0eb",
+                                        ":hover": {
+                                            backgroundColor: "#2a54b6eb",
+                                        },
+                                        ":disabled": {
+                                            backgroundColor: "#2e61d95a",
+                                        },
                                     }}
-                                />
-                            </Button>
+                                >
+                                    <img
+                                        src={jump}
+                                        alt="jump"
+                                        style={{
+                                            objectFit: "cover",
+                                        }}
+                                    />
+                                </Button>
+                            </span>
                         </Tooltip>
 
                         <Tooltip title="Ajuda dos Universitários">
-                            <Button
-                                variant="contained"
-                                color="inherit"
-                                disabled={!canUseUniversityHelp}
-                                onClick={handleUniversityHelp}
-                                sx={{
-                                    height: "50px",
-                                    width: "50px",
-                                    padding: 0,
-                                    backgroundColor: "#e1613aeb",
-                                    ":hover": {
-                                        backgroundColor: "#b44d2eeb",
-                                    },
-                                    ":disabled": {
-                                        backgroundColor: "#df4a1d79",
-                                    },
-                                }}
-                            >
-                                <img
-                                    src={universityHelp}
-                                    alt="universityHelp"
-                                    style={{
-                                        objectFit: "cover",
+                            <span>
+                                <Button
+                                    variant="contained"
+                                    color="inherit"
+                                    disabled={!canUseUniversityHelp}
+                                    onClick={handleUniversityHelp}
+                                    sx={{
+                                        height: "50px",
+                                        width: "50px",
+                                        padding: 0,
+                                        backgroundColor: "#e1613aeb",
+                                        ":hover": {
+                                            backgroundColor: "#b44d2eeb",
+                                        },
+                                        ":disabled": {
+                                            backgroundColor: "#df4a1d79",
+                                        },
                                     }}
-                                />
-                            </Button>
+                                >
+                                    <img
+                                        src={universityHelp}
+                                        alt="universityHelp"
+                                        style={{
+                                            objectFit: "cover",
+                                        }}
+                                    />
+                                </Button>
+                            </span>
                         </Tooltip>
 
                         <Tooltip title="Ajuda da Plateia">
-                            <Button
-                                variant="contained"
-                                color="inherit"
-                                disabled={!canUseAudience}
-                                onClick={handleAudience}
-                                sx={{
-                                    height: "50px",
-                                    width: "50px",
-                                    padding: 0,
-                                    backgroundColor: "#ce2ce0eb",
-                                    ":hover": {
-                                        backgroundColor: "#a12aaeeb",
-                                    },
-                                    ":disabled": {
-                                        backgroundColor: "#cb1adf50",
-                                    },
-                                }}
-                            >
-                                <img
-                                    src={audience}
-                                    alt="audience"
-                                    style={{
-                                        objectFit: "cover",
+                            <span>
+                                <Button
+                                    variant="contained"
+                                    color="inherit"
+                                    disabled={!canUseAudience}
+                                    onClick={handleAudience}
+                                    sx={{
+                                        height: "50px",
+                                        width: "50px",
+                                        padding: 0,
+                                        backgroundColor: "#ce2ce0eb",
+                                        ":hover": {
+                                            backgroundColor: "#a12aaeeb",
+                                        },
+                                        ":disabled": {
+                                            backgroundColor: "#cb1adf50",
+                                        },
                                     }}
-                                />
-                            </Button>
+                                >
+                                    <img
+                                        src={audience}
+                                        alt="audience"
+                                        style={{
+                                            objectFit: "cover",
+                                        }}
+                                    />
+                                </Button>
+                            </span>
                         </Tooltip>
                     </Box>
                 </Box>

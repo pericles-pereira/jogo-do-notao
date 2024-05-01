@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('in_game_records', function (Blueprint $table) {
             $table->id();
             $table->string('response');
+            $table->string('in_minutes');
+            $table->decimal('points');
             $table->timestamps();
             $table->foreignId('question_id')->constrained('questions');
             $table->foreignId('started_game_id')->constrained('started_games')->cascadeOnDelete();

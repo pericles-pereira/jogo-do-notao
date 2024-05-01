@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class StartedGame extends Model
 {
@@ -25,9 +24,9 @@ class StartedGame extends Model
         return $this->belongsTo(Game::class);
     }
 
-    public function universityHelp(): HasOne
+    public function universityHelp(): HasMany
     {
-        return $this->hasOne(UniversityHelp::class);
+        return $this->hasMany(UniversityHelp::class);
     }
 
     public function inGameRecord(): HasMany

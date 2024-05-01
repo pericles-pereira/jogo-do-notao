@@ -278,7 +278,7 @@ export default function Ranking({
                                             ) : (
                                                 <Typography
                                                     variant="subtitle1"
-                                                    className="text-wrap"
+                                                    className="whitespace-nowrap overflow-hidden w-full text-ellipsis"
                                                 >
                                                     {row[column.dataKey]}
                                                 </Typography>

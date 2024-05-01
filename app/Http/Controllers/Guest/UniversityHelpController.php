@@ -32,6 +32,12 @@ class UniversityHelpController extends Controller
             if (!$startedGame->universityHelp) {
                 throw new \DomainException('Ajuda universitária não utilizada pelo jogador.');
             }
+
+            $universityHelp = $startedGame->universityHelp->where(['response' => null])->get()[0] ?? null;
+
+            if (!$universityHelp) {
+                throw new \DomainException('A ajuda universitária já foi utilizada todas as vezes.');
+            }
         } catch (\Throwable $th) {
             if ($th instanceof UnauthorizedException) {
                 return Redirect::routeError('university-help-code', $th->getMessage());
@@ -42,10 +48,10 @@ class UniversityHelpController extends Controller
         }
 
         return Page::render('Guest/UniversityHelp/UniversityHelp', [
-            'question' => $startedGame->universityHelp->question,
+            'question' => $startedGame->universityHelp[0]->question,
             'roomCode' => $roomCode,
-            'timer' => $startedGame->universityHelp->timer,
-            'options' => $startedGame->universityHelp->options
+            'timer' => $startedGame->universityHelp[0]->timer,
+            'options' => $startedGame->universityHelp[0]->options
         ]);
     }
 }

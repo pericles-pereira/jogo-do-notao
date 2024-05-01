@@ -74,14 +74,20 @@ class PlayingController extends Controller
             $correctResponses = [];
             foreach ($game->inGameRecord as $value) {
                 $correctResponses[] = $value->id;
-            }   
+            }
+
+            $inMinutes = $request->inMinutes;
 
             $game->inGameRecord()->create([
                 'response' => $request->response,
                 'question_id' => $request->questionId,
+                'in_minutes' => end($inMinutes),
+                'points' => $request->points
             ]);
 
-            if (Question::find($request->questionId)->correct_option !== $request->response) {
+            if (
+                Question::find($request->questionId)->correct_option !== $request->response
+            ) {
                 Game::finishGame(
                     array_merge(
                         $request->only([
@@ -102,7 +108,34 @@ class PlayingController extends Controller
         }
 
         return response()->json([
-            'success' => true
+            'success' => true,
+        ]);
+    }
+
+    public function finishGame(FormRequest $request): JsonResponse
+    {
+        $request->validate([
+            'roomCode' => ['required', 'digits:4'],
+            'inMinutes' => ['required', 'array'],
+            'points' => ['required'],
+            'correctResponses' => ['required', 'array']
+        ]);
+
+        $roomCode = $request->roomCode;
+
+        try {
+            $game = StartedGame::where(['room_code' => $roomCode])->get()[0] ?? null;
+
+            Game::finishGame($request->all(), $game);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'error' => true,
+                'message' => $th->getMessage()
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
         ]);
     }
 }

@@ -31,3 +31,4 @@ Route::post('set-question-response', [PlayingController::class, 'setQuestionResp
 
 Route::get('get-finished-games/{gameAcronym}', [RankingController::class, 'getFinishedGames'])->name('get-finished-games');
 
+Route::post('finish-game', [PlayingController::class, 'finishGame'])->name('finish-game');

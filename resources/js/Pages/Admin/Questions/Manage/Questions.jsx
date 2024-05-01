@@ -18,20 +18,12 @@ export default function Questions({ questions, categories }) {
         {
             accessorKey: "category",
             header: "Categoria",
+            filterVariant: "select",
         },
         {
             accessorKey: "difficulty",
             header: "Dificuldade",
-            Cell: ({ cell }) => (
-                <div>
-                    {Number(cell.getValue()) === 1 && "Muito Fácil"}
-                    {Number(cell.getValue()) === 2 && "Fácil"}
-                    {Number(cell.getValue()) === 3 && "Intermediário"}
-                    {Number(cell.getValue()) === 4 && "Difícil"}
-                    {Number(cell.getValue()) === 5 && "Muito Difícil"}
-                    {Number(cell.getValue()) === 6 && "Impossível"}
-                </div>
-            ),
+            filterVariant: "select",
         },
         {
             accessorKey: "statement",
@@ -59,6 +51,10 @@ export default function Questions({ questions, categories }) {
                 ModalFields={ModalFields}
                 headers={headers}
                 categories={categories}
+                tableOptions={{
+                    enableFacetedValues: true,
+                    initialState: { showColumnFilters: true },
+                }}
             />
         </AuthenticatedLayout>
     );

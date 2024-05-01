@@ -14,6 +14,8 @@ class InGameRecord extends Model
     protected $fillable = [
         'response',
         'question_id',
+        'in_minutes',
+        'points'
     ];
 
     public function startedGame(): BelongsTo

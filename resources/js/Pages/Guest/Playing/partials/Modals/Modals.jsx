@@ -1,4 +1,10 @@
-import { Button, Modal, Paper, Typography } from "@mui/material";
+import {
+    Button,
+    LinearProgress,
+    Modal,
+    Paper,
+    Typography,
+} from "@mui/material";
 import ReactConfetti from "react-confetti";
 import { East } from "@mui/icons-material";
 import sad from "@/assets/images/game/sad.png";
@@ -19,9 +25,10 @@ export default function Modals({
     waitingUniversityHelp,
     setEndGame,
     showConfetti,
-    threeDots,
     isMobile,
     gameAcronym,
+    currentUniversityResponses,
+    roomCode,
 }) {
     return (
         <>
@@ -213,16 +220,19 @@ export default function Modals({
                     }`}
                     sx={{
                         padding: isMobile ? "" : "24px",
-                        minWidth: isMobile ? "auto" : "500px",
+                        minWidth: isMobile ? "auto" : "550px",
                         maxWidth: !isMobile ? "auto" : "428px",
                         maxHeight: "70vh",
                     }}
                 >
-                    <Typography variant="h6" className="text-wrap">
-                        Aguardando resposta da ajuda universitária{threeDots}
+                    <Typography
+                        variant={isMobile ? "h6" : "h5"}
+                        className="text-wrap"
+                    >
+                        Para receber ajuda, informe o código: {roomCode}
                     </Typography>
 
-                    <div className="flex justify-center mt-4">
+                    <div className="flex justify-center py-1">
                         <Typography
                             variant="body1"
                             className="p-1 flex justify-center text-black"
@@ -231,15 +241,23 @@ export default function Modals({
                             {formatTime(universityHelpTime)}
                         </Typography>
                     </div>
-                    <div className="flex justify-end mt-6">
-                        <Button
-                            variant="contained"
-                            color="error"
-                            onClick={handleCancelUniversityHelp}
+                    <div className="block w-full mb-3">
+                        <Typography
+                            variant="subtitle1"
+                            className="w-full"
+                            sx={{ fontSize: "18px" }}
                         >
-                            Cancelar Ajuda
-                        </Button>
+                            Respostas Recebidas: {currentUniversityResponses}
+                        </Typography>
                     </div>
+
+                    <Button
+                        variant="contained"
+                        color="error"
+                        onClick={handleCancelUniversityHelp}
+                    >
+                        Cancelar Ajuda
+                    </Button>
                 </Paper>
             </Modal>
         </>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
+use App\Models\Groups\Games\Game;
 use App\Models\Groups\Games\StartedGames\StartedGame;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\RedirectResponse;
@@ -10,13 +11,22 @@ use Illuminate\Support\Facades\Redirect as FacadesRedirect;
 use Inertia\Response;
 use Source\Helpers\Controllers\Page;
 use Source\Helpers\Controllers\Redirect;
+use Source\Helpers\Models\Search;
 use Source\Helpers\Utils\Common\Toast;
 
 class UniversityHelpCodeController extends Controller
 {
-    public function index(): Response
+    public function index(): Response | RedirectResponse
     {
-        return Page::render('Guest/UniversityHelpCode/UniversityHelpCode');
+        try {
+            $games = Search::allDataInCamel(Game::all());
+        } catch (\Throwable $th) {
+            return Redirect::back($th, 'Erro no servidor!');
+        }
+
+        return Page::render('Guest/UniversityHelpCode/UniversityHelpCode', [
+            'games' => $games
+        ]);
     }
 
     public function store(FormRequest $request): RedirectResponse
@@ -37,18 +47,16 @@ class UniversityHelpCodeController extends Controller
                 throw new \DomainException('Este jogador ainda não usou a ajuda dos universitários.');
             }
 
-            $universityHelp = $game->universityHelp;
+            $universityHelp = $game->universityHelp->filter(function ($item) {
+                return !$item->used && $item->response === null;
+            })->values()->all();
 
-            if ($universityHelp->response) {
-                throw new \DomainException('Este jogador já utilizou a ajuda universitária uma vez.');
+            if (count($universityHelp) === 0) {
+                throw new \DomainException('Esta partida já atingiu seu máximo de usos da ajuda universitária.');
             }
 
-            if ($universityHelp->used) {
-                throw new \DomainException('Outro universitário já está ajudando este jogador.');
-            }
-
-            $universityHelp->used = true;
-            $universityHelp->save();
+            $universityHelp[0]->used = true;
+            $universityHelp[0]->save();
         } catch (\Throwable $th) {
             if ($th instanceof \InvalidArgumentException || $th instanceof \DomainException) {
                 return Redirect::back($th, $th->getMessage());

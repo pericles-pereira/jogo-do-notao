@@ -20,7 +20,6 @@ return new class extends Migration
             $table->time('timer');
             $table->timestamps();
             $table->foreignId('started_game_id')->constrained('started_games')->cascadeOnDelete();
-            $table->unique('started_game_id');
         });
     }
 

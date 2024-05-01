@@ -22,6 +22,15 @@ class QuestionController extends Controller
             $questions = Search::allDataInCamel($request->user()->group->question);
             foreach ($questions as $key => $value) {
                 $questions[$key]['category'] = Category::find($value['categoryId'])->name;
+                $questions[$key]['difficulty'] = match ($value['difficulty']) {
+                    "1" => "Muito Fácil",
+                    "2" => "Fácil",
+                    "3" => "Intermediário",
+                    "4" => "Difícil",
+                    "5" => "Muito Difícil",
+                    "6" => "Impossível",
+                    default => "?? erro ??"
+                };
             }
             $categories = Search::allDataInCamel($request->user()->group->category);
         } catch (\Throwable $th) {

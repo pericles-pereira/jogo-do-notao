@@ -43,3 +43,5 @@ Route::patch('game/manage', [GamesController::class, 'update'])->name('game.mana
 Route::delete('game/manage', [GamesController::class, 'delete'])->name('game.manage.delete');
 
 Route::get('game/watch/{roomCode}', [WatchGameController::class, 'show'])->name('game.watch');
+
+Route::delete('game/finish/{roomCode}', [StartGameController::class, 'delete'])->name('game.finish');
