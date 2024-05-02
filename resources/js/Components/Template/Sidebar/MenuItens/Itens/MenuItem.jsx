@@ -40,7 +40,7 @@ export default function MenuItem(item, openStates, handleToggle) {
 
                     <Typography
                         variant="h6"
-                        sx={{ fontSize: "18px" }}
+                        sx={{ fontSize: "14px" }}
                         component="span"
                         noWrap
                     >

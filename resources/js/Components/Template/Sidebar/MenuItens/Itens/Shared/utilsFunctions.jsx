@@ -10,7 +10,7 @@ export const utilsFunctions = {
     // Gera o ícone com a estilização correta, caso exista icone.
     getIcon: (item) => {
         if (item.icon)
-            return item.icon({ fontSize: "35px", marginRight: "13px" });
+            return item.icon({ fontSize: "28px", marginRight: "20px" });
     },
 
     // Função para verificar se algum filho tem a url da página atual

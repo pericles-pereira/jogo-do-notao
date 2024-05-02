@@ -53,7 +53,7 @@ export default function SubmenuItem(
 
                     <Typography
                         variant="h6"
-                        sx={{ fontSize: "18px" }}
+                        sx={{ fontSize: "14px" }}
                         component="span"
                         noWrap
                     >

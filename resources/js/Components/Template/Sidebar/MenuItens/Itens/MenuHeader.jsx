@@ -18,8 +18,10 @@ export default function MenuHeader({ item }) {
     return (
         open && (
             <ListSubheader component="div" inset sx={menuHeaderStyles}>
-                <Typography variant="h5" sx={{ fontSize: "18px", fontWeight: "bold", }} component="span" noWrap>{item.header.toUpperCase()}</Typography>
+                <Typography variant="subtitle2" component="span" noWrap>
+                    {item.header}
+                </Typography>
             </ListSubheader>
         )
     );
-};
+}
