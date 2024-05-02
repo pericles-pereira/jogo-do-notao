@@ -63,7 +63,7 @@ export default function Ranking({
                             0
                         );
 
-                        return bInSeconds - aInSeconds;
+                        return aInSeconds - bInSeconds;
                     }
                 })
                 .map((finishedGame, index) => ({

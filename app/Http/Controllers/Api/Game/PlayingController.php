@@ -47,7 +47,7 @@ class PlayingController extends Controller
             'questionId' => ['required', 'integer'],
             'response' => ['required', 'string'],
             'inMinutes' => ['array'],
-            'points' => ['required']
+            'points' => ['required'],
         ]);
 
         $roomCode = $request->roomCode;
@@ -84,22 +84,6 @@ class PlayingController extends Controller
                 'in_minutes' => end($inMinutes),
                 'points' => $request->points
             ]);
-
-            if (
-                Question::find($request->questionId)->correct_option !== $request->response
-            ) {
-                Game::finishGame(
-                    array_merge(
-                        $request->only([
-                            'roomCode',
-                            'inMinutes',
-                            'points',
-                        ]),
-                        ['correctResponses' => $correctResponses]
-                    ),
-                    $game
-                );
-            }
         } catch (\Throwable $th) {
             return response()->json([
                 'error' => true,

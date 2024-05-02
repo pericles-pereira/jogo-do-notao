@@ -172,12 +172,14 @@ export default function Playing({
 
     const toNextQuestion = () => {
         if (currentQuestionIndex < questions.length - 1) {
-            setShowCorrect(null);
-            setShowIncorrect(null);
-            setUniversityResponses([]);
-            setDisableCardQuestions([]);
-            setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
             setTimeLeft(parseTime(timer.slice(3))); // Reinicia o cronômetro para a próxima pergunta
+            setTimeout(async () => {
+                setShowCorrect(null);
+                setShowIncorrect(null);
+                setUniversityResponses([]);
+                setDisableCardQuestions([]);
+                setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+            }, 500);
         } else {
             setEndGame(true);
         }

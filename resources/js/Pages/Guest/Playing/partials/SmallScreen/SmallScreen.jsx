@@ -8,6 +8,7 @@ import {
     ListItemText,
     Box,
     Tooltip,
+    Badge,
 } from "@mui/material";
 import cards from "@/assets/images/game/cards.png";
 import jump from "@/assets/images/game/jump.png";
@@ -99,63 +100,83 @@ export default function SmallScreen({
                                         : ""
                                 }`}
                             >
-                                <Button
-                                    variant="text"
-                                    color="inherit"
+                                <Badge
+                                    anchorOrigin={{
+                                        vertical: "top",
+                                        horizontal: "left",
+                                    }}
+                                    badgeContent={
+                                        universityResponses.filter(
+                                            (item) => item === index
+                                        ).length
+                                    }
+                                    color="success"
                                     className="w-full block text-wrap"
-                                    disabled={
-                                        disableAllQuestions ||
-                                        (disableCardQuestions.length > 0 &&
-                                            disableCardQuestions.some(
-                                                (value) => value === index
-                                            ))
-                                    }
-                                    onClick={() =>
-                                        !showCorrect &&
-                                        !showIncorrect &&
-                                        handleAnswer(option, index)
-                                    }
-                                    style={{ textTransform: "none" }}
                                 >
-                                    <ListItem>
-                                        <ListItemText
-                                            primary={
-                                                <div
-                                                    style={{
-                                                        display: "flex",
-                                                        marginTop: "-6px",
-                                                        marginBottom: "-6px",
-                                                        alignItems: "center",
-                                                    }}
-                                                    className="align-middle"
-                                                >
-                                                    <Typography
-                                                        variant="body1"
-                                                        sx={{
-                                                            fontSize: "20px",
-                                                            fontWeight: 500,
-                                                            marginRight: "8px",
-                                                        }}
-                                                        component="span"
-                                                        className="text-nowrap align-middle"
-                                                    >
-                                                        {index + 1} -
-                                                    </Typography>
+                                    <Button
+                                        variant="text"
+                                        color="inherit"
+                                        className="w-full block text-wrap"
+                                        disabled={
+                                            disableAllQuestions ||
+                                            (disableCardQuestions.length > 0 &&
+                                                disableCardQuestions.some(
+                                                    (value) => value === index
+                                                ))
+                                        }
+                                        onClick={() =>
+                                            !showCorrect &&
+                                            !showIncorrect &&
+                                            handleAnswer(option, index)
+                                        }
+                                        style={{ textTransform: "none" }}
+                                    >
+                                        <ListItem>
+                                            <ListItemText
+                                                primary={
                                                     <div
                                                         style={{
-                                                            paddingTop: "2px",
-                                                            fontSize: "14px",
+                                                            display: "flex",
+                                                            marginTop: "-6px",
+                                                            marginBottom:
+                                                                "-6px",
+                                                            alignItems:
+                                                                "center",
                                                         }}
+                                                        className="align-middle"
                                                     >
-                                                        {capitalizeFirstLetter(
-                                                            option
-                                                        )}
+                                                        <Typography
+                                                            variant="body1"
+                                                            sx={{
+                                                                fontSize:
+                                                                    "20px",
+                                                                fontWeight: 500,
+                                                                marginRight:
+                                                                    "8px",
+                                                            }}
+                                                            component="span"
+                                                            className="text-nowrap align-middle"
+                                                        >
+                                                            {index + 1} -
+                                                        </Typography>
+                                                        <div
+                                                            style={{
+                                                                paddingTop:
+                                                                    "2px",
+                                                                fontSize:
+                                                                    "14px",
+                                                            }}
+                                                        >
+                                                            {capitalizeFirstLetter(
+                                                                option
+                                                            )}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            }
-                                        />
-                                    </ListItem>
-                                </Button>
+                                                }
+                                            />
+                                        </ListItem>
+                                    </Button>
+                                </Badge>
                             </Paper>
                         ))}
                     </List>
