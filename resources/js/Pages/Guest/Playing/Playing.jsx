@@ -46,6 +46,7 @@ export default function Playing({
     const [universityHelpTime, setUniversityHelpTime] = useState(0);
     const [disableAllQuestions, setDisableAllQuestions] = useState(false);
     const [universityResponses, setUniversityResponses] = useState([]);
+    const [canGoToNextQuestion, setCanGoToNextQuestion] = useState(false);
 
     const isMobile = useMediaQuery("(max-width:428px)");
 
@@ -171,7 +172,9 @@ export default function Playing({
     }, []);
 
     const toNextQuestion = () => {
+        setCanGoToNextQuestion(false);
         if (currentQuestionIndex < questions.length - 1) {
+            toast.success("Indo para a próxima questão...");
             setTimeLeft(parseTime(timer.slice(3))); // Reinicia o cronômetro para a próxima pergunta
             setTimeout(async () => {
                 setShowCorrect(null);
@@ -226,7 +229,7 @@ export default function Playing({
                             ],
                         });
 
-                        toast.success("Resposta correta! Avançando...");
+                        toast.success("Resposta correta!");
                     } else {
                         setShowIncorrect(index);
                         toast.error("Resposta incorreta! Finalizando jogo...");
@@ -237,9 +240,8 @@ export default function Playing({
                     }
 
                     setTimeout(async () => {
-                        // Avança para a próxima pergunta
-                        toNextQuestion();
-                    }, 3500);
+                        setCanGoToNextQuestion(true);
+                    }, 3800);
                 })
                 .catch((e) => {
                     console.log(e);
@@ -294,7 +296,7 @@ export default function Playing({
     const handleJump = () => {
         if (canJump) {
             toast.info("Pulo utilizado, avançando para a próxima questão...");
-            toNextQuestion();
+            setCanGoToNextQuestion(true);
             setCanJump(false);
         }
     };
@@ -423,6 +425,10 @@ export default function Playing({
                     questions={questions}
                     disableAllQuestions={disableAllQuestions}
                     universityResponses={universityResponses}
+                    playerName={playerName}
+                    roomCode={roomCode}
+                    canGoToNextQuestion={canGoToNextQuestion}
+                    toNextQuestion={toNextQuestion}
                 />
             ) : (
                 <LargeScreen
@@ -446,6 +452,10 @@ export default function Playing({
                     timeLeft={timeLeft}
                     disableAllQuestions={disableAllQuestions}
                     universityResponses={universityResponses}
+                    playerName={playerName}
+                    roomCode={roomCode}
+                    canGoToNextQuestion={canGoToNextQuestion}
+                    toNextQuestion={toNextQuestion}
                 />
             )}
             <Modals

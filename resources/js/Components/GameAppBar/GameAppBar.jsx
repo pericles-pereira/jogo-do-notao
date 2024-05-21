@@ -40,14 +40,16 @@ export default function GameAppBar({ games }) {
         <AppBar
             position="absolute"
             sx={{
-                backgroundColor: "white",
-                boxShadow: "rgba(0, 0, 0, 0.5) 0px 4px 10px",
+                backgroundColor: "rgb(29,42,142)",
+                height: "50px",
             }}
+            elevation={8}
         >
             <Toolbar
                 className={
                     isTablet ? (isMobile ? "gap-x-0" : "gap-x-4") : "gap-x-8"
                 }
+                sx={{ marginTop: "-8px", color: "white" }}
             >
                 <div style={{ flexGrow: 1 }} />
                 {isMobile ? (
@@ -55,11 +57,11 @@ export default function GameAppBar({ games }) {
                         <Button
                             variant="text"
                             onClick={handleMobileMenuOpen}
-                            className="text-nowrap"
+                            className="mx-auto text-nowrap"
                             sx={{
-                                color: "#262626",
+                                color: "white",
                                 ":hover": {
-                                    color: "#262626",
+                                    color: "white",
                                     textDecoration: "underline",
                                 },
                             }}
@@ -68,20 +70,14 @@ export default function GameAppBar({ games }) {
                                 variant="h6"
                                 sx={{
                                     textTransform: "none",
-                                    color: "#262626",
+                                    color: "white",
                                 }}
                             >
                                 Menu
                                 {Boolean(mobileMenuAnchor) ? (
-                                    <ExpandLess
-                                        className="ml-0.5 mb-0.5"
-                                        sx={{ color: "#262626" }}
-                                    />
+                                    <ExpandLess className="ml-0.5 mb-0.5" />
                                 ) : (
-                                    <ExpandMore
-                                        className="ml-0.5 mb-0.5"
-                                        sx={{ color: "#262626" }}
-                                    />
+                                    <ExpandMore className="ml-0.5 mb-0.5" />
                                 )}
                             </Typography>
                         </Button>
@@ -107,7 +103,7 @@ export default function GameAppBar({ games }) {
                                         variant="subtitle1"
                                         sx={{
                                             textTransform: "none",
-                                            color: "#262626",
+                                            color: "black",
                                         }}
                                         className="flex"
                                     >
@@ -120,7 +116,7 @@ export default function GameAppBar({ games }) {
                                         variant="subtitle1"
                                         sx={{
                                             textTransform: "none",
-                                            color: "#262626",
+                                            color: "black",
                                         }}
                                         className="flex"
                                     >
@@ -159,7 +155,7 @@ export default function GameAppBar({ games }) {
                                                     variant="subtitle2"
                                                     sx={{
                                                         textTransform: "none",
-                                                        color: "#262626",
+                                                        color: "black",
                                                     }}
                                                     className="flex"
                                                 >
@@ -178,7 +174,7 @@ export default function GameAppBar({ games }) {
                                         variant="subtitle1"
                                         sx={{
                                             textTransform: "none",
-                                            color: "#262626",
+                                            color: "black",
                                         }}
                                         className="flex"
                                     >
@@ -194,7 +190,7 @@ export default function GameAppBar({ games }) {
                                         variant="subtitle1"
                                         sx={{
                                             textTransform: "none",
-                                            color: "#262626",
+                                            color: "black",
                                         }}
                                         className="flex"
                                     >
@@ -210,10 +206,11 @@ export default function GameAppBar({ games }) {
                             <Button
                                 variant="text"
                                 sx={{
-                                    color: "#262626",
+                                    color: "white",
                                     ":hover": {
-                                        color: "#262626",
+                                        color: "white",
                                         textDecoration: "underline",
+                                        bgcolor: "inherit",
                                     },
                                 }}
                             >
@@ -221,7 +218,8 @@ export default function GameAppBar({ games }) {
                                     variant="h6"
                                     sx={{
                                         textTransform: "none",
-                                        color: "#262626",
+                                        color: "white",
+                                        fontSize: "16px",
                                     }}
                                 >
                                     Home
@@ -232,10 +230,11 @@ export default function GameAppBar({ games }) {
                         <Button
                             variant="text"
                             sx={{
-                                color: "#262626",
+                                color: "white",
                                 ":hover": {
-                                    color: "#262626",
+                                    color: "white",
                                     textDecoration: "underline",
+                                    bgcolor: "inherit",
                                 },
                             }}
                             onClick={handleRankingMenuOpen}
@@ -244,15 +243,16 @@ export default function GameAppBar({ games }) {
                                 variant="h6"
                                 sx={{
                                     textTransform: "none",
-                                    color: "#262626",
+                                    color: "white",
+                                    fontSize: "16px",
                                 }}
                                 className="flex"
                             >
                                 Ranking
                                 {Boolean(rankingMenuAnchor) ? (
-                                    <ExpandLess className="mt-1" />
+                                    <ExpandLess />
                                 ) : (
-                                    <ExpandMore className="mt-1" />
+                                    <ExpandMore />
                                 )}
                             </Typography>
                         </Button>
@@ -282,7 +282,7 @@ export default function GameAppBar({ games }) {
                                             variant="subtitle1"
                                             sx={{
                                                 textTransform: "none",
-                                                color: "#262626",
+                                                color: "black",
                                             }}
                                             className="flex"
                                         >
@@ -297,10 +297,11 @@ export default function GameAppBar({ games }) {
                             <Button
                                 variant="text"
                                 sx={{
-                                    color: "#262626",
+                                    color: "white",
                                     ":hover": {
-                                        color: "#262626",
+                                        color: "white",
                                         textDecoration: "underline",
+                                        bgcolor: "inherit",
                                     },
                                 }}
                             >
@@ -308,7 +309,8 @@ export default function GameAppBar({ games }) {
                                     variant="h6"
                                     sx={{
                                         textTransform: "none",
-                                        color: "#262626",
+                                        color: "white",
+                                        fontSize: "16px",
                                     }}
                                     className="flex"
                                 >
@@ -321,10 +323,11 @@ export default function GameAppBar({ games }) {
                             <Button
                                 variant="text"
                                 sx={{
-                                    color: "#262626",
+                                    color: "white",
                                     ":hover": {
-                                        color: "#262626",
+                                        color: "white",
                                         textDecoration: "underline",
+                                        bgcolor: "inherit",
                                     },
                                 }}
                             >
@@ -332,7 +335,8 @@ export default function GameAppBar({ games }) {
                                     variant="h6"
                                     sx={{
                                         textTransform: "none",
-                                        color: "#262626",
+                                        color: "white",
+                                        fontSize: "16px",
                                     }}
                                     className="flex"
                                 >

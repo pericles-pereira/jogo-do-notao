@@ -6,8 +6,9 @@
     :root {
         --linear-gradient-navbar-color: linear-gradient(
             180deg,
-            rgba(25, 118, 210, 1) 60%,
-            rgba(66, 152, 237, 1) 100%
+            rgba(29, 42, 142, 1) 0%,
+            rgba(17, 29, 124, 1) 35%,
+            rgba(7, 17, 93, 1) 100%
         );
     }
 

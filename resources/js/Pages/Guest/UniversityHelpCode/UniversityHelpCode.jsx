@@ -77,8 +77,13 @@ export default function UniversityHelpCode({ games }) {
                         <div className="flex items-center justify-end mt-4">
                             <Button
                                 className="ms-4"
-                                color="secondary"
                                 type="submit"
+                                sx={{
+                                    bgcolor: "rgb(29,42,142)",
+                                    ":hover": {
+                                        bgcolor: "#060e4f",
+                                    },
+                                }}
                                 variant="contained"
                                 disabled={processing}
                             >

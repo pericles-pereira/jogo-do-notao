@@ -1,38 +1,42 @@
-import { useEffect } from 'react';
-import Checkbox from '@/Components/Form/Checkbox';
-import GuestLayout from '@/Layouts/GuestLayout';
-import InputError from '@/Components/Form/InputError';
-import InputLabel from '@/Components/Form/InputLabel';
-import TextInput from '@/Components/Form/TextInput';
-import { Link, useForm } from '@inertiajs/react';
-import { Typography } from '@mui/material';
-import DefaultButton from '@/Components/Form/DefaultButton';
-import HomeButton from '@/Components/HomeButton/HomeButton';
+import { useEffect } from "react";
+import Checkbox from "@/Components/Form/Checkbox";
+import GuestLayout from "@/Layouts/GuestLayout";
+import InputError from "@/Components/Form/InputError";
+import InputLabel from "@/Components/Form/InputLabel";
+import TextInput from "@/Components/Form/TextInput";
+import { Link, useForm } from "@inertiajs/react";
+import { Button, Typography } from "@mui/material";
+import DefaultButton from "@/Components/Form/DefaultButton";
+import HomeButton from "@/Components/HomeButton/HomeButton";
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
-        email: '',
-        password: '',
+        email: "",
+        password: "",
         remember: false,
     });
 
     useEffect(() => {
         return () => {
-            reset('password');
+            reset("password");
         };
     }, []);
 
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('login'));
+        post(route("login"));
     };
 
     return (
-        <GuestLayout title='Login'>
-            <HomeButton color="#1976d2" hoverColor="#0f70d2"/>
+        <GuestLayout title="Login">
+            <HomeButton color="rgb(29,42,142)" hoverColor="#060e4f" />
 
-            {status && !status.message && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
+            {status && !status.message && (
+                <div className="mb-4 font-medium text-sm text-green-600">
+                    {status}
+                </div>
+            )}
 
             <form onSubmit={submit}>
                 <div>
@@ -46,7 +50,7 @@ export default function Login({ status, canResetPassword }) {
                         className="mt-1 block w-full"
                         autoComplete="username"
                         isFocused={true}
-                        onChange={(e) => setData('email', e.target.value)}
+                        onChange={(e) => setData("email", e.target.value)}
                     />
 
                     <InputError message={errors.email} className="mt-2" />
@@ -62,7 +66,7 @@ export default function Login({ status, canResetPassword }) {
                         value={data.password}
                         className="mt-1 block w-full"
                         autoComplete="current-password"
-                        onChange={(e) => setData('password', e.target.value)}
+                        onChange={(e) => setData("password", e.target.value)}
                     />
 
                     <InputError message={errors.password} className="mt-2" />
@@ -73,26 +77,41 @@ export default function Login({ status, canResetPassword }) {
                         <Checkbox
                             name="remember"
                             checked={data.remember}
-                            onChange={(e) => setData('remember', e.target.checked)}
-                            className='mr-1'
+                            onChange={(e) =>
+                                setData("remember", e.target.checked)
+                            }
+                            className="mr-1"
                         />
-                        <Typography className="ms-2 text-sm text-gray-600">Lembrar-me</Typography>
+                        <Typography className="ms-2 text-sm text-gray-600">
+                            Lembrar-me
+                        </Typography>
                     </label>
                 </div>
 
                 <div className="flex items-center justify-end mt-4">
                     {canResetPassword && (
                         <Link
-                            href={route('password.request')}
+                            href={route("password.request")}
                             className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-3"
                         >
                             <Typography>Esqueceu sua senha?</Typography>
                         </Link>
                     )}
 
-                    <DefaultButton size="medium" className="ms-4" disabled={processing}>
+                    <Button
+                        type="submit"
+                        className="ms-4"
+                        sx={{
+                            bgcolor: "rgb(29,42,142)",
+                            ":hover": {
+                                bgcolor: "#060e4f",
+                            },
+                        }}
+                        variant="contained"
+                        disabled={processing}
+                    >
                         <Typography>Entrar</Typography>
-                    </DefaultButton>
+                    </Button>
                 </div>
             </form>
         </GuestLayout>

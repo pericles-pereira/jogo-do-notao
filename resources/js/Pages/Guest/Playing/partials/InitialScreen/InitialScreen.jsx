@@ -38,10 +38,15 @@ export default function InitialScreen({
                     <div className="flex items-center justify-center mt-8">
                         <Button
                             size="large"
-                            color="secondary"
                             className="ms-4"
                             type="button"
                             variant="contained"
+                            sx={{
+                                bgcolor: "rgb(29,42,142)",
+                                ":hover": {
+                                    bgcolor: "#060e4f",
+                                },
+                            }}
                             onClick={initializeGame}
                             disabled={gameStarted}
                         >

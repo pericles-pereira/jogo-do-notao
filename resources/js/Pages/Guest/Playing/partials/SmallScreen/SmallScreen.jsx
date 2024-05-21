@@ -18,6 +18,7 @@ import audience from "@/assets/images/game/audience.png";
 import coloredDragonBalls from "@/assets/images/game/coloredDragonBalls.png";
 import { formatTime } from "@/utils/common/time";
 import { capitalizeFirstLetter } from "@/utils/common/strings";
+import { East } from "@mui/icons-material";
 
 export default function SmallScreen({
     timeLeft,
@@ -40,15 +41,31 @@ export default function SmallScreen({
     questionPoints,
     questions,
     disableAllQuestions,
+    universityResponses,
+    playerName,
+    roomCode,
+    toNextQuestion,
+    canGoToNextQuestion,
 }) {
     return (
-        <Grid container className="min-h-full">
-            <Grid item xs={12} className="content-center">
-                <Box className="flex justify-between">
-                    <Box
-                        className="pl-3 flex justify-end gap-1 text-white"
-                        sx={{ marginTop: "-100px" }}
+        <Grid container className="min-h-full" sx={{ marginTop: "-24px" }}>
+            <Grid
+                item
+                xs={12}
+                className="content-center align-middle items-center"
+            >
+                <Box className="flex w-full justify-start px-3">
+                    <Typography
+                        variant="body1"
+                        className="p-1 text-black whitespace-nowrap overflow-hidden w-full text-ellipsis"
+                        sx={{ fontSize: "24px" }}
                     >
+                        <span className="font-medium">{roomCode} -</span>{" "}
+                        {playerName}
+                    </Typography>
+                </Box>
+                <Box className="flex flex-row justify-between mt-1">
+                    <Box className="pl-3 flex flex-row gap-2 text-black">
                         <img
                             src={coloredDragonBalls}
                             alt="coloredDragonBalls"
@@ -68,14 +85,14 @@ export default function SmallScreen({
 
                     <Typography
                         variant="body2"
-                        className="pr-3 flex justify-end text-white"
-                        sx={{ fontSize: "30px", marginTop: "-100px" }}
+                        className="pr-3 text-black"
+                        sx={{ fontSize: "30px" }}
                     >
                         {formatTime(timeLeft)}
                     </Typography>
                 </Box>
 
-                <div className="space-y-1 mx-2" style={{ marginTop: "-62px" }}>
+                <div className="space-y-1 mx-2">
                     <List className="space-y-2">
                         {options.map((option, index) => (
                             <Paper
@@ -182,7 +199,7 @@ export default function SmallScreen({
                     </List>
                 </div>
 
-                <Box className="p-1 flex justify-center align-middle gap-0.5 flex-wrap">
+                <Box className="p-1 flex justify-center align-middle gap-0.5 flex-wrap mt-2.5">
                     <Tooltip title="Sortear Carta">
                         <span>
                             <Button
@@ -308,45 +325,72 @@ export default function SmallScreen({
                         </span>
                     </Tooltip>
                 </Box>
-                <Box className="flex px-6 mt-1 justify-center">
-                    <Button
-                        variant="contained"
-                        color="inherit"
-                        style={{
-                            height: "42px",
-                            width: "220px",
-                            padding: 0,
-                            backgroundColor: "#ea1414ed",
-                            gap: "12px",
-                        }}
-                        onClick={() => setOpenQuitConfirmation(true)}
-                    >
-                        <img
-                            src={giveUp}
-                            alt="giveUp"
+                <Box className="flex flex-col justify-center gap-3">
+                    <Box className="flex px-6 mt-1 justify-center">
+                        <Button
+                            variant="contained"
+                            color="inherit"
                             style={{
-                                objectFit: "cover",
+                                height: "42px",
+                                width: "220px",
+                                padding: 0,
+                                backgroundColor: "#ea1414ed",
+                                gap: "12px",
                             }}
-                            className="pb-1"
-                        />
-                        <Typography
-                            variant="button"
-                            color="white"
-                            sx={{ textTransform: "none" }}
-                            className="pt-0.5"
+                            onClick={() => setOpenQuitConfirmation(true)}
                         >
-                            Sair da Partida
-                        </Typography>
-                        <img
-                            src={giveUp}
-                            alt="giveUp"
-                            style={{
-                                objectFit: "cover",
-                                transform: "scaleX(-1)",
-                            }}
-                            className="pb-1"
-                        />
-                    </Button>
+                            <img
+                                src={giveUp}
+                                alt="giveUp"
+                                style={{
+                                    objectFit: "cover",
+                                }}
+                                className="pb-1"
+                            />
+                            <Typography
+                                variant="button"
+                                color="white"
+                                sx={{ textTransform: "none" }}
+                                className="pt-0.5"
+                            >
+                                Sair da Partida
+                            </Typography>
+                            <img
+                                src={giveUp}
+                                alt="giveUp"
+                                style={{
+                                    objectFit: "cover",
+                                    transform: "scaleX(-1)",
+                                }}
+                                className="pb-1"
+                            />
+                        </Button>
+                    </Box>
+                    {canGoToNextQuestion && (
+                        <Box className="flex px-6 justify-center">
+                            <Button
+                                variant="contained"
+                                color="success"
+                                style={{
+                                    height: "42px",
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                }}
+                                disabled={!canGoToNextQuestion}
+                                onClick={() => toNextQuestion()}
+                                endIcon={<East />}
+                            >
+                                <Typography
+                                    variant="button"
+                                    color="white"
+                                    sx={{ textTransform: "none" }}
+                                    className="pt-0.5"
+                                >
+                                    Próxima Questão
+                                </Typography>
+                            </Button>
+                        </Box>
+                    )}
                 </Box>
             </Grid>
         </Grid>

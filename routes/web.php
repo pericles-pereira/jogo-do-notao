@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\Guest\PlayingController;
 use App\Http\Controllers\Guest\RankingController;
+use App\Http\Controllers\Guest\RoomCodeController;
+use App\Http\Controllers\Guest\UniversityHelpCodeController;
+use App\Http\Controllers\Guest\UniversityHelpController;
 use Illuminate\Support\Facades\Route;
 use Source\Helpers\Controllers\Page;
 
@@ -20,4 +24,3 @@ require __DIR__ . '/guest.php';
 require __DIR__ . '/auth.php';
 
 Route::get('ranking/{gameAcronym}', [RankingController::class, 'index'])->name('ranking');
-

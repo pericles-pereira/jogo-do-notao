@@ -92,10 +92,15 @@ export default function CrudTable({
         enableGlobalFilter: true,
         enableFullScreenToggle: false,
         enableClickToCopy: false,
-        muiTablePaperProps: { sx: { padding: "4px 4px 0px 4px" } },
+        muiTablePaperProps: { sx: { padding: "4px 4px 0px 4px", width: "100%" } },
         muiTableProps: { sx: { width: "100%", minWidth: "750px" } },
         muiTableBodyCellProps: {
             sx: { textAlign: "center", fontWeight: 450 },
+        },
+        muiTableContainerProps: {
+            sx: {
+                width: "100%",
+            },
         },
         muiSelectAllCheckboxProps: { sx: { textAlign: "center" } },
         muiTableHeadCellProps: { sx: { textAlign: "center" } },
@@ -308,8 +313,8 @@ export default function CrudTable({
 
     return (
         <>
-            <Container maxWidth="xl" sx={{ py: 4 }}>
-                <Grid container justifyContent="center">
+            <Container sx={{ py: 4 }}>
+                <Grid item justifyContent="center" xs={12}>
                     <div style={{ display: "grid" }}>
                         <MaterialReactTable table={table} />
                     </div>

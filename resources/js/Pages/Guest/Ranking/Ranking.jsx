@@ -8,10 +8,9 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { TableVirtuoso } from "react-virtuoso";
 import GameLayout from "@/Layouts/GameLayout";
-import { Grid, Typography } from "@mui/material";
+import { Grid, Typography, styled } from "@mui/material";
 import { useMemo } from "react";
 import { formatTime, parseTime } from "@/utils/common/time";
-import announcer from "@/assets/images/game/announcer3-2.png";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import HomeButton from "@/Components/HomeButton/HomeButton";
 import goldMedal from "@/assets/images/game/goldMedal.png";
@@ -19,6 +18,12 @@ import silverMedal from "@/assets/images/game/silverMedal.png";
 import bronzeMedal from "@/assets/images/game/bronzeMedal.png";
 import { useEffect } from "react";
 import { useState } from "react";
+
+const StripedTableRow = styled(TableRow)(({ theme }) => ({
+    "&:nth-of-type(odd)": {
+        backgroundColor: theme.palette.action.hover,
+    },
+}));
 
 export default function Ranking({
     gameName,
@@ -103,7 +108,6 @@ export default function Ranking({
             dataKey: "time",
         },
     ]);
-    const hideImages = useMediaQuery("(max-width:800px)");
     const isMobile = useMediaQuery("(max-width:428px)");
 
     useEffect(() => {
@@ -152,24 +156,10 @@ export default function Ranking({
                 container
                 spacing={3}
                 className={`min-h-full justify-evenly ${
-                    hideImages ? (isMobile ? "px-3" : "px-10") : "px-20"
+                    isMobile ? "px-3" : "px-20"
                 }`}
             >
-                {!hideImages && (
-                    <Grid item xs={2} className="content-center">
-                        <img
-                            src={announcer}
-                            alt="announcer"
-                            style={{ width: "110%", height: "110%" }}
-                            className="fill-current object-cover"
-                        />
-                    </Grid>
-                )}
-                <Grid
-                    item
-                    xs={hideImages ? 12 : 8}
-                    className="content-center text-center"
-                >
+                <Grid item xs={12} className="content-center text-center">
                     <Paper
                         elevation={3}
                         style={{
@@ -206,7 +196,7 @@ export default function Ranking({
                                     />
                                 )),
                                 TableRow: ({ item: _item, ...props }) => (
-                                    <TableRow {...props} />
+                                    <StripedTableRow {...props} />
                                 ),
                                 TableBody: React.forwardRef((props, ref) => (
                                     <TableBody {...props} ref={ref} />
@@ -290,20 +280,6 @@ export default function Ranking({
                         />
                     </Paper>
                 </Grid>
-                {!hideImages && (
-                    <Grid item xs={2} className="content-center">
-                        <img
-                            src={announcer}
-                            alt="announcer"
-                            style={{
-                                width: "110%",
-                                height: "110%",
-                                transform: "scaleX(-1)",
-                            }}
-                            className="fill-current object-cover"
-                        />
-                    </Grid>
-                )}
             </Grid>
         </GameLayout>
     );

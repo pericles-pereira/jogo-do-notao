@@ -4,7 +4,7 @@ import { Button } from "@mui/material";
 
 export default function HomeButton({ color = null, hoverColor = null }) {
     return (
-        <Link href="/">
+        <Link href={route("room-code")}>
             <Button
                 variant="contained"
                 sx={{

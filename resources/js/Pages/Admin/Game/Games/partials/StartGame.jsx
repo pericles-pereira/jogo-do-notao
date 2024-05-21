@@ -50,12 +50,13 @@ export default function StartGame({ games, roomCode }) {
             sx={{ alignItems: "center", justifyContent: "center" }}
             className="pt-4"
         >
-            <Grid item xs={12} md={10} lg={8}>
+            <Grid item xs={12}>
                 <Paper
-                    elevation={3}
+                    elevation={1}
                     sx={{
                         padding: "16px",
                         mb: "16px",
+                        mx: "24px",
                         boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.15)",
                     }}
                 >
