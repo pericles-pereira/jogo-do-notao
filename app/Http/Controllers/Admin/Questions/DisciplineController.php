@@ -13,17 +13,17 @@ use Source\Helpers\Models\Delete;
 use Source\Helpers\Models\Search;
 use Source\Helpers\Utils\Common\Str;
 
-class CategoryController extends Controller
+class DisciplineController extends Controller
 {
     public function index(Request $request): Response | RedirectResponse
     {
         try {
-            $categories = Search::allDataInCamel($request->user()->group->category);
+            $disciplines = Search::allDataInCamel($request->user()->group->discipline);
         } catch (\Throwable $th) {
             return Redirect::back($th, 'Erro no servidor! Falha ao carregar os dados da página.');
         }
 
-        return Page::render('Admin/Questions/Category/Category', ['categories' => $categories]);
+        return Page::render('Admin/Questions/Discipline/Discipline', ['disciplines' => $disciplines]);
     }
 
     public function store(FormRequest $request): RedirectResponse
@@ -32,12 +32,12 @@ class CategoryController extends Controller
         $request->validate($validation);
 
         try {
-            $request->user()->group->category()->create(Str::camelToSnake($request->only(array_keys($validation))));
+            $request->user()->group->discipline()->create(Str::camelToSnake($request->only(array_keys($validation))));
         } catch (\Throwable $th) {
-            return Redirect::back($th, 'Erro no servidor! Categoria não cadastrada.');
+            return Redirect::back($th, 'Erro no servidor! Disciplina não cadastrada.');
         }
 
-        return Redirect::route('category', 'Categoria cadastrada.');
+        return Redirect::route('discipline', 'Disciplina cadastrada.');
     }
 
     public function update(FormRequest $request): RedirectResponse
@@ -46,19 +46,19 @@ class CategoryController extends Controller
         $request->validate($validation);
 
         try {
-            $category = $request->user()->group->category->find($request->only('id')['id']);
+            $discipline = $request->user()->group->discipline->find($request->only('id')['id']);
 
-            if (!$category) {
+            if (!$discipline) {
                 throw new \Error();
             }
 
-            $category->fill(Str::camelToSnake($request->only(array_keys($validation))));
-            $category->save();
+            $discipline->fill(Str::camelToSnake($request->only(array_keys($validation))));
+            $discipline->save();
         } catch (\Throwable $th) {
-            return Redirect::back($th, 'Erro no servidor! Categoria não atualizada.');
+            return Redirect::back($th, 'Erro no servidor! Disciplina não atualizada.');
         }
 
-        return Redirect::route('category', 'Categoria atualizada.');
+        return Redirect::route('discipline', 'Disciplina atualizada.');
     }
 
     public function delete(FormRequest $request): RedirectResponse
@@ -68,12 +68,12 @@ class CategoryController extends Controller
         $s = count($data) > 1 ? 's' : '';
 
         try {
-            Delete::multipleRecords($data, $request->user()->group->category);
+            Delete::multipleRecords($data, $request->user()->group->discipline);
         } catch (\Throwable $th) {
-            return Redirect::back($th, 'Erro no servidor! Categoria' . $s . ' não excluída' . $s . '.');
+            return Redirect::back($th, 'Erro no servidor! Disciplina' . $s . ' não excluída' . $s . '.');
         }
 
-        return Redirect::route('category', 'Categoria' . $s . ' excluída' . $s . '.');
+        return Redirect::route('discipline', 'Disciplina' . $s . ' excluída' . $s . '.');
     }
 
     private function fieldsAndValidation(): array

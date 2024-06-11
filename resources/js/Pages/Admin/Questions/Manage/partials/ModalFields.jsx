@@ -7,7 +7,7 @@ import {
     TextareaAutosize,
 } from "@mui/material";
 
-export default function ModalFields({ data, setData, errors, categories }) {
+export default function ModalFields({ data, setData, errors, disciplines }) {
     return (
         <>
             <div className="w-full md:w-6/12 p-2 pl-0 pb-1">
@@ -15,32 +15,32 @@ export default function ModalFields({ data, setData, errors, categories }) {
                     fullWidth
                     variant="outlined"
                     required
-                    error={!!errors.categoryId}
+                    error={!!errors.disciplineId}
                     style={{ minWidth: "200px" }}
                 >
-                    <InputLabel id="categoryIdLabel">Categoria</InputLabel>
+                    <InputLabel id="disciplineIdLabel">Disciplina</InputLabel>
                     <Select
-                        labelId="categoryIdLabel"
-                        id="categoryId"
-                        name="categoryId"
-                        value={data.categoryId}
-                        onChange={(e) => setData("categoryId", e.target.value)}
-                        label="Categoria"
-                        error={!!errors.categoryId}
+                        labelId="disciplineIdLabel"
+                        id="disciplineId"
+                        name="disciplineId"
+                        value={data.disciplineId}
+                        onChange={(e) => setData("disciplineId", e.target.value)}
+                        label="Disciplina"
+                        error={!!errors.disciplineId}
                         style={{ width: "100%" }}
                     >
                         <MenuItem value="">
                             <em>Selecione</em>
                         </MenuItem>
 
-                        {categories.map((categoryId) => (
-                            <MenuItem value={categoryId.id} key={categoryId.id}>
-                                {categoryId?.name}
+                        {disciplines.map((disciplineId) => (
+                            <MenuItem value={disciplineId.id} key={disciplineId.id}>
+                                {disciplineId?.name}
                             </MenuItem>
                         ))}
                     </Select>
                     <InputError
-                        message={errors.categoryId}
+                        message={errors.disciplineId}
                         className="flex justify-start"
                     />
                 </FormControl>

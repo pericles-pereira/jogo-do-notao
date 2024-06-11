@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models\Groups\Category\Question;
+namespace App\Models\Groups\Disciplines\Question;
 
-use App\Models\Groups\Category\Category;
+use App\Models\Groups\Disciplines\Discipline;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,12 +18,12 @@ class Question extends Model
         'wrong_option2',
         'wrong_option3',
         'wrong_option4',
-        'category_id',
+        'discipline_id',
         'difficulty'
     ];
 
-    public function category(): BelongsTo
+    public function discipline(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Discipline::class);
     }
 }

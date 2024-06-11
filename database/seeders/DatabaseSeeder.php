@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use App\Models\Groups\Category\Category;
+use App\Models\Groups\Disciplines\Discipline;
 use App\Models\Groups\Group;
 use App\Models\Users\User;
 use Illuminate\Database\Seeder;
@@ -31,17 +31,17 @@ class DatabaseSeeder extends Seeder
 
             $user->permission()->create(['master' => true]);
 
-            $category = $user->group->category()->create(['name' => 'categoria1']);
+            $discipline = $user->group->discipline()->create(['name' => 'disciplina1']);
 
             for ($i = 0; $i < 10; $i++) {
-                $category->question()->create([
+                $discipline->question()->create([
                     'statement' => 'Socorro - Questão ' . $i + 1,
                     'correct_option' => 'Socorro ' . $i + 1 . ' - Opção Correta',
                     'wrong_option1' => 'Socorro ' . $i + 1,
                     'wrong_option2' => 'Socorro ' . $i + 1,
                     'wrong_option3' => 'Socorro ' . $i + 1,
                     'wrong_option4' => 'Socorro ' . $i + 1,
-                    'category_id' => 1,
+                    'discipline_id' => 1,
                     'difficulty' => random_int(1, 6),
                 ]);
             }
@@ -51,7 +51,8 @@ class DatabaseSeeder extends Seeder
                 'acronym' => 'JOG001',
                 'questions' => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                 'maximum_points' => 2,
-                'timer' => '00:04:12'
+                'timer' => '00:04:12',
+                'discipline_id' => 1
             ]);
         });
     }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin\Game;
 
 use App\Http\Controllers\Controller;
-use App\Models\Groups\Category\Question\Question;
+use App\Models\Groups\Disciplines\Question\Question;
 use App\Models\Groups\Games\StartedGames\StartedGame;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\RedirectResponse;

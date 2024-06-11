@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('wrong_option4');
             $table->enum('difficulty', [1, 2, 3, 4, 5, 6]);
             $table->timestamps();
-            $table->foreignId('category_id')->constrained('categories');
+            $table->foreignId('discipline_id')->constrained('disciplines');
         });
     }
 

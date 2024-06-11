@@ -211,7 +211,7 @@ return [
         'current_password' => 'senha atual',
         'complement' => 'complemento',
         'modality' => 'modalidade',
-        'category' => 'categoria',
+        'discipline' => 'disciplina',
         'blood_type' => 'tipo sanguíneo',
         'birth_date' => 'data de nascimento'
     ],

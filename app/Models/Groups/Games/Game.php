@@ -2,7 +2,8 @@
 
 namespace App\Models\Groups\Games;
 
-use App\Models\Groups\Category\Question\Question;
+use App\Models\Groups\Disciplines\Discipline;
+use App\Models\Groups\Disciplines\Question\Question;
 use App\Models\Groups\Games\FinishedGames\FinishedGame;
 use App\Models\Groups\Games\StartedGames\InGameRecords\InGameRecord;
 use App\Models\Groups\Games\StartedGames\StartedGame;
@@ -20,7 +21,7 @@ class Game extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'questions', 'acronym', 'maximum_points', 'timer'];
+    protected $fillable = ['name', 'questions', 'acronym', 'maximum_points', 'timer', 'discipline_id'];
 
     public function setQuestionsAttribute($value): void
     {
@@ -35,6 +36,11 @@ class Game extends Model
     public function group(): BelongsTo
     {
         return $this->belongsTo(Group::class);
+    }
+
+    public function discipline(): BelongsTo
+    {
+        return $this->belongsTo(Discipline::class);
     }
 
     public function question(): array|Collection

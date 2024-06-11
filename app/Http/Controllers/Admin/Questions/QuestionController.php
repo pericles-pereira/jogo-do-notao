@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin\Questions;
 
 use App\Http\Controllers\Controller;
-use App\Models\Groups\Category\Category;
+use App\Models\Groups\Disciplines\Discipline;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,7 +21,7 @@ class QuestionController extends Controller
         try {
             $questions = Search::allDataInCamel($request->user()->group->question);
             foreach ($questions as $key => $value) {
-                $questions[$key]['category'] = Category::find($value['categoryId'])->name;
+                $questions[$key]['discipline'] = Discipline::find($value['disciplineId'])->name;
                 $questions[$key]['difficulty'] = match ($value['difficulty']) {
                     "1" => "Muito Fácil",
                     "2" => "Fácil",
@@ -32,12 +32,12 @@ class QuestionController extends Controller
                     default => "?? erro ??"
                 };
             }
-            $categories = Search::allDataInCamel($request->user()->group->category);
+            $disciplines = Search::allDataInCamel($request->user()->group->discipline);
         } catch (\Throwable $th) {
             return Redirect::back($th, 'Erro no servidor! Falha ao carregar os dados da página.');
         }
 
-        return Page::render('Admin/Questions/Manage/Questions', ['questions' => $questions, 'categories' => $categories]);
+        return Page::render('Admin/Questions/Manage/Questions', ['questions' => $questions, 'disciplines' => $disciplines]);
     }
 
     public function store(FormRequest $request): RedirectResponse
@@ -101,7 +101,7 @@ class QuestionController extends Controller
             'wrongOption2' => ['required', 'max:255'],
             'wrongOption3' => ['required', 'max:255'],
             'wrongOption4' => ['required', 'max:255'],
-            'categoryId' => ['required', 'integer'],
+            'disciplineId' => ['required', 'integer'],
             'difficulty' => ['required', 'integer']
         ];
     }

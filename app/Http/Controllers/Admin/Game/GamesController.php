@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Game;
 
 use App\Http\Controllers\Controller;
+use App\Models\Groups\Disciplines\Discipline;
 use App\Models\Groups\Games\Game;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\RedirectResponse;
@@ -27,6 +28,11 @@ class GamesController extends Controller
             $games = Search::allDataInCamel($group->game);
             $questions = Search::allDataInCamel($group->question);
             $startedGames = Search::allDataInCamel($group->startedGame);
+            $disciplines = Search::allDataInCamel($group->discipline);
+
+            foreach ($games as $key => $value) {
+                $games[$key]['discipline'] = Discipline::find($value['disciplineId'])->name;
+            }
 
             foreach ($startedGames as $key => $value) {
                 $startedGames[$key]['game'] = Game::find($value['gameId'])->acronym;
@@ -46,7 +52,8 @@ class GamesController extends Controller
             'games' => $games,
             'startedGames' => $startedGames,
             'roomCode' => $roomCode,
-            'finishedGames' => $finishedGames
+            'finishedGames' => $finishedGames,
+            'disciplines' => $disciplines,
         ]);
     }
 
@@ -116,6 +123,7 @@ class GamesController extends Controller
             'acronym' => ['required', 'max:255'],
             "timer" => ['required'],
             "maximumPoints" => ['required'],
+            "disciplineId" => ['required', 'integer'],
         ];
     }
 }

@@ -32,7 +32,13 @@ function getStyles(theme) {
     };
 }
 
-export default function ModalFields({ data, setData, errors, questions }) {
+export default function ModalFields({
+    data,
+    setData,
+    errors,
+    questions,
+    disciplines,
+}) {
     const theme = useTheme();
     const { text } = textFieldFilters(setData);
 
@@ -230,6 +236,50 @@ export default function ModalFields({ data, setData, errors, questions }) {
                     </Select>
                     <InputError
                         message={errors.questions}
+                        className="flex justify-start"
+                    />
+                </FormControl>
+            </div>
+            <div className="md:w-6/12 w-full p-2 pl-0 pb-1">
+                <FormControl
+                    fullWidth
+                    variant="outlined"
+                    required
+                    error={!!errors.disciplineId}
+                    style={{
+                        minWidth: "200px",
+                    }}
+                >
+                    <InputLabel id="disciplineIdLabel">Disciplina</InputLabel>
+                    <Select
+                        labelId="disciplineIdLabel"
+                        id="disciplineId"
+                        name="disciplineId"
+                        value={data.disciplineId}
+                        onChange={(e) =>
+                            setData("disciplineId", e.target.value)
+                        }
+                        label="Disciplina"
+                        error={!!errors.disciplineId}
+                        style={{
+                            width: "100%",
+                        }}
+                    >
+                        <MenuItem value="">
+                            <em>Selecione</em>
+                        </MenuItem>
+
+                        {disciplines.map((discipline) => (
+                            <MenuItem
+                                value={discipline?.id}
+                                key={discipline?.id}
+                            >
+                                {discipline?.name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                    <InputError
+                        message={errors.disciplineId}
                         className="flex justify-start"
                     />
                 </FormControl>

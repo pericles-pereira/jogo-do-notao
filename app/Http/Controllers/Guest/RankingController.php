@@ -16,21 +16,33 @@ class RankingController extends Controller
     public function index(string $gameAcronym): Response | RedirectResponse
     {
         try {
-            $game = Game::where(['acronym' => $gameAcronym])->get()[0] ?? null;
+            $finishedGames = [];
+            $maxPoints = 0;
+            if ($gameAcronym === "all") {
+                $games = Game::all();
 
-            if (!$game) {
-                throw new \InvalidArgumentException('Este jogo não existe.');
+                foreach ($games as $game) {
+                    $finishedGames = array_merge($finishedGames, Search::allDataInCamel($game->finishedGame));
+                    if ($game->maximum_points > $maxPoints) {
+                        $maxPoints = $game->maximum_points;
+                    }
+                }
+            } else {
+                $game = Game::where(['acronym' => $gameAcronym])->get()[0] ?? null;
+                if (!$game) {
+                    throw new \InvalidArgumentException('Este jogo não existe.');
+                }
+                $finishedGames = Search::allDataInCamel($game->finishedGame);
             }
 
-            $finishedGames = Search::allDataInCamel($game->finishedGame);
         } catch (\Throwable $th) {
             return Redirect::back($th, 'Erro no servidor! Falha ao carregar os dados da página.');
         }
 
         return Page::render('Guest/Ranking/Ranking', [
-            'gameName' => $game->name,
-            'gameAcronym' => $game->acronym,
-            'maximumPoints' => $game->maximum_points,
+            'gameName' => $game ? $game->name : "Ranking Geral",
+            'gameAcronym' => $game ? $game->acronym : "All",
+            'maximumPoints' => $game ? $game->maximum_points : $maxPoints,
             'finishedGames' => $finishedGames
         ]);
     }

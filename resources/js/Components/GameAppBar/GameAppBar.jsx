@@ -143,6 +143,23 @@ export default function GameAppBar({ games }) {
                                     className="mt-10"
                                 >
                                     <List>
+                                        <ListItemButton
+                                            component={Link}
+                                            href={route("ranking", {
+                                                gameAcronym: "all",
+                                            })}
+                                        >
+                                            <Typography
+                                                variant="subtitle2"
+                                                sx={{
+                                                    textTransform: "none",
+                                                    color: "black",
+                                                }}
+                                                className="flex"
+                                            >
+                                                Ranking Geral
+                                            </Typography>
+                                        </ListItemButton>
                                         {games.map(({ acronym, id }) => (
                                             <ListItemButton
                                                 key={id}
@@ -270,6 +287,23 @@ export default function GameAppBar({ games }) {
                             }}
                         >
                             <List>
+                                <ListItemButton
+                                    component={Link}
+                                    href={route("ranking", {
+                                        gameAcronym: "all",
+                                    })}
+                                >
+                                    <Typography
+                                        variant="subtitle1"
+                                        sx={{
+                                            textTransform: "none",
+                                            color: "black",
+                                        }}
+                                        className="flex"
+                                    >
+                                        Ranking Geral
+                                    </Typography>
+                                </ListItemButton>
                                 {games.map(({ acronym, id }) => (
                                     <ListItemButton
                                         key={id}

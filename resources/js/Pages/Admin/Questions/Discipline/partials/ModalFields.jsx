@@ -17,7 +17,7 @@ export default function ModalFields({ data, setData, errors }) {
                     error={!!errors.name}
                     required
                     variant="outlined"
-                    label="Categoria"
+                    label="Disciplina"
                 />
                 <InputError
                     message={errors.name}

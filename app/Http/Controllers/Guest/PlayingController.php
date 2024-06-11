@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
-use App\Models\Groups\Category\Question\Question;
+use App\Models\Groups\Disciplines\Question\Question;
 use App\Models\Groups\Games\Game;
 use App\Models\Groups\Games\StartedGames\StartedGame;
 use Illuminate\Foundation\Http\FormRequest;

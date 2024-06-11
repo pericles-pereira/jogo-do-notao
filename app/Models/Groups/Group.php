@@ -2,8 +2,8 @@
 
 namespace App\Models\Groups;
 
-use App\Models\Groups\Category\Category;
-use App\Models\Groups\Category\Question\Question;
+use App\Models\Groups\Disciplines\Discipline;
+use App\Models\Groups\Disciplines\Question\Question;
 use App\Models\Groups\Games\FinishedGames\FinishedGame;
 use App\Models\Groups\Games\Game;
 use App\Models\Groups\Games\StartedGames\StartedGame;
@@ -26,9 +26,9 @@ class Group extends Model
         return $this->hasMany(User::class);
     }
 
-    public function category(): HasMany
+    public function discipline(): HasMany
     {
-        return $this->hasMany(Category::class);
+        return $this->hasMany(Discipline::class);
     }
 
     public function game(): HasMany
@@ -38,7 +38,7 @@ class Group extends Model
 
     public function question(): HasManyThrough
     {
-        return $this->hasManyThrough(Question::class, Category::class);
+        return $this->hasManyThrough(Question::class, Discipline::class);
     }
 
     public function startedGame(): HasManyThrough

@@ -2,7 +2,7 @@ import CrudTable from "@/Components/Tables/CrudTable/CrudTable";
 import ModalFields from "./partials/ModalFields";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 
-export default function Questions({ questions, categories }) {
+export default function Questions({ questions, disciplines }) {
     const initialFormProps = {
         statement: "",
         correctOption: "",
@@ -10,14 +10,14 @@ export default function Questions({ questions, categories }) {
         wrongOption2: "",
         wrongOption3: "",
         wrongOption4: "",
-        categoryId: "",
+        disciplineId: "",
         difficulty: "",
     };
 
     const columns = [
         {
-            accessorKey: "category",
-            header: "Categoria",
+            accessorKey: "discipline",
+            header: "Disciplina",
             filterVariant: "select",
         },
         {
@@ -50,7 +50,7 @@ export default function Questions({ questions, categories }) {
                 tableData={questions}
                 ModalFields={ModalFields}
                 headers={headers}
-                categories={categories}
+                disciplines={disciplines}
                 tableOptions={{
                     enableFacetedValues: true,
                     initialState: { showColumnFilters: true },

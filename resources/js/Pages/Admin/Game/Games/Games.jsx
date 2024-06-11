@@ -29,6 +29,7 @@ export default function Games({
     startedGames,
     roomCode,
     finishedGames,
+    disciplines
 }) {
     const { delete: destroy, processing } = useForm();
     const [openModal, setOpenModal] = useState(false);
@@ -40,6 +41,7 @@ export default function Games({
         questions: [],
         timer: null,
         maximumPoints: null,
+        disciplineId: "",
     };
 
     const columns = [
@@ -51,6 +53,11 @@ export default function Games({
         {
             accessorKey: "name",
             header: "Nome do Jogo",
+        },
+        {
+            accessorKey: "discipline",
+            header: "Disciplina",
+            filterVariant: "select",
         },
         {
             accessorKey: "timer",
@@ -326,6 +333,7 @@ export default function Games({
                     enableFacetedValues: true,
                     initialState: { showColumnFilters: true },
                 }}
+                disciplines={disciplines}
             />
 
             <Modal

@@ -26,8 +26,8 @@ const menu = [
                 icon: IconWrapper(List),
             },
             {
-                text: "Categorias",
-                url: route("category"),
+                text: "Disciplinas",
+                url: route("discipline"),
                 icon: IconWrapper(Category),
             },
         ],

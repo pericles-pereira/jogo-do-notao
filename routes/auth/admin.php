@@ -3,7 +3,7 @@
 use App\Http\Controllers\Admin\Game\GamesController;
 use App\Http\Controllers\Admin\Game\StartGameController;
 use App\Http\Controllers\Admin\Game\WatchGameController;
-use App\Http\Controllers\Admin\Questions\CategoryController;
+use App\Http\Controllers\Admin\Questions\DisciplineController;
 use App\Http\Controllers\Admin\Questions\QuestionController;
 use App\Http\Controllers\Admin\Users\EditUserController;
 use App\Http\Controllers\Admin\Users\RegisteredUserController;
@@ -23,17 +23,17 @@ Route::patch('users/{id}/disable', [EditUserController::class, 'disable'])->name
 Route::patch('users/{id}/activate', [EditUserController::class, 'activate'])->name('user.activate.patch')->can('master');
 Route::delete('users/{id}/delete', [EditUserController::class, 'delete'])->name('user.delete')->can('master');
 
-Route::get('category', [CategoryController::class, 'index'])->name('category');
-Route::post('category', [CategoryController::class, 'store'])->name('category.store');
-Route::patch('category', [CategoryController::class, 'update'])->name('category.update');
-Route::delete('category', [CategoryController::class, 'delete'])->name('category.delete');
+Route::get('discipline', [DisciplineController::class, 'index'])->name('discipline');
+Route::post('discipline', [DisciplineController::class, 'store'])->name('discipline.store');
+Route::patch('discipline', [DisciplineController::class, 'update'])->name('discipline.update');
+Route::delete('discipline', [DisciplineController::class, 'delete'])->name('discipline.delete');
 
 Route::get('questions', [QuestionController::class, 'index'])->name('questions');
 Route::post('questions', [QuestionController::class, 'store'])->name('questions.store');
 Route::patch('questions', [QuestionController::class, 'update'])->name('questions.update');
 Route::delete('questions', [QuestionController::class, 'delete'])->name('questions.delete');
 
-Route::get('/', fn() => Redirect::route('game.manage'));
+Route::get('/', fn () => Redirect::route('game.manage'));
 
 Route::post('game/start', [StartGameController::class, 'store'])->name('game.start.store');
 

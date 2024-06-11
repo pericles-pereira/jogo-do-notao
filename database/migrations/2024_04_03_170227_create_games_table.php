@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('maximum_points');
             $table->time('timer');
             $table->timestamps();
+            $table->foreignId('discipline_id')->constrained('disciplines');
             $table->foreignId('group_id')->constrained('groups');
         });
     }

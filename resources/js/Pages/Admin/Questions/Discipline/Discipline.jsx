@@ -2,7 +2,7 @@ import CrudTable from "@/Components/Tables/CrudTable/CrudTable";
 import ModalFields from "./partials/ModalFields";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 
-export default function Category({ categories }) {
+export default function Discipline({ disciplines }) {
     const initialFormProps = {
         name: "",
     };
@@ -10,27 +10,27 @@ export default function Category({ categories }) {
     const columns = [
         {
             accessorKey: "name",
-            header: "Categoria",
+            header: "Disciplina",
         },
     ];
 
     const headers = {
         title: {
-            create: "Adicionar Nova Categoria",
-            edit: "Editar Categoria",
+            create: "Adicionar Nova Disciplina",
+            edit: "Editar Disciplina",
         },
         subtitle: {
-            create: "Por favor, informe os dados da nova categoria.",
-            edit: "Atualize os dados desta categoria.",
+            create: "Por favor, informe os dados da nova disciplina.",
+            edit: "Atualize os dados desta disciplina.",
         },
     };
     return (
-        <AuthenticatedLayout title="Categorias">
+        <AuthenticatedLayout title="Disciplinas">
             <CrudTable
-                relativeZiggyRoute="category"
+                relativeZiggyRoute="discipline"
                 initialFormProps={initialFormProps}
                 tableColumns={columns}
-                tableData={categories}
+                tableData={disciplines}
                 ModalFields={ModalFields}
                 headers={headers}
             />

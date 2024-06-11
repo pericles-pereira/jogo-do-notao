@@ -1,19 +1,20 @@
 <?php
 
-namespace App\Models\Groups\Category;
+namespace App\Models\Groups\Disciplines;
 
-use App\Models\Groups\Category\Question\Question;
+use App\Models\Groups\Disciplines\Question\Question;
+use App\Models\Groups\Games\Game;
 use App\Models\Groups\Group;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Category extends Model
+class Discipline extends Model
 {
     use HasFactory;
 
-    protected $table = 'categories';
+    protected $table = 'disciplines';
 
     protected $fillable = [
         'name'
@@ -27,5 +28,10 @@ class Category extends Model
     public function question(): HasMany
     {
         return $this->hasMany(Question::class);
+    }
+
+    public function game(): HasMany
+    {
+        return $this->hasMany(Game::class);
     }
 }

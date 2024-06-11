@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin\Game;
 
 use App\Http\Controllers\Controller;
-use App\Models\Groups\Category\Question\Question;
+use App\Models\Groups\Disciplines\Question\Question as QuestionQuestion;
 use App\Models\Groups\Games\Game;
 use App\Models\Groups\Games\StartedGames\StartedGame;
 use Illuminate\Foundation\Http\FormRequest;
@@ -53,7 +53,7 @@ class StartGameController extends Controller
             foreach ($startedGame->inGameRecord as $value) {
                 $inMinutes[] = $value->in_minutes;
                 $points = $value->points > $points ? $value->points : $points;
-                if ($value->response === Question::find($value->question_id)->correct_option) {
+                if ($value->response === QuestionQuestion::find($value->question_id)->correct_option) {
                     $correctResponses[] = $value->question_id;
                 }
             }
