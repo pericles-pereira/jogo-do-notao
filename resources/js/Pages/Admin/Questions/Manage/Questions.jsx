@@ -4,6 +4,8 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 
 export default function Questions({ questions, disciplines }) {
     const initialFormProps = {
+        title: "",
+        theme: "",
         statement: "",
         correctOption: "",
         wrongOption1: "",
@@ -21,12 +23,17 @@ export default function Questions({ questions, disciplines }) {
             filterVariant: "select",
         },
         {
+            accessorKey: "theme",
+            header: "Tema",
+            filterVariant: "select",
+        },
+        {
             accessorKey: "difficulty",
             header: "Dificuldade",
             filterVariant: "select",
         },
         {
-            accessorKey: "statement",
+            accessorKey: "title",
             header: "Questão",
         },
     ];
@@ -41,6 +48,7 @@ export default function Questions({ questions, disciplines }) {
             edit: "Atualize os dados desta questão.",
         },
     };
+
     return (
         <AuthenticatedLayout title="Questões">
             <CrudTable

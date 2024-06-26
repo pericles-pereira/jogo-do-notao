@@ -24,7 +24,9 @@ export default function ModalFields({ data, setData, errors, disciplines }) {
                         id="disciplineId"
                         name="disciplineId"
                         value={data.disciplineId}
-                        onChange={(e) => setData("disciplineId", e.target.value)}
+                        onChange={(e) =>
+                            setData("disciplineId", e.target.value)
+                        }
                         label="Disciplina"
                         error={!!errors.disciplineId}
                         style={{ width: "100%" }}
@@ -34,7 +36,10 @@ export default function ModalFields({ data, setData, errors, disciplines }) {
                         </MenuItem>
 
                         {disciplines.map((disciplineId) => (
-                            <MenuItem value={disciplineId.id} key={disciplineId.id}>
+                            <MenuItem
+                                value={disciplineId.id}
+                                key={disciplineId.id}
+                            >
                                 {disciplineId?.name}
                             </MenuItem>
                         ))}
@@ -81,6 +86,52 @@ export default function ModalFields({ data, setData, errors, disciplines }) {
                         className="flex justify-start"
                     />
                 </FormControl>
+            </div>
+
+            <div className="w-full p-2 pl-0 pb-1">
+                <InputLabel
+                    htmlFor="title"
+                    style={{ fontSize: "1.1rem", color: "#333" }}
+                >
+                    Título da Questão
+                </InputLabel>
+                <TextareaAutosize
+                    id="title"
+                    name="title"
+                    value={data.title}
+                    onChange={(e) => setData("title", e.target.value)}
+                    required
+                    minRows={1}
+                    className="w-full rounded"
+                    style={{ fontSize: "1rem" }}
+                />
+                <InputError
+                    message={errors.title}
+                    className="flex justify-start"
+                />
+            </div>
+
+            <div className="w-full p-2 pl-0 pb-1">
+                <InputLabel
+                    htmlFor="theme"
+                    style={{ fontSize: "1.1rem", color: "#333" }}
+                >
+                    Tema da Questão
+                </InputLabel>
+                <TextareaAutosize
+                    id="theme"
+                    name="theme"
+                    value={data.theme}
+                    onChange={(e) => setData("theme", e.target.value)}
+                    required
+                    minRows={1}
+                    className="w-full rounded"
+                    style={{ fontSize: "1rem" }}
+                />
+                <InputError
+                    message={errors.theme}
+                    className="flex justify-start"
+                />
             </div>
 
             <div className="w-full p-2 pl-0 pb-1">

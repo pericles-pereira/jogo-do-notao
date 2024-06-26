@@ -95,6 +95,8 @@ class QuestionController extends Controller
     private function fieldsAndValidation(): array
     {
         return [
+            'title' => ['required', 'max:500'],
+            'theme' => ['required', 'max:500'],
             'statement' => ['required', 'max:500'],
             'correctOption' => ['required', 'max:255'],
             'wrongOption1' => ['required', 'max:255'],

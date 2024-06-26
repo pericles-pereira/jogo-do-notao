@@ -50,17 +50,15 @@ export default function Appbar({ user, title }) {
                     </div>
 
                     <IconButton onClick={() => setOpenProfile(!openProfile)}>
-                        <Badge badgeContent={4} color="primary">
-                            <Avatar
-                                alt="User Photo"
-                                src={profileImg}
-                                sx={{
-                                    width: 42,
-                                    height: 42,
-                                    objectFit: "cover",
-                                }}
-                            />
-                        </Badge>
+                        <Avatar
+                            alt="User Photo"
+                            src={profileImg}
+                            sx={{
+                                width: 42,
+                                height: 42,
+                                objectFit: "cover",
+                            }}
+                        />
                     </IconButton>
                 </Toolbar>
             </AppbarStyled>

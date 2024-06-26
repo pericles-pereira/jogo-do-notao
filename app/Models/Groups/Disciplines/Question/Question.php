@@ -12,6 +12,8 @@ class Question extends Model
     use HasFactory;
 
     protected $fillable = [
+        'title',
+        'theme',
         'statement',
         'correct_option',
         'wrong_option1',

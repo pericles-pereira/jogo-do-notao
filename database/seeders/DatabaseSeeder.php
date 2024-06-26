@@ -35,6 +35,8 @@ class DatabaseSeeder extends Seeder
 
             for ($i = 0; $i < 10; $i++) {
                 $discipline->question()->create([
+                    'title' => 'Questão ' . $i + 1,
+                    'theme' => 'Tema Da Questão',
                     'statement' => 'Socorro - Questão ' . $i + 1,
                     'correct_option' => 'Socorro ' . $i + 1 . ' - Opção Correta',
                     'wrong_option1' => 'Socorro ' . $i + 1,
