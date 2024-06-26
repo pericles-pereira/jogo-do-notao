@@ -345,6 +345,7 @@ export default function CrudTable({
                                                     setData={form.setData}
                                                     errors={form.errors}
                                                     reset={form.reset}
+                                                    inEdit={inEdit}
                                                     {...modalProperties}
                                                 />
                                             </div>

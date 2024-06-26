@@ -67,6 +67,10 @@ class GamesController extends Controller
             $data['timer'] = Carbon::parse($data['timer'])->format('00:i:s');
             $data['maximumPoints'] = Decimals::numericStringToDecimal($data['maximumPoints']);
 
+            if ($data['copyGame']) {
+                $data['questions'] = Game::find($data['copyGame'])->questions;
+            }
+
             $request->user()->group->game()->create(Str::camelToSnake($data));
         } catch (\Throwable $th) {
             return Redirect::back($th, 'Erro no servidor! Jogo não cadastrado.');
@@ -119,11 +123,12 @@ class GamesController extends Controller
     {
         return [
             'name' => ['required', 'max:255'],
-            'questions' => ['required', 'array'],
+            'questions' => ['nullable', 'array'],
             'acronym' => ['required', 'max:255'],
             "timer" => ['required'],
             "maximumPoints" => ['required'],
             "disciplineId" => ['required', 'integer'],
+            "copyGame" => ['integer', 'nullable']
         ];
     }
 }

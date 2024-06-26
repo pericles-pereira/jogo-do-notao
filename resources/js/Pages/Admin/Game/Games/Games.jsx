@@ -47,6 +47,7 @@ export default function Games({
         timer: null,
         maximumPoints: null,
         disciplineId: "",
+        copyGame: ""
     };
 
     const columns = [
@@ -405,6 +406,7 @@ export default function Games({
                     initialState: { showColumnFilters: true },
                 }}
                 disciplines={disciplines}
+                games={games}
             />
 
             <Modal
